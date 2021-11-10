@@ -14,6 +14,16 @@ import { removeSpawnListener } from "../../common/mq";
 
 export const Character = () => {
   const targetName = usePollValue(() => mq.tlo.Target.Name());
+  const buffs = usePollValue(() =>
+    {
+      const buffArray = [];
+      for (let i = 0; i < mq.tlo.Me.CountBuffs(); i++) {
+        const buff = mq.tlo.Me.Buff(i + 1);
+        buffArray.push({ name: buff(), duration: buff.Duration() })
+      }
+      return buffArray;
+    }
+  );
   const link = targetName
     ? `https://eq.magelo.com/do_npcs.jspa?name=${targetName
         .split(" ")
@@ -36,12 +46,21 @@ export const Character = () => {
       <Card variant="outlined">
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Character: {mq.tlo.Me.Name}
+            Character: {mq.tlo.Me.Name()}
           </Typography>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             Target:
             {targetName && <Link href={link}>{targetName || "No Target"}</Link>}
           </Typography>
+          <Typography>Buffs</Typography>
+          <div>
+            {buffs.map((b) => (
+              <>
+                <Typography>Name: {b.name}</Typography>
+                <Typography>Duration: {b.duration}</Typography>
+              </>
+            ))}
+          </div>
           {targetName && (
             <>
               <Typography

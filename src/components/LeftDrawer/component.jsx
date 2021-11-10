@@ -20,8 +20,6 @@ import { useState } from "react";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import GroupIcon from "@mui/icons-material/Group";
 import { Character } from "../Character/component";
-import { mq } from "../../common/mq";
-import { usePollValue } from "../../hooks/usePollValue";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -74,16 +72,7 @@ export const LeftDrawer = () => {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState("Home");
   const [content, setContent] = useState(<div />);
-  const buffs = usePollValue(() =>
-    {
-      const buffArray = [];
-      for (let i = 0; i < mq.tlo.Me.CountBuffs(); i++) {
-        const buff = mq.tlo.Me.Buff(i + 1);
-        buffArray.push({ name: buff(), duration: buff.Duration() })
-      }
-      return buffArray;
-    }
-  );
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -106,14 +95,7 @@ export const LeftDrawer = () => {
           >
             <MenuIcon />
           </IconButton>
-          <div>
-            {buffs.map((b) => (
-              <>
-                <Typography>Name: {b.name}</Typography>
-                <Typography>Duration: {b.duration}</Typography>
-              </>
-            ))}
-          </div>
+         
           <Typography variant="h6" noWrap component="div">
             {title}
           </Typography>
