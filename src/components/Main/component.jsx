@@ -1,14 +1,13 @@
-import { createTheme, ThemeProvider, Typography } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { LeftDrawer } from "../LeftDrawer";
 
 import {
   DefaultToast,
   ToastProvider,
-  useToasts,
+  
 } from "react-toast-notifications";
 import "./component.scss";
 import { useRef } from "react";
-import { mq } from "../../common/mq";
 
 
 // Testing

@@ -35,12 +35,16 @@ if (window.addMqListener) {
       case "spawn":
         spawnListeners.forEach((fn) => fn(data));
         break;
+      default:
+        break;
     }
   });
   window.addMqListener("despawn", (name, data) => {
-    switch (name) {
+  switch (name) {
       case "despawn":
         despawnListeners.forEach((fn) => fn(data));
+        break;
+      default:
         break;
     }
   });

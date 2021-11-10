@@ -3,11 +3,9 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { usePollValue } from "../../hooks/usePollValue";
 import { mq } from "../../common/mq";
-import { Anchor } from "@mui/icons-material";
 import { Link } from "@mui/material";
 import { useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
@@ -32,7 +30,7 @@ export const Character = () => {
     return () => {
       removeSpawnListener(listener)
     }
-  }, []);
+  }, [addToast]);
   return (
     <Box className="content-card" sx={{ minWidth: 275 }}>
       <Card variant="outlined">
@@ -53,7 +51,7 @@ export const Character = () => {
               >
                 Dynamic View
               </Typography>
-              <iframe src={link} width={600} height={300} />
+              <iframe title={'Dynamic NPC'} src={link} width={600} height={300} />
             </>
           )}
         </CardContent>

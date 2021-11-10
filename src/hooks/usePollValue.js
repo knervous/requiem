@@ -10,7 +10,7 @@ export const usePollValue = (expr) => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [expr]);
 
   return state;
 };

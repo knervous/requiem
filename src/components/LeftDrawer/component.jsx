@@ -15,14 +15,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { useState } from "react";
 
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import GroupIcon from "@mui/icons-material/Group";
 import { Character } from "../Character/component";
-import { stepContentClasses } from "@mui/material";
 import { mq } from "../../common/mq";
 import { usePollValue } from "../../hooks/usePollValue";
 const drawerWidth = 240;
