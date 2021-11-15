@@ -1,4 +1,4 @@
-export const mq = global.mq;
+export const mq = global.mq || { eval () {}, mock: true };
 
 // This is how we proxy MQData objects.
 // Use would be `mq.tlo.Me.Buff('Clarity').Duration.Seconds()`
@@ -13,8 +13,8 @@ class MqProxy extends ExtensibleFunction {
       super((t) =>
         void 0 !== t
           ? ((this.path[this.path.length - 1] += `[${t}]`),
-            new MqProxy(this.path))
-          : mq.eval(this.path.join("."))
+          new MqProxy(this.path))
+          : mq.eval(this.path.join('.'))
       ),
       (this.path = t),
       new Proxy(this, {
@@ -30,18 +30,18 @@ let despawnListeners = [];
 let chatListeners = [];
 
 if (window.addMqListener) {
-  window.addMqListener("spawn", (name, data) => {
+  window.addMqListener('spawn', (name, data) => {
     switch (name) {
-      case "spawn":
+      case 'spawn':
         spawnListeners.forEach((fn) => fn(data));
         break;
       default:
         break;
     }
   });
-  window.addMqListener("despawn", (name, data) => {
-  switch (name) {
-      case "despawn":
+  window.addMqListener('despawn', (name, data) => {
+    switch (name) {
+      case 'despawn':
         despawnListeners.forEach((fn) => fn(data));
         break;
       default:
@@ -50,7 +50,7 @@ if (window.addMqListener) {
   });
   window.addMqListener('chat', (name_, line) => {
     chatListeners.forEach(fn => fn(line));
-  })
+  });
 }
 
 export function addSpawnListener(listener) {

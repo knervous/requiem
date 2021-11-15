@@ -15,11 +15,19 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import HouseIcon from '@mui/icons-material/House';
 import { useState } from "react";
 
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import GroupIcon from "@mui/icons-material/Group";
 import { Character } from "../Character/component";
+import { Zone } from "../Zone/component";
+
+
+
+//scss
+import './component.scss'
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -82,6 +90,10 @@ export const LeftDrawer = () => {
   };
 
   return (
+    <div className="dashboard-content">
+
+
+
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
@@ -128,6 +140,7 @@ export const LeftDrawer = () => {
         <List>
           {[
             ["Character", <AccessibilityIcon />, <Character />],
+            ["Zone", <HouseIcon />, <Zone />],
             ["Group", <GroupIcon />],
           ].map(([text, icon, content = <div />], index) => (
             <ListItem
@@ -150,5 +163,6 @@ export const LeftDrawer = () => {
         {content}
       </Main>
     </Box>
+    </div>
   );
 };
