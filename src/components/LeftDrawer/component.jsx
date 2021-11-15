@@ -142,7 +142,7 @@ export const LeftDrawer = () => {
               ['Character', <AccessibilityIcon />, <Character />],
               ['Zone', <HouseIcon />, <Zone />],
               ['Group', <GroupIcon />],
-            ].map(([text, icon, content = <div />], index) => (
+            ].map(([text, icon, content = <div />]) => (
               <ListItem
                 onClick={() => {
                   setTitle(text);

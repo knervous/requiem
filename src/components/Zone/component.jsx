@@ -73,7 +73,6 @@ const RenderedZone = ({ zoneName }) => {
     `${storageUrl}/${zoneName}/${zoneName}.glb`
   );
   useState(() => {
-    console.log('Change zone name', zoneName);
     setObjects([]);
     // fetch(`${storageUrl}/${zoneName}/objects.json`)
     //   .then((r) => r.json())
