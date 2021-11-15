@@ -1,13 +1,13 @@
-import { createTheme, ThemeProvider } from "@mui/material";
-import { LeftDrawer } from "../LeftDrawer";
+import { createTheme, ThemeProvider } from '@mui/material';
+import { LeftDrawer } from '../LeftDrawer';
 
 import {
   DefaultToast,
   ToastProvider,
   
-} from "react-toast-notifications";
-import "./component.scss";
-import { useRef } from "react";
+} from 'react-toast-notifications';
+import './component.scss';
+import { useRef } from 'react';
 
 
 // Testing
@@ -20,20 +20,20 @@ const CustomToast = ({ children, ...props }) => {
   // anytime we upgrade React.
   const callback = (event) => {
     for (const node of Array.from(
-      document.querySelectorAll(".react-toast-notifications__toast")
+      document.querySelectorAll('.react-toast-notifications__toast')
     )) {
       if (node.contains(myToast.current)) {
         continue;
       }
       const key = Object.keys(node).find((n) =>
-        n.startsWith("__reactEventHandlers")
+        n.startsWith('__reactEventHandlers')
       );
       if (key) {
         const fn =
           node[key][
-            event.type === "mouseenter" ? "onMouseEnter" : "onMouseLeave"
+            event.type === 'mouseenter' ? 'onMouseEnter' : 'onMouseLeave'
           ];
-        if (typeof fn === "function") {
+        if (typeof fn === 'function') {
           fn();
         }
       }
@@ -59,7 +59,7 @@ const CustomToast = ({ children, ...props }) => {
 export const Main = () => {
   return (
     <ToastProvider components={{ Toast: CustomToast }}>
-      <ThemeProvider theme={createTheme({ palette: { mode: "dark" } })}>
+      <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
         <div className="app">
           <LeftDrawer />
         </div>
