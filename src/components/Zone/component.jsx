@@ -1,4 +1,4 @@
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useRef, Suspense, forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -31,7 +31,7 @@ const supportedZoneOptions = supportedZones.map((zone, id) => ({
   label: zone,
   id,
 }));
-const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
+const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones2';
 
 // function SkyBox() {
 //   const renderer = useThree();
@@ -46,7 +46,7 @@ const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
 //   return null;
 // }
 
-const CameraControls = () => {
+const CameraControls = forwardRef(({ controls }, ref) => {
   // Get a reference to the Three.js Camera, and the canvas html element.
   // We need these to setup the OrbitControls component.
   // https://threejs.org/docs/#examples/en/controls/OrbitControls
@@ -56,64 +56,72 @@ const CameraControls = () => {
   } = useThree();
 
   // Ref to the controls, so that we can update them on every frame using useFrame
-  const controls = useRef();
+  
   useFrame((state) => {
     state.camera.far = 100000;
     state.camera.near = 0.1;
     state.camera.updateProjectionMatrix();
     controls.current.update();
   });
-  return <orbitControls ref={controls} args={[camera, domElement]} />;
-};
+  return <orbitControls ref={ref} args={[camera, domElement]} />;
+});
 
-const RenderedZone = ({ zoneName }) => {
-  const [objects, setObjects] = useState([]);
+const RenderedZone = ({ zoneName, controls }) => {
+  
   const zoneGltf = useLoader(
     GLTFLoader,
     `${storageUrl}/${zoneName}/${zoneName}.glb`
   );
+
   useState(() => {
-    setObjects([]);
-    // fetch(`${storageUrl}/${zoneName}/objects.json`)
-    //   .then((r) => r.json())
-    //   .then(async (objectMetadata) => {
-    //     console.log('Got object metadata');
+    if (controls.current) {
+      controls.current.reset();
+    }
+    
+  }, [zoneName, controls]);
+  // const [objects, setObjects] = useState([]);
+  // useState(() => {
+  //   setObjects([]);
+  //   fetch(`${storageUrl}/${zoneName}/objects.json`)
+  //     .then((r) => r.json())
+  //     .then(async (objectMetadata) => {
+  //       console.log('Got object metadata');
 
-    //     const gLoader = new GLTFLoader();
-    //     const zoneObjects = await Promise.all(
-    //       Object.keys(objectMetadata)
-    //         .filter(Boolean)
-    //         .flatMap(async (key) => {
-    //           const glb = await gLoader.loadAsync(
-    //             `${storageUrl}/${zoneName}/${key}.glb`
-    //           );
+  //       const gLoader = new GLTFLoader();
+  //       const zoneObjects = await Promise.all(
+  //         Object.keys(objectMetadata)
+  //           .filter(Boolean)
+  //           .flatMap(async (key) => {
+  //             const glb = await gLoader.loadAsync(
+  //               `${storageUrl}/${zoneName}/${key}.glb`
+  //             );
       
-    //           const zoneObjects = [];
-    //           for (const {
-    //             posX,
-    //             posY,
-    //             posZ,
-    //             rotX,
-    //             rotY,
-    //             rotZ,
-    //             scaleX,
-    //             scaleY,
-    //             scaleZ,
-    //           } of objectMetadata[key]) {
-    //             const clone = glb.scene.clone();
-    //             clone.position.set(posX, posY, posZ * -1);
-    //             zoneObjects.push(clone);
-    //           }
-    //           return zoneObjects;
-    //         })
-    //     );
-    //     setObjects(zoneObjects.flat());
-    //   })
-    //   .catch((e) => {
-    //     console.warn('Error getting metadata', e);
-    //   });
-  }, [zoneName]);
-
+  //             const zoneObjects = [];
+  //             for (const {
+  //               posX,
+  //               posY,
+  //               posZ,
+  //               rotX,
+  //               rotY,
+  //               rotZ,
+  //               scaleX,
+  //               scaleY,
+  //               scaleZ,
+  //             } of objectMetadata[key]) {
+  //               const clone = glb.scene.clone();
+  //               clone.position.set(posX, posY, posZ * -1);
+  //               zoneObjects.push(clone);
+  //             }
+  //             return zoneObjects;
+  //           })
+  //       );
+  //       setObjects(zoneObjects.flat());
+  //     })
+  //     .catch((e) => {
+  //       console.warn('Error getting metadata', e);
+  //     });
+  // }, [zoneName]);
+  //      {objects.map((obj) => <primitive key={obj.uuid} object={obj} />)}
 
   if (zoneGltf?.scene) {
     zoneGltf.scene.position.set(0, -20, -100);
@@ -122,15 +130,15 @@ const RenderedZone = ({ zoneName }) => {
   return (
     <>
       <primitive object={zoneGltf?.scene ?? null} />
-      {objects.map((obj) => <primitive key={obj.uuid} object={obj} />)}
+
     </>
   );
 };
 
 export const Zone = () => {
-  const [selectedZone, setSelectedZone] = useState('qeynos2');
+  const [selectedZone, setSelectedZone] = useState('airplane');
   useEffect(() => {}, []);
-
+  const cameraControls = useRef();
   return (
     <Box className="zone-container" sx={{ minWidth: 275 }}>
       <Card className="zone-header" variant="outlined">
@@ -169,12 +177,12 @@ export const Zone = () => {
         <CardContent>
           <Canvas>
             {/* <SkyBox /> */}
-            <CameraControls />
+            <CameraControls controls={cameraControls} ref={cameraControls} />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {selectedZone && (
               <Suspense fallback={null}>
-                <RenderedZone zoneName={selectedZone} />
+                <RenderedZone controls={cameraControls} zoneName={selectedZone} />
               </Suspense>
             )}
           </Canvas>
