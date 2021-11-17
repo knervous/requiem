@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MQDashboard",
+  "name": "MQ Browser Dashboard",
   "icons": [
     {
       "src": "favicon.ico",

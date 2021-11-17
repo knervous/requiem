@@ -78,8 +78,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const LeftDrawer = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [title, setTitle] = useState('Home');
-  const [content, setContent] = useState(<div />);
+  const [title, setTitle] = useState('Zone');
+  const [content, setContent] = useState(<Zone />);
   
   const handleDrawerOpen = () => {
     setOpen(true);

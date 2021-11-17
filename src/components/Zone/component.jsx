@@ -21,6 +21,7 @@ import {
   extend,
   useThree,
 } from '@react-three/fiber';
+import { useProgress, Html } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import './component.scss';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -31,7 +32,7 @@ const supportedZoneOptions = supportedZones.map((zone, id) => ({
   label: zone,
   id,
 }));
-const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones2';
+const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
 
 // function SkyBox() {
 //   const renderer = useThree();
@@ -66,11 +67,16 @@ const CameraControls = forwardRef(({ controls }, ref) => {
   return <orbitControls ref={ref} args={[camera, domElement]} />;
 });
 
+function Loader() {
+  const { progress, loaded } = useProgress();
+  return <Html center>{loaded} Meshes Loaded {progress}% Loaded</Html>;
+}
+
 const RenderedZone = ({ zoneName, controls }) => {
   
   const zoneGltf = useLoader(
     GLTFLoader,
-    `${storageUrl}/${zoneName}/${zoneName}.glb`
+    `${storageUrl}/${zoneName}.glb`
   );
 
   useState(() => {
@@ -79,60 +85,14 @@ const RenderedZone = ({ zoneName, controls }) => {
     }
     
   }, [zoneName, controls]);
-  // const [objects, setObjects] = useState([]);
-  // useState(() => {
-  //   setObjects([]);
-  //   fetch(`${storageUrl}/${zoneName}/objects.json`)
-  //     .then((r) => r.json())
-  //     .then(async (objectMetadata) => {
-  //       console.log('Got object metadata');
-
-  //       const gLoader = new GLTFLoader();
-  //       const zoneObjects = await Promise.all(
-  //         Object.keys(objectMetadata)
-  //           .filter(Boolean)
-  //           .flatMap(async (key) => {
-  //             const glb = await gLoader.loadAsync(
-  //               `${storageUrl}/${zoneName}/${key}.glb`
-  //             );
-      
-  //             const zoneObjects = [];
-  //             for (const {
-  //               posX,
-  //               posY,
-  //               posZ,
-  //               rotX,
-  //               rotY,
-  //               rotZ,
-  //               scaleX,
-  //               scaleY,
-  //               scaleZ,
-  //             } of objectMetadata[key]) {
-  //               const clone = glb.scene.clone();
-  //               clone.position.set(posX, posY, posZ * -1);
-  //               zoneObjects.push(clone);
-  //             }
-  //             return zoneObjects;
-  //           })
-  //       );
-  //       setObjects(zoneObjects.flat());
-  //     })
-  //     .catch((e) => {
-  //       console.warn('Error getting metadata', e);
-  //     });
-  // }, [zoneName]);
-  //      {objects.map((obj) => <primitive key={obj.uuid} object={obj} />)}
+  
 
   if (zoneGltf?.scene) {
     zoneGltf.scene.position.set(0, -20, -100);
     zoneGltf.scene.rotation.y = Math.PI;
   }
-  return (
-    <>
-      <primitive object={zoneGltf?.scene ?? null} />
+  return <primitive object={zoneGltf?.scene} />;
 
-    </>
-  );
 };
 
 export const Zone = () => {
@@ -181,7 +141,7 @@ export const Zone = () => {
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {selectedZone && (
-              <Suspense fallback={null}>
+              <Suspense fallback={<Loader />}>
                 <RenderedZone controls={cameraControls} zoneName={selectedZone} />
               </Suspense>
             )}
