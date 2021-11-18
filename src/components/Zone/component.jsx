@@ -295,7 +295,9 @@ export const Zone = () => {
   const spawns = usePollValue(() => {
     return mq
       .getZoneSpawns()
-      .filter((s) => s.displayedName !== mq.tlo.Me.DisplayName());
+      .filter(Boolean)
+      .filter(s => !!s?.displayedName)
+      .filter((s) => s?.displayedName !== mq.tlo.Me.DisplayName());
   }, 500);
   const [filteredSpawns, setFilteredSpawns] = useState(spawns);
   const [myTarget, setMyTarget] = useState('');
@@ -308,7 +310,7 @@ export const Zone = () => {
           setFilteredSpawns(
             Object.entries(visibleRowsLookup)
               .filter(([_, visible]) => visible)
-              .map(([visibleRow]) => spawns.find((s) => +s.id === +visibleRow)),
+              .map(([visibleRow]) => spawns.find((s) => +s?.id === +visibleRow)),
           );
           setNextDataUpdateCallback(null);
         });
@@ -320,7 +322,7 @@ export const Zone = () => {
   );
 
   useEffect(() => {
-    setFilteredSpawns(filteredSpawns => filteredSpawns.map(f => spawns.find(s => s.id === f.id)));
+    setFilteredSpawns(filteredSpawns => filteredSpawns.map(f => spawns.find(s => s?.id === f?.id)));
   }, [spawns, setFilteredSpawns]);
 
   return (
@@ -361,7 +363,7 @@ export const Zone = () => {
             {selectedZone && (
               <Suspense fallback={<Loader />}>
                 <RenderedZone
-                  spawns={filteredSpawns}
+                  spawns={filteredSpawns.filter(Boolean)}
                   myTarget={myTarget}
                   setMyTarget={setMyTarget}
                   controls={cameraControls}
