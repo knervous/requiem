@@ -22,6 +22,7 @@ import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import GroupIcon from '@mui/icons-material/Group';
 import { Character } from '../Character/component';
 import { Zone } from '../Zone/component';
+import { ZoneViewer } from '../ZoneViewer/component';
 
 
 
@@ -79,7 +80,7 @@ export const LeftDrawer = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState('Zone');
-  const [content, setContent] = useState(<Zone />);
+  const [content, setContent] = useState(<ZoneViewer />);
   
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -91,9 +92,6 @@ export const LeftDrawer = () => {
 
   return (
     <div className="dashboard-content">
-
-
-
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -140,7 +138,8 @@ export const LeftDrawer = () => {
           <List>
             {[
               ['Character', <AccessibilityIcon />, <Character />],
-              ['Zone', <HouseIcon />, <Zone />],
+              ['Advanced Map', <HouseIcon />, <Zone />],
+              ['Zone Viewer', <HouseIcon />, <ZoneViewer />],
               ['Group', <GroupIcon />],
             ].map(([text, icon, content = <div />]) => (
               <ListItem
@@ -158,7 +157,7 @@ export const LeftDrawer = () => {
             ))}
           </List>
         </Drawer>
-        <Main open={open}>
+        <Main className="main-content" open={open}>
           <DrawerHeader />
           {content}
         </Main>

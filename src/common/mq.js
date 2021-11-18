@@ -1,4 +1,8 @@
-export const mq = global.mq || { eval () {}, mock: true };
+
+import mockZoneSpawns from './mockZoneSpawns.json';
+
+
+export const mq = global.mq || { eval () {}, getZoneSpawns: () => mockZoneSpawns.map(s => ({ ...s, x: s.x + Math.random() * 10 })), mock: true };
 
 // This is how we proxy MQData objects.
 // Use would be `mq.tlo.Me.Buff('Clarity').Duration.Seconds()`

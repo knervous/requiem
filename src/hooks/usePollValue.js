@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 
-export const usePollValue = (expr) => {
+export const usePollValue = (expr, pollMs = 100) => {
   const [state, setState] = useState(expr());
   useEffect(() => {
     const interval = setInterval(() => {
-      setState(expr());
-    }, 50);
+      const val = expr();
+      if (JSON.stringify(val) !== JSON.stringify(state)) {
+        setState(val);
+      }
+    }, pollMs);
 
     return () => {
       clearInterval(interval);
     };
-  }, [expr]);
+  }, [expr, pollMs, state]);
 
   return state;
 };

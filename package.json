@@ -7,6 +7,9 @@
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
+    "@mui/styles": "^5.1.1",
+    "@mui/x-data-grid": "^5.0.1",
+    "@mui/x-data-grid-generator": "^5.0.1",
     "@react-three/drei": "^7.22.0",
     "@react-three/fiber": "^7.0.19",
     "@testing-library/jest-dom": "^5.15.0",
@@ -17,6 +20,7 @@
     "react-scripts": "4.0.3",
     "react-toast-notifications": "^2.5.1",
     "three": "^0.134.0",
+    "troika-three-text": "^0.44.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
