@@ -245,7 +245,7 @@ const RenderedZone = forwardRef(
 
     const targetMe = useCallback(() => {
       if (zoneTexture?.scene) {
-        zoneTexture.scene.position.set(-40, 0, 0);
+        zoneTexture.scene.position.set(0, 0, 0);
         setTimeout(() => {
           const charPosition = new THREE.Vector3(
             character.y * -1,
@@ -307,6 +307,7 @@ const RenderedZone = forwardRef(
       followMe
     }));
 
+    
     return (
       <>
         {spawns.map((s, i) => {
