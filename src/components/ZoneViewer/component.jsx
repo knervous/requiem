@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 
 // Our data
 import { supportedZones } from './data';
-
+import * as THREE from 'three';
 import {
   Canvas,
   useLoader,
@@ -34,29 +34,28 @@ const supportedZoneOptions = supportedZones.map((zone, id) => ({
 }));
 const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
 
-// function SkyBox() {
-//   const renderer = useThree();
-//   const texture = useLoader(
-//     THREE.TextureLoader,
-//     `sky4.jpg`
-//   );
-//   const rt = new THREE.WebGLCubeRenderTarget(texture.image.height);
-//   rt.fromEquirectangularTexture(renderer, texture);
-//   // Set the scene background property to the resulting texture.
-//   renderer.scene.background = rt.texture
-//   return null;
-// }
+const images = ['right', 'left', 'top', 'bot', 'front', 'back'];
 
+const getImagePaths = folder => images.map(img => `/bg/${folder}/${img}.png`);
+
+const useSkybox = path => {
+  const { scene } = useThree();
+
+  useEffect(() => {
+    const loader = new THREE.CubeTextureLoader();
+    const mat = loader.load(getImagePaths(path));
+    scene.background = mat;
+    scene.environment = mat;
+  }, [path]); //eslint-disable-line
+
+  return null;
+};
 const CameraControls = forwardRef(({ controls }, ref) => {
-  // Get a reference to the Three.js Camera, and the canvas html element.
-  // We need these to setup the OrbitControls component.
-  // https://threejs.org/docs/#examples/en/controls/OrbitControls
+
   const {
     camera,
     gl: { domElement },
   } = useThree();
-
-  // Ref to the controls, so that we can update them on every frame using useFrame
 
   useFrame((state) => {
     state.camera.far = 100000;
@@ -83,7 +82,7 @@ const RenderedZone = ({
 }) => {
 
   const zoneTexture = useLoader(GLTFLoader, `${storageUrl}/${zoneName}.glb`);
-
+  useSkybox('space');
 
   //
   useEffect(() => {
