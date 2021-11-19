@@ -529,8 +529,8 @@ export const Zone = () => {
             <DialogContent>
               <div style={{ height: 600, width: '100%' }}>
                 <DataGrid
-                  onRowDoubleClick={(row) => {
-                    setMyTarget(row.row);
+                  onRowClick={({ row }) => {
+                    setMyTarget(row);
                   }}
                   onFilterModelChange={onFilterModelChange}
                   onStateChange={nextDateUpdateCallback}
