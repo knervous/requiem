@@ -23,6 +23,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import { Character } from '../Character/component';
 import { Zone } from '../Zone/component';
 import { ZoneViewer } from '../ZoneViewer/component';
+import { Group } from '../Group/component';
 
 
 
@@ -140,7 +141,7 @@ export const LeftDrawer = () => {
               ['Character', <AccessibilityIcon />, <Character />],
               ['Advanced Map', <HouseIcon />, <Zone />],
               ['Zone Viewer', <HouseIcon />, <ZoneViewer />],
-              ['Group', <GroupIcon />],
+              ['Group', <GroupIcon />, <Group />],
             ].map(([text, icon, content = <div />]) => (
               <ListItem
                 onClick={() => {

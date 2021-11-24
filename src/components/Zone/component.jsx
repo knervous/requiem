@@ -121,9 +121,10 @@ const RenderedZone = forwardRef(
       const x = mq.tlo.Me.X();
       const y = mq.tlo.Me.Y();
       const z = mq.tlo.Me.Z();
+      const heading = mq.tlo.Me.Heading.Degrees();
       const level = mq.tlo.Me.Level();
-      return { x, y, z, level };
-    });
+      return { x, y, z, level, heading };
+    }, 300);
     const [originalTarget, setOriginalTarget] = useState(null);
     const [target, setTarget] = useState(myTarget);
     const [{ bannerScale, bannerLoc }, setBanner] = useState({
@@ -138,9 +139,9 @@ const RenderedZone = forwardRef(
       GLTFLoader,
       `${storageUrl}/textures/banner.glb`,
     );
-    const swordTexture = useLoader(
+    const bamTexture = useLoader(
       GLTFLoader,
-      `${storageUrl}/textures/sword2.glb`,
+      `${storageUrl}/full-model/BAM.glb`,
     );
 
     useFrame(() => {
@@ -300,14 +301,13 @@ const RenderedZone = forwardRef(
         controls.current.target = originalTarget;
       }
     };
-
+    window.rr = characterRef.current;
     // Expose functions to parent
     useImperativeHandle(forwardRef, () => ({
       targetMe,
       followMe
     }));
 
-    
     return (
       <>
         {spawns.map((s, i) => {
@@ -352,9 +352,9 @@ const RenderedZone = forwardRef(
         <primitive
           ref={characterRef}
           scale={[5, 5, 5]}
-          rotation={[0, 0, 0.5]}
-          position={[character.y * -1 - 3, character.z + 65, character.x + 4]}
-          object={swordTexture?.scene}
+          rotation={[-1.55, 0, ((-1 * character.heading - 180) * (Math.PI / 180))]}
+          position={[character.y * -1 - 3, character.z + 10, character.x + 4]}
+          object={bamTexture?.scene}
         />
         {/* Spotlight over our head */}
         <spotLight
