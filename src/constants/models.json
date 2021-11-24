@@ -1,0 +1,4388 @@
+{
+  "1": {
+    "raceName": " Human",
+    "male": "HUM",
+    "female": "HUF",
+    "neutral": "N/A"
+  },
+  "2": {
+    "raceName": " Barbarian",
+    "male": "BAM",
+    "female": "BAF",
+    "neutral": "N/A"
+  },
+  "3": {
+    "raceName": " Erudite",
+    "male": "ERM",
+    "female": "ERF",
+    "neutral": "N/A"
+  },
+  "4": {
+    "raceName": " Wood Elf",
+    "male": "ELM",
+    "female": "ELF",
+    "neutral": "N/A"
+  },
+  "5": {
+    "raceName": " High Elf",
+    "male": "HIM",
+    "female": "HIF",
+    "neutral": "N/A"
+  },
+  "6": {
+    "raceName": " Dark Elf",
+    "male": "DAM",
+    "female": "DAF",
+    "neutral": "N/A"
+  },
+  "7": {
+    "raceName": " Half Elf",
+    "male": "HAM",
+    "female": "HAF",
+    "neutral": "N/A"
+  },
+  "8": {
+    "raceName": " Dwarf",
+    "male": "DWM",
+    "female": "DWF",
+    "neutral": "N/A"
+  },
+  "9": {
+    "raceName": " Troll",
+    "male": "TRM",
+    "female": "TRF",
+    "neutral": "N/A"
+  },
+  "10": {
+    "raceName": " Ogre",
+    "male": "OGM",
+    "female": "OGF",
+    "neutral": "N/A"
+  },
+  "11": {
+    "raceName": " Halfling",
+    "male": "HOM",
+    "female": "HOF",
+    "neutral": "N/A"
+  },
+  "12": {
+    "raceName": " Gnome",
+    "male": "GNM",
+    "female": "GNF",
+    "neutral": "N/A"
+  },
+  "13": {
+    "raceName": " Aviak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AVI"
+  },
+  "14": {
+    "raceName": " Werewolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WER"
+  },
+  "15": {
+    "raceName": " Brownie",
+    "male": "BRM",
+    "female": "BRF",
+    "neutral": "N/A"
+  },
+  "16": {
+    "raceName": " Centaur",
+    "male": "CEM",
+    "female": "CEF",
+    "neutral": "CEN"
+  },
+  "17": {
+    "raceName": " Golem",
+    "male": "GOM",
+    "female": "GOF",
+    "neutral": "GOL"
+  },
+  "18": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GIA"
+  },
+  "19": {
+    "raceName": " Trakanon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRK"
+  },
+  "20": {
+    "raceName": " Venril Sathir",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VST"
+  },
+  "21": {
+    "raceName": " Evil Eye",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BEH"
+  },
+  "22": {
+    "raceName": " Beetle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BET"
+  },
+  "23": {
+    "raceName": " Kerran",
+    "male": "CPM",
+    "female": "CPF",
+    "neutral": "N/A"
+  },
+  "24": {
+    "raceName": " Fish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FIS"
+  },
+  "25": {
+    "raceName": " Fairy",
+    "male": "FAM",
+    "female": "FAF",
+    "neutral": "N/A"
+  },
+  "26": {
+    "raceName": " Froglok",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRO"
+  },
+  "27": {
+    "raceName": " Froglok",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRG"
+  },
+  "28": {
+    "raceName": " Fungusman",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FUN"
+  },
+  "29": {
+    "raceName": " Gargoyle",
+    "male": "GAM",
+    "female": "N/A",
+    "neutral": "GAR"
+  },
+  "30": {
+    "raceName": " Gasbag",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BEH"
+  },
+  "31": {
+    "raceName": " Gelatinous Cube",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CUB"
+  },
+  "32": {
+    "raceName": " Ghost",
+    "male": "GHM",
+    "female": "GHF",
+    "neutral": "N/A"
+  },
+  "33": {
+    "raceName": " Ghoul",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GHU"
+  },
+  "34": {
+    "raceName": " Bat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BAT"
+  },
+  "36": {
+    "raceName": " Rat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RAT"
+  },
+  "37": {
+    "raceName": " Snake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SNA"
+  },
+  "38": {
+    "raceName": " Spider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPI"
+  },
+  "39": {
+    "raceName": " Gnoll",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GNN"
+  },
+  "40": {
+    "raceName": " Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GOB"
+  },
+  "41": {
+    "raceName": " Gorilla",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GOR"
+  },
+  "42": {
+    "raceName": " Wolf",
+    "male": "WOM",
+    "female": "WOF",
+    "neutral": "WOL"
+  },
+  "43": {
+    "raceName": " Bear",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BEA"
+  },
+  "44": {
+    "raceName": " Guard",
+    "male": "FPM",
+    "female": "FPF",
+    "neutral": "N/A"
+  },
+  "45": {
+    "raceName": " Demi Lich",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DML"
+  },
+  "46": {
+    "raceName": " Imp",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IMP"
+  },
+  "47": {
+    "raceName": " Griffin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRI"
+  },
+  "48": {
+    "raceName": " Kobold",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KOB"
+  },
+  "49": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRA"
+  },
+  "50": {
+    "raceName": " Lion",
+    "male": "LIM",
+    "female": "LIF",
+    "neutral": "N/A"
+  },
+  "51": {
+    "raceName": " Lizard Man",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LIZ"
+  },
+  "52": {
+    "raceName": " Mimic",
+    "male": "MIM",
+    "female": "MIF",
+    "neutral": "N/A"
+  },
+  "53": {
+    "raceName": " Minotaur",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MIN"
+  },
+  "54": {
+    "raceName": " Orc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ORC"
+  },
+  "55": {
+    "raceName": " Beggar",
+    "male": "BGM",
+    "female": "BGF",
+    "neutral": "N/A"
+  },
+  "56": {
+    "raceName": " Pixie",
+    "male": "PIM",
+    "female": "PIF",
+    "neutral": "N/A"
+  },
+  "57": {
+    "raceName": " Drachnid",
+    "male": "DRM",
+    "female": "DRF",
+    "neutral": "N/A"
+  },
+  "58": {
+    "raceName": " Solusek Ro",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SOL"
+  },
+  "59": {
+    "raceName": " Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BGG"
+  },
+  "60": {
+    "raceName": " Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKE"
+  },
+  "61": {
+    "raceName": " Shark",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHA"
+  },
+  "62": {
+    "raceName": " Tunare",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TUN"
+  },
+  "63": {
+    "raceName": " Tiger",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TIG"
+  },
+  "64": {
+    "raceName": " Treant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRE"
+  },
+  "65": {
+    "raceName": " Vampire",
+    "male": "DVM",
+    "female": "DVF",
+    "neutral": "N/A"
+  },
+  "66": {
+    "raceName": " Rallos Zek",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RAL"
+  },
+  "67": {
+    "raceName": " Human",
+    "male": "HHM",
+    "female": "HHF",
+    "neutral": "N/A"
+  },
+  "68": {
+    "raceName": " Tentacle Terror",
+    "male": "TEM",
+    "female": "TEF",
+    "neutral": "TEN"
+  },
+  "69": {
+    "raceName": " Will-O-Wisp",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WIL"
+  },
+  "70": {
+    "raceName": " Zombie",
+    "male": "ZOM",
+    "female": "ZOF",
+    "neutral": "N/A"
+  },
+  "71": {
+    "raceName": " Human",
+    "male": "QCM",
+    "female": "QCF",
+    "neutral": "N/A"
+  },
+  "72": {
+    "raceName": " Ship",
+    "male": "SHI",
+    "female": "PRE",
+    "neutral": "PRE"
+  },
+  "73": {
+    "raceName": " Launch",
+    "male": "LAU",
+    "female": "N/A",
+    "neutral": "LAU"
+  },
+  "74": {
+    "raceName": " Piranha",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PIR"
+  },
+  "75": {
+    "raceName": " Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ELE"
+  },
+  "76": {
+    "raceName": " Puma",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PUM"
+  },
+  "77": {
+    "raceName": " Dark Elf",
+    "male": "NGM",
+    "female": "NGF",
+    "neutral": "N/A"
+  },
+  "78": {
+    "raceName": " Erudite",
+    "male": "EGM",
+    "female": "EGF",
+    "neutral": "N/A"
+  },
+  "79": {
+    "raceName": " Bixie",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BIX"
+  },
+  "80": {
+    "raceName": " Reanimated Hand",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "REA"
+  },
+  "81": {
+    "raceName": " Halfling",
+    "male": "RIM",
+    "female": "RIF",
+    "neutral": "N/A"
+  },
+  "82": {
+    "raceName": " Scarecrow",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCA"
+  },
+  "83": {
+    "raceName": " Skunk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKU"
+  },
+  "84": {
+    "raceName": " Snake Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SNE"
+  },
+  "85": {
+    "raceName": " Spectre",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPE"
+  },
+  "86": {
+    "raceName": " Sphinx",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPH"
+  },
+  "87": {
+    "raceName": " Armadillo",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ARM"
+  },
+  "88": {
+    "raceName": " Clockwork Gnome",
+    "male": "CLM",
+    "female": "CLF",
+    "neutral": "CLN"
+  },
+  "89": {
+    "raceName": " Drake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRK"
+  },
+  "90": {
+    "raceName": " Barbarian",
+    "male": "HLM",
+    "female": "HLF",
+    "neutral": "N/A"
+  },
+  "91": {
+    "raceName": " Alligator",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ALL"
+  },
+  "92": {
+    "raceName": " Troll",
+    "male": "GRM",
+    "female": "GRF",
+    "neutral": "N/A"
+  },
+  "93": {
+    "raceName": " Ogre",
+    "male": "OKM",
+    "female": "OKF",
+    "neutral": "N/A"
+  },
+  "94": {
+    "raceName": " Dwarf",
+    "male": "KAM",
+    "female": "KAF",
+    "neutral": "KAN"
+  },
+  "95": {
+    "raceName": " Cazic Thule",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CAZ"
+  },
+  "96": {
+    "raceName": " Cockatrice",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "COC"
+  },
+  "97": {
+    "raceName": " Daisy Man",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DIA"
+  },
+  "98": {
+    "raceName": " Vampire",
+    "male": "VSM",
+    "female": "VSF",
+    "neutral": "N/A"
+  },
+  "99": {
+    "raceName": " Amygdalan",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DEN"
+  },
+  "100": {
+    "raceName": " Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DER"
+  },
+  "101": {
+    "raceName": " Efreeti",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EFR"
+  },
+  "102": {
+    "raceName": " Tadpole",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRT"
+  },
+  "103": {
+    "raceName": " Kedge",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KED"
+  },
+  "104": {
+    "raceName": " Leech",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LEE"
+  },
+  "105": {
+    "raceName": " Swordfish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SWO"
+  },
+  "106": {
+    "raceName": " Guard",
+    "male": "FEM",
+    "female": "FEF",
+    "neutral": "N/A"
+  },
+  "107": {
+    "raceName": " Mammoth",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MAM"
+  },
+  "108": {
+    "raceName": " Eye",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EYE"
+  },
+  "109": {
+    "raceName": " Wasp",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WAS"
+  },
+  "110": {
+    "raceName": " Mermaid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MER"
+  },
+  "111": {
+    "raceName": " Harpy",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HAR"
+  },
+  "112": {
+    "raceName": " Guard",
+    "male": "GFM",
+    "female": "GFF",
+    "neutral": "N/A"
+  },
+  "113": {
+    "raceName": " Drixie",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRI"
+  },
+  "114": {
+    "raceName": " Ghost Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GSP"
+  },
+  "115": {
+    "raceName": " Clam",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLA"
+  },
+  "116": {
+    "raceName": " Seahorse",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SEA"
+  },
+  "117": {
+    "raceName": " Ghost",
+    "male": "GDM",
+    "female": "GDF",
+    "neutral": "N/A"
+  },
+  "118": {
+    "raceName": " Ghost",
+    "male": "GEM",
+    "female": "GEF",
+    "neutral": "N/A"
+  },
+  "119": {
+    "raceName": " Saber-toothed Cat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "STC"
+  },
+  "120": {
+    "raceName": " Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WOE"
+  },
+  "121": {
+    "raceName": " Gorgon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRG"
+  },
+  "122": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRU"
+  },
+  "123": {
+    "raceName": " Innoruuk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "INN"
+  },
+  "124": {
+    "raceName": " Unicorn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UNI"
+  },
+  "125": {
+    "raceName": " Pegasus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PEG"
+  },
+  "126": {
+    "raceName": " Djinn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DJI"
+  },
+  "127": {
+    "raceName": " Invisible Man",
+    "male": "IVM",
+    "female": "IVF",
+    "neutral": "N/A"
+  },
+  "128": {
+    "raceName": " Iksar",
+    "male": "IKM",
+    "female": "IKF",
+    "neutral": "N/A"
+  },
+  "129": {
+    "raceName": " Scorpion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCR"
+  },
+  "130": {
+    "raceName": " Vah Shir",
+    "male": "KEM",
+    "female": "KEF",
+    "neutral": "N/A"
+  },
+  "131": {
+    "raceName": " Sarnak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRW"
+  },
+  "132": {
+    "raceName": " Draglock",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DLK"
+  },
+  "133": {
+    "raceName": " Drolvarg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LYC"
+  },
+  "134": {
+    "raceName": " Mosquito",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MOS"
+  },
+  "135": {
+    "raceName": " Rhinoceros",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RHI"
+  },
+  "136": {
+    "raceName": " Xalgoz",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "XAL"
+  },
+  "137": {
+    "raceName": " Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KGO"
+  },
+  "138": {
+    "raceName": " Yeti",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "YET"
+  },
+  "139": {
+    "raceName": " Iksar",
+    "male": "ICM",
+    "female": "ICF",
+    "neutral": "ICN"
+  },
+  "140": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FGI"
+  },
+  "141": {
+    "raceName": " Boat",
+    "male": "BOA",
+    "female": "BOA",
+    "neutral": "BOA"
+  },
+  "144": {
+    "raceName": " Burynai",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRN"
+  },
+  "145": {
+    "raceName": " Goo",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GOO"
+  },
+  "146": {
+    "raceName": " Sarnak Spirit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SSN"
+  },
+  "147": {
+    "raceName": " Iksar Spirit",
+    "male": "SIM",
+    "female": "SIF",
+    "neutral": "N/A"
+  },
+  "148": {
+    "raceName": " Fish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BAC"
+  },
+  "149": {
+    "raceName": " Scorpion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ISC"
+  },
+  "150": {
+    "raceName": " Erollisi",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ERO"
+  },
+  "151": {
+    "raceName": " Tribunal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRI"
+  },
+  "152": {
+    "raceName": " Bertoxxulous",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BER"
+  },
+  "153": {
+    "raceName": " Bristlebane",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRI"
+  },
+  "154": {
+    "raceName": " Fay Drake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FDR"
+  },
+  "155": {
+    "raceName": " Undead Sarnak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SSK"
+  },
+  "156": {
+    "raceName": " Ratman",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VRM"
+  },
+  "157": {
+    "raceName": " Wyvern",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WYV"
+  },
+  "158": {
+    "raceName": " Wurm",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WUR"
+  },
+  "159": {
+    "raceName": " Devourer",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DEV"
+  },
+  "160": {
+    "raceName": " Iksar Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IKG"
+  },
+  "161": {
+    "raceName": " Undead Iksar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IKS"
+  },
+  "162": {
+    "raceName": " Man-Eating Plant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MEP"
+  },
+  "163": {
+    "raceName": " Raptor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RAP"
+  },
+  "164": {
+    "raceName": " Sarnak Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SGO"
+  },
+  "165": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SED"
+  },
+  "166": {
+    "raceName": " Animated Hand",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IKH"
+  },
+  "167": {
+    "raceName": " Succulent",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SUC"
+  },
+  "168": {
+    "raceName": " Holgresh",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FMO"
+  },
+  "169": {
+    "raceName": " Brontotherium",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTM"
+  },
+  "170": {
+    "raceName": " Snow Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SDE"
+  },
+  "171": {
+    "raceName": " Dire Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DIW"
+  },
+  "172": {
+    "raceName": " Manticore",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTC"
+  },
+  "173": {
+    "raceName": " Totem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TOT"
+  },
+  "174": {
+    "raceName": " Ice Spectre",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPC"
+  },
+  "175": {
+    "raceName": " Enchanted Armor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ENA"
+  },
+  "176": {
+    "raceName": " Snow Rabbit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SBU"
+  },
+  "177": {
+    "raceName": " Walrus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WAL"
+  },
+  "178": {
+    "raceName": " Geonid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RGM"
+  },
+  "181": {
+    "raceName": " Yakkar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "YAK"
+  },
+  "182": {
+    "raceName": " Faun",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FAN"
+  },
+  "183": {
+    "raceName": " Coldain",
+    "male": "COM",
+    "female": "COF",
+    "neutral": "COK"
+  },
+  "184": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DR2"
+  },
+  "185": {
+    "raceName": " Hag",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HAG"
+  },
+  "186": {
+    "raceName": " Hippogriff",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HIP"
+  },
+  "187": {
+    "raceName": " Siren",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SIR"
+  },
+  "188": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FSG"
+  },
+  "189": {
+    "raceName": " Giant",
+    "male": "STM",
+    "female": "N/A",
+    "neutral": "STG"
+  },
+  "190": {
+    "raceName": " Othmir",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "OTM"
+  },
+  "191": {
+    "raceName": " Ulthork",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WLM"
+  },
+  "192": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CCD"
+  },
+  "193": {
+    "raceName": " Abhorrent",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ABH"
+  },
+  "194": {
+    "raceName": " Sea Turtle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "STU"
+  },
+  "195": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BWD"
+  },
+  "196": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GDR"
+  },
+  "197": {
+    "raceName": " Ronnie Test",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RON"
+  },
+  "198": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PRI"
+  },
+  "199": {
+    "raceName": " Shik'Nar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKN"
+  },
+  "200": {
+    "raceName": " Rockhopper",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RHP"
+  },
+  "201": {
+    "raceName": " Underbulk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UNB"
+  },
+  "202": {
+    "raceName": " Grimling",
+    "male": "GMM",
+    "female": "GMF",
+    "neutral": "GMN"
+  },
+  "203": {
+    "raceName": " Worm",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VAC"
+  },
+  "204": {
+    "raceName": " Evan Test",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ECS"
+  },
+  "205": {
+    "raceName": " Shadel",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KHA"
+  },
+  "206": {
+    "raceName": " Owlbear",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "OWB"
+  },
+  "207": {
+    "raceName": " Rhino Beetle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RNB"
+  },
+  "208": {
+    "raceName": " Vampire",
+    "male": "VPM",
+    "female": "VPF",
+    "neutral": "N/A"
+  },
+  "209": {
+    "raceName": " Earth Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EEL"
+  },
+  "210": {
+    "raceName": " Air Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AEL"
+  },
+  "211": {
+    "raceName": " Water Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WEL"
+  },
+  "212": {
+    "raceName": " Fire Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FEL"
+  },
+  "213": {
+    "raceName": " Wetfang Minnow",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WET"
+  },
+  "214": {
+    "raceName": " Thought Horror",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "THO"
+  },
+  "215": {
+    "raceName": " Tegi",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TEG"
+  },
+  "216": {
+    "raceName": " Horse",
+    "male": "HSM",
+    "female": "HSF",
+    "neutral": "HSN"
+  },
+  "217": {
+    "raceName": " Shissar",
+    "male": "SHM",
+    "female": "SHF",
+    "neutral": "SHN"
+  },
+  "218": {
+    "raceName": " Fungal Fiend",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FUG"
+  },
+  "219": {
+    "raceName": " Vampire",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VOL"
+  },
+  "220": {
+    "raceName": " Stonegrabber",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SGR"
+  },
+  "221": {
+    "raceName": " Scarlet Cheetah",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCH"
+  },
+  "222": {
+    "raceName": " Zelniak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ZEL"
+  },
+  "223": {
+    "raceName": " Lightcrawler",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LCR"
+  },
+  "224": {
+    "raceName": " Shade",
+    "male": "SDM",
+    "female": "SDF",
+    "neutral": "N/A"
+  },
+  "225": {
+    "raceName": " Sunflower",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SNN"
+  },
+  "226": {
+    "raceName": " Sun Revenant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRV"
+  },
+  "227": {
+    "raceName": " Shrieker",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHR"
+  },
+  "228": {
+    "raceName": " Galorian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GAL"
+  },
+  "229": {
+    "raceName": " Netherbian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NET"
+  },
+  "230": {
+    "raceName": " Akheva",
+    "male": "AKM",
+    "female": "AKF",
+    "neutral": "AKN"
+  },
+  "231": {
+    "raceName": " Grieg Veneficus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPR"
+  },
+  "232": {
+    "raceName": " Sonic Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SOW"
+  },
+  "233": {
+    "raceName": " Ground Shaker",
+    "male": "GSM",
+    "female": "GSF",
+    "neutral": "GSN"
+  },
+  "234": {
+    "raceName": " Vah Shir Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KES"
+  },
+  "235": {
+    "raceName": " Wretch",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MUH"
+  },
+  "236": {
+    "raceName": " Seru",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SER"
+  },
+  "237": {
+    "raceName": " Recuso",
+    "male": "REM",
+    "female": "REF",
+    "neutral": "REN"
+  },
+  "238": {
+    "raceName": " Vah Shir",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VSK"
+  },
+  "239": {
+    "raceName": " Guard",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VSG"
+  },
+  "240": {
+    "raceName": " Teleport Man",
+    "male": "TPM",
+    "female": "TPF",
+    "neutral": "TPN"
+  },
+  "241": {
+    "raceName": " Werewolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LUJ"
+  },
+  "242": {
+    "raceName": " Nymph",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NYD"
+  },
+  "243": {
+    "raceName": " Dryad",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NYM"
+  },
+  "244": {
+    "raceName": " Treant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRN"
+  },
+  "245": {
+    "raceName": " Fly",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WRF"
+  },
+  "246": {
+    "raceName": " Tarew Marr",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TMR"
+  },
+  "247": {
+    "raceName": " Solusek Ro",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRO"
+  },
+  "248": {
+    "raceName": " Clockwork Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLG"
+  },
+  "249": {
+    "raceName": " Clockwork Brain",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLB"
+  },
+  "250": {
+    "raceName": " Banshee",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKB"
+  },
+  "251": {
+    "raceName": " Guard of Justice",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GOJ"
+  },
+  "252": {
+    "raceName": " Mini POM",
+    "male": "MIN",
+    "female": "MIN",
+    "neutral": "MIN"
+  },
+  "253": {
+    "raceName": " Diseased Fiend",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DSB"
+  },
+  "254": {
+    "raceName": " Solusek Ro Guard",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRG"
+  },
+  "255": {
+    "raceName": " Bertoxxulous",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTX"
+  },
+  "256": {
+    "raceName": " The Tribunal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TBU"
+  },
+  "257": {
+    "raceName": " Terris Thule",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRT"
+  },
+  "258": {
+    "raceName": " Vegerog",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VEG"
+  },
+  "259": {
+    "raceName": " Crocodile",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRO"
+  },
+  "260": {
+    "raceName": " Bat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NBT"
+  },
+  "261": {
+    "raceName": " Hraquis",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SLG"
+  },
+  "262": {
+    "raceName": " Tranquilion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRQ"
+  },
+  "263": {
+    "raceName": " Tin Soldier",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TIN"
+  },
+  "264": {
+    "raceName": " Nightmare Wraith",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NMW"
+  },
+  "265": {
+    "raceName": " Malarian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MAL"
+  },
+  "266": {
+    "raceName": " Knight of Pestilence",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KOP"
+  },
+  "267": {
+    "raceName": " Lepertoloth",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LEP"
+  },
+  "268": {
+    "raceName": " Bubonian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BUB"
+  },
+  "269": {
+    "raceName": " Bubonian Underling",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BUU"
+  },
+  "270": {
+    "raceName": " Pusling",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PUS"
+  },
+  "271": {
+    "raceName": " Water Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WMP"
+  },
+  "272": {
+    "raceName": " Stormrider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "STR"
+  },
+  "273": {
+    "raceName": " Junk Beast",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "JUB"
+  },
+  "274": {
+    "raceName": " Broken Clockwork",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRC"
+  },
+  "275": {
+    "raceName": " Giant Clockwork",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GLC"
+  },
+  "276": {
+    "raceName": " Clockwork Beetle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CWB"
+  },
+  "277": {
+    "raceName": " Nightmare Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NMG"
+  },
+  "278": {
+    "raceName": " Karana",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KAR"
+  },
+  "279": {
+    "raceName": " Blood Raven",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRV"
+  },
+  "280": {
+    "raceName": " Nightmare Gargoyle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GGL"
+  },
+  "281": {
+    "raceName": " Mouth of Insanity",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MOI"
+  },
+  "282": {
+    "raceName": " Skeletal Horse",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HSS"
+  },
+  "283": {
+    "raceName": " Saryrn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SAR"
+  },
+  "284": {
+    "raceName": " Fennin Ro",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FEN"
+  },
+  "285": {
+    "raceName": " Tormentor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRW"
+  },
+  "286": {
+    "raceName": " Soul Devourer",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NPT"
+  },
+  "287": {
+    "raceName": " Nightmare",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NMH"
+  },
+  "288": {
+    "raceName": " Rallos Zek",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RAZ"
+  },
+  "289": {
+    "raceName": " Vallon Zek",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VAZ"
+  },
+  "290": {
+    "raceName": " Tallon Zek",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TAZ"
+  },
+  "291": {
+    "raceName": " Air Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AMP"
+  },
+  "292": {
+    "raceName": " Earth Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EMP"
+  },
+  "293": {
+    "raceName": " Fire Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FMP"
+  },
+  "294": {
+    "raceName": " Nightmare Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NMP"
+  },
+  "295": {
+    "raceName": " Zebuxoruk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ZEB"
+  },
+  "296": {
+    "raceName": " Mithaniel Marr",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MAR"
+  },
+  "297": {
+    "raceName": " Undead Knight",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UDK"
+  },
+  "298": {
+    "raceName": " The Rathe",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RTH"
+  },
+  "299": {
+    "raceName": " Xegony",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "XEG"
+  },
+  "300": {
+    "raceName": " Fiend",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GTD"
+  },
+  "301": {
+    "raceName": " Test Object",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ONT"
+  },
+  "302": {
+    "raceName": " Crab",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRB"
+  },
+  "303": {
+    "raceName": " Phoenix",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PHX"
+  },
+  "304": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TMT"
+  },
+  "305": {
+    "raceName": " Bear",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PBR"
+  },
+  "306": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "STA"
+  },
+  "307": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SSA"
+  },
+  "308": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKR"
+  },
+  "309": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SVO"
+  },
+  "310": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SMA"
+  },
+  "311": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "STF"
+  },
+  "312": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCE"
+  },
+  "313": {
+    "raceName": " War Wraith",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WRW"
+  },
+  "314": {
+    "raceName": " Wrulon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WRU"
+  },
+  "315": {
+    "raceName": " Kraken",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KRK"
+  },
+  "316": {
+    "raceName": " Poison Frog",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PAF"
+  },
+  "317": {
+    "raceName": " Nilborien",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "QZT"
+  },
+  "318": {
+    "raceName": " Valorian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VAL"
+  },
+  "319": {
+    "raceName": " War Boar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WRB"
+  },
+  "320": {
+    "raceName": " Efreeti",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EFE"
+  },
+  "321": {
+    "raceName": " War Boar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WBU"
+  },
+  "322": {
+    "raceName": " Valorian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BKN"
+  },
+  "323": {
+    "raceName": " Animated Armor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AAM"
+  },
+  "324": {
+    "raceName": " Undead Footman",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UDF"
+  },
+  "325": {
+    "raceName": " Rallos Zek Minion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RZM"
+  },
+  "326": {
+    "raceName": " Arachnid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPD"
+  },
+  "327": {
+    "raceName": " Crystal Spider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPL"
+  },
+  "328": {
+    "raceName": " Zebuxoruk's Cage",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ZBC"
+  },
+  "329": {
+    "raceName": " BoT Portal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTP"
+  },
+  "330": {
+    "raceName": " Froglok",
+    "male": "FRM",
+    "female": "FRF",
+    "neutral": "N/A"
+  },
+  "331": {
+    "raceName": " Troll",
+    "male": "TBM",
+    "female": "TBF",
+    "neutral": "N/A"
+  },
+  "332": {
+    "raceName": " Troll",
+    "male": "FBM",
+    "female": "FBF",
+    "neutral": "N/A"
+  },
+  "333": {
+    "raceName": " Troll",
+    "male": "TSM",
+    "female": "TSF",
+    "neutral": "N/A"
+  },
+  "334": {
+    "raceName": " Ghost",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPB"
+  },
+  "335": {
+    "raceName": " Pirate",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TPB"
+  },
+  "336": {
+    "raceName": " Pirate",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TVP"
+  },
+  "337": {
+    "raceName": " Pirate",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TPO"
+  },
+  "338": {
+    "raceName": " Pirate",
+    "male": "GPM",
+    "female": "GPF",
+    "neutral": "N/A"
+  },
+  "339": {
+    "raceName": " Pirate",
+    "male": "DPM",
+    "female": "DPF",
+    "neutral": "N/A"
+  },
+  "340": {
+    "raceName": " Pirate",
+    "male": "OPM",
+    "female": "OPF",
+    "neutral": "N/A"
+  },
+  "341": {
+    "raceName": " Pirate",
+    "male": "HPM",
+    "female": "HPF",
+    "neutral": "N/A"
+  },
+  "342": {
+    "raceName": " Pirate",
+    "male": "EPM",
+    "female": "EPF",
+    "neutral": "N/A"
+  },
+  "343": {
+    "raceName": " Frog",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RPF"
+  },
+  "344": {
+    "raceName": " Troll Zombie",
+    "male": "TZM",
+    "female": "TZF",
+    "neutral": "N/A"
+  },
+  "345": {
+    "raceName": " Luggald",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LUG"
+  },
+  "346": {
+    "raceName": " Luggald",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LGA"
+  },
+  "347": {
+    "raceName": " Luggalds",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LGR"
+  },
+  "348": {
+    "raceName": " Drogmore",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FMT"
+  },
+  "349": {
+    "raceName": " Froglok Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FSK"
+  },
+  "350": {
+    "raceName": " Undead Froglok",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FUD"
+  },
+  "351": {
+    "raceName": " Knight of Hate",
+    "male": "IWM",
+    "female": "IWF",
+    "neutral": "N/A"
+  },
+  "352": {
+    "raceName": " Arcanist of Hate",
+    "male": "IZM",
+    "female": "IZF",
+    "neutral": "N/A"
+  },
+  "353": {
+    "raceName": " Veksar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VEK"
+  },
+  "354": {
+    "raceName": " Veksar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GVK"
+  },
+  "355": {
+    "raceName": " Veksar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BVK"
+  },
+  "356": {
+    "raceName": " Chokidai",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WOF"
+  },
+  "357": {
+    "raceName": " Undead Chokidai",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WUF"
+  },
+  "358": {
+    "raceName": " Undead Veksar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UVK"
+  },
+  "359": {
+    "raceName": " Vampire",
+    "male": "LMM",
+    "female": "LMF",
+    "neutral": "N/A"
+  },
+  "360": {
+    "raceName": " Vampire",
+    "male": "MMM",
+    "female": "MMF",
+    "neutral": "N/A"
+  },
+  "361": {
+    "raceName": " Rujarkian Orc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ROM"
+  },
+  "362": {
+    "raceName": " Bone Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BGB"
+  },
+  "363": {
+    "raceName": " Synarcana",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SYN"
+  },
+  "364": {
+    "raceName": " Sand Elf",
+    "male": "SEM",
+    "female": "SEF",
+    "neutral": "N/A"
+  },
+  "365": {
+    "raceName": " Vampire",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MMV"
+  },
+  "366": {
+    "raceName": " Rujarkian Orc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ROE"
+  },
+  "367": {
+    "raceName": " Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKT"
+  },
+  "368": {
+    "raceName": " Mummy",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MMY"
+  },
+  "369": {
+    "raceName": " Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GBL"
+  },
+  "370": {
+    "raceName": " Insect",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "NIN"
+  },
+  "371": {
+    "raceName": " Froglok Ghost",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FGH"
+  },
+  "372": {
+    "raceName": " Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRV"
+  },
+  "373": {
+    "raceName": " Shade",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SDC"
+  },
+  "374": {
+    "raceName": " Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GLM"
+  },
+  "375": {
+    "raceName": " Evil Eye",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EEY"
+  },
+  "376": {
+    "raceName": " Box",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BOX"
+  },
+  "377": {
+    "raceName": " Barrel",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRL"
+  },
+  "378": {
+    "raceName": " Chest",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CST"
+  },
+  "379": {
+    "raceName": " Vase",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VAS"
+  },
+  "380": {
+    "raceName": " Table",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TBL"
+  },
+  "381": {
+    "raceName": " Weapon Rack",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RAK"
+  },
+  "382": {
+    "raceName": " Coffin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CPT"
+  },
+  "383": {
+    "raceName": " Bones",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BON"
+  },
+  "384": {
+    "raceName": " Jokester",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "JKR"
+  },
+  "385": {
+    "raceName": " Nihil",
+    "male": "TNM",
+    "female": "TNF",
+    "neutral": "N/A"
+  },
+  "386": {
+    "raceName": " Trusik",
+    "male": "TEM",
+    "female": "TEF",
+    "neutral": "N/A"
+  },
+  "387": {
+    "raceName": " Stone Worker",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TGL"
+  },
+  "388": {
+    "raceName": " Hynid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TWF"
+  },
+  "389": {
+    "raceName": " Turepta",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TAC"
+  },
+  "390": {
+    "raceName": " Cragbeast",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TMB"
+  },
+  "391": {
+    "raceName": " Stonemite",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TTB"
+  },
+  "392": {
+    "raceName": " Ukun",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IWH"
+  },
+  "393": {
+    "raceName": " Ixt",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IEC"
+  },
+  "394": {
+    "raceName": " Ikaav",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ILA"
+  },
+  "395": {
+    "raceName": " Aneuk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ICY"
+  },
+  "396": {
+    "raceName": " Kyv",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IHU"
+  },
+  "397": {
+    "raceName": " Noc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ISB"
+  },
+  "398": {
+    "raceName": " Ra`tuk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IBR"
+  },
+  "399": {
+    "raceName": " Taneth",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IFC"
+  },
+  "400": {
+    "raceName": " Huvul",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ILB"
+  },
+  "401": {
+    "raceName": " Mutna",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "IWB"
+  },
+  "402": {
+    "raceName": " Mastruq",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ISE"
+  },
+  "403": {
+    "raceName": " Taelosian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TLN"
+  },
+  "404": {
+    "raceName": " Discord Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHP"
+  },
+  "405": {
+    "raceName": " Stone Worker",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TGO"
+  },
+  "406": {
+    "raceName": " Mata Muram",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLV"
+  },
+  "407": {
+    "raceName": " Lightning Warrior",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MUR"
+  },
+  "408": {
+    "raceName": " Succubus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCU"
+  },
+  "409": {
+    "raceName": " Bazu",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DSG"
+  },
+  "410": {
+    "raceName": " Feran",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRA"
+  },
+  "411": {
+    "raceName": " Pyrilen",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCU"
+  },
+  "412": {
+    "raceName": " Chimera",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CHM"
+  },
+  "413": {
+    "raceName": " Dragorn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DDM"
+  },
+  "414": {
+    "raceName": " Murkglider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DMA"
+  },
+  "415": {
+    "raceName": " Rat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RTN"
+  },
+  "416": {
+    "raceName": " Bat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTN"
+  },
+  "417": {
+    "raceName": " Gelidran",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRD"
+  },
+  "418": {
+    "raceName": " Discordling",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DSF"
+  },
+  "419": {
+    "raceName": " Girplan",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DDV"
+  },
+  "420": {
+    "raceName": " Minotaur",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MNT"
+  },
+  "421": {
+    "raceName": " Dragorn Box",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DBX"
+  },
+  "422": {
+    "raceName": " Runed Orb",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ROB"
+  },
+  "423": {
+    "raceName": " Dragon Bones",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DBP"
+  },
+  "424": {
+    "raceName": " Muramite Armor Pile",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MAP"
+  },
+  "425": {
+    "raceName": " Crystal Shard",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRS"
+  },
+  "426": {
+    "raceName": " Portal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PRT"
+  },
+  "427": {
+    "raceName": " Coin Purse",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CNP"
+  },
+  "428": {
+    "raceName": " Rock Pile",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RKP"
+  },
+  "429": {
+    "raceName": " Murkglider Egg Sac",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MES"
+  },
+  "430": {
+    "raceName": " Drake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CDR"
+  },
+  "431": {
+    "raceName": " Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DVS"
+  },
+  "432": {
+    "raceName": " Drake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DKE"
+  },
+  "433": {
+    "raceName": " Goblin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GBN"
+  },
+  "434": {
+    "raceName": " Kirin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KRN"
+  },
+  "435": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LDR"
+  },
+  "436": {
+    "raceName": " Basilisk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BAS"
+  },
+  "437": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MDR"
+  },
+  "438": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SDR"
+  },
+  "439": {
+    "raceName": " Puma",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PMA"
+  },
+  "440": {
+    "raceName": " Spider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TAR"
+  },
+  "441": {
+    "raceName": " Spider Queen",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPQ"
+  },
+  "442": {
+    "raceName": " Animated Statue",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ANS"
+  },
+  "445": {
+    "raceName": " Dragon Egg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRE"
+  },
+  "446": {
+    "raceName": " Dragon Statue",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRS"
+  },
+  "447": {
+    "raceName": " Lava Rock",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LVR"
+  },
+  "448": {
+    "raceName": " Animated Statue",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ASM"
+  },
+  "449": {
+    "raceName": " Spider Egg Sack",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SEG"
+  },
+  "450": {
+    "raceName": " Lava Spider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LSP"
+  },
+  "451": {
+    "raceName": " Lava Spider Queen",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LSQ"
+  },
+  "452": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHD"
+  },
+  "453": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FGT"
+  },
+  "454": {
+    "raceName": " Werewolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WWF"
+  },
+  "455": {
+    "raceName": " Kobold",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KBD"
+  },
+  "456": {
+    "raceName": " Sporali",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FNG"
+  },
+  "457": {
+    "raceName": " Gnomework",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CWG"
+  },
+  "458": {
+    "raceName": " Orc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ORK"
+  },
+  "459": {
+    "raceName": " Corathus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRH"
+  },
+  "460": {
+    "raceName": " Coral",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRL"
+  },
+  "461": {
+    "raceName": " Drachnid",
+    "male": "DCM",
+    "female": "DCF",
+    "neutral": "N/A"
+  },
+  "462": {
+    "raceName": " Drachnid Cocoon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRC"
+  },
+  "463": {
+    "raceName": " Fungus Patch",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FGP"
+  },
+  "464": {
+    "raceName": " Gargoyle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GGY"
+  },
+  "465": {
+    "raceName": " Witheran",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KOR"
+  },
+  "466": {
+    "raceName": " Dark Lord",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MYG"
+  },
+  "467": {
+    "raceName": " Shiliskin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHL"
+  },
+  "468": {
+    "raceName": " Snake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SNK"
+  },
+  "469": {
+    "raceName": " Evil Eye",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EVE"
+  },
+  "470": {
+    "raceName": " Minotaur",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MNR"
+  },
+  "471": {
+    "raceName": " Zombie",
+    "male": "ZMM",
+    "female": "ZMF",
+    "neutral": "N/A"
+  },
+  "472": {
+    "raceName": " Clockwork Boar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CWR"
+  },
+  "473": {
+    "raceName": " Fairy",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FRY"
+  },
+  "474": {
+    "raceName": " Witheran",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KRB"
+  },
+  "475": {
+    "raceName": " Air Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AIE"
+  },
+  "476": {
+    "raceName": " Earth Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EAE"
+  },
+  "477": {
+    "raceName": " Fire Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FIE"
+  },
+  "478": {
+    "raceName": " Water Elemental",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WAE"
+  },
+  "479": {
+    "raceName": " Alligator",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ALR"
+  },
+  "480": {
+    "raceName": " Bear",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BAR"
+  },
+  "481": {
+    "raceName": " Scaled Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCW"
+  },
+  "482": {
+    "raceName": " Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WLF"
+  },
+  "483": {
+    "raceName": " Spirit Wolf",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPW"
+  },
+  "484": {
+    "raceName": " Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKL"
+  },
+  "485": {
+    "raceName": " Spectre",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPT"
+  },
+  "486": {
+    "raceName": " Bolvirk",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BLV"
+  },
+  "487": {
+    "raceName": " Banshee",
+    "male": "N/A",
+    "female": "BSE",
+    "neutral": "N/A"
+  },
+  "488": {
+    "raceName": " Banshee",
+    "male": "N/A",
+    "female": "BSG",
+    "neutral": "N/A"
+  },
+  "489": {
+    "raceName": " Elddar",
+    "male": "EEM",
+    "female": "EEF",
+    "neutral": "N/A"
+  },
+  "490": {
+    "raceName": " Forest Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GFO"
+  },
+  "491": {
+    "raceName": " Bone Golem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GLB"
+  },
+  "492": {
+    "raceName": " Horse",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HRS"
+  },
+  "493": {
+    "raceName": " Pegasus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PGS"
+  },
+  "494": {
+    "raceName": " Shambling Mound",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SMD"
+  },
+  "495": {
+    "raceName": " Scrykin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRN"
+  },
+  "496": {
+    "raceName": " Treant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRA"
+  },
+  "497": {
+    "raceName": " Vampire",
+    "male": "VAM",
+    "female": "VAF",
+    "neutral": "N/A"
+  },
+  "498": {
+    "raceName": " Ayonae Ro",
+    "male": "N/A",
+    "female": "ARO",
+    "neutral": "N/A"
+  },
+  "499": {
+    "raceName": " Sullon Zek",
+    "male": "N/A",
+    "female": "SZK",
+    "neutral": "N/A"
+  },
+  "500": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BNR"
+  },
+  "501": {
+    "raceName": " Flag",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FLG"
+  },
+  "502": {
+    "raceName": " Rowboat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ROW"
+  },
+  "503": {
+    "raceName": " Bear Trap",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T00"
+  },
+  "504": {
+    "raceName": " Clockwork Bomb",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T01"
+  },
+  "505": {
+    "raceName": " Dynamite Keg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T02"
+  },
+  "506": {
+    "raceName": " Pressure Plate",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T03"
+  },
+  "507": {
+    "raceName": " Puffer Spore",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T04"
+  },
+  "508": {
+    "raceName": " Stone Ring",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T05"
+  },
+  "509": {
+    "raceName": " Root Tentacle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T06"
+  },
+  "510": {
+    "raceName": " Runic Symbol",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T07"
+  },
+  "511": {
+    "raceName": " Saltpetter Bomb",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T08"
+  },
+  "512": {
+    "raceName": " Floating Skull",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T09"
+  },
+  "513": {
+    "raceName": " Spike Trap",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T10"
+  },
+  "514": {
+    "raceName": " Totem",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T11"
+  },
+  "515": {
+    "raceName": " Web",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T12"
+  },
+  "516": {
+    "raceName": " Wicker Basket",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "T13"
+  },
+  "517": {
+    "raceName": " Nightmare/Unicorn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UNM"
+  },
+  "518": {
+    "raceName": " Horse",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HRS"
+  },
+  "519": {
+    "raceName": " Nightmare/Unicorn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "UNM"
+  },
+  "520": {
+    "raceName": " Bixie",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BXI"
+  },
+  "521": {
+    "raceName": " Centaur",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CNT"
+  },
+  "522": {
+    "raceName": " Drakkin",
+    "male": "DKM",
+    "female": "DKF",
+    "neutral": "N/A"
+  },
+  "523": {
+    "raceName": " Giant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GFR"
+  },
+  "524": {
+    "raceName": " Gnoll",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GNL"
+  },
+  "525": {
+    "raceName": " Griffin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRN"
+  },
+  "526": {
+    "raceName": " Giant Shade",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GFS"
+  },
+  "527": {
+    "raceName": " Harpy",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HRP"
+  },
+  "528": {
+    "raceName": " Mammoth",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTH"
+  },
+  "529": {
+    "raceName": " Satyr",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SAT"
+  },
+  "530": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRG"
+  },
+  "531": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRN"
+  },
+  "532": {
+    "raceName": " Dyn'Leth",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DYN"
+  },
+  "533": {
+    "raceName": " Boat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHI"
+  },
+  "534": {
+    "raceName": " Weapon Rack",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I00"
+  },
+  "535": {
+    "raceName": " Armor Rack",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I01"
+  },
+  "536": {
+    "raceName": " Honey Pot",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I02"
+  },
+  "537": {
+    "raceName": " Jum Jum Bucket",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I03"
+  },
+  "538": {
+    "raceName": " Toolbox",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I04"
+  },
+  "539": {
+    "raceName": " Stone Jug",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I05"
+  },
+  "540": {
+    "raceName": " Small Plant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I06"
+  },
+  "541": {
+    "raceName": " Medium Plant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I07"
+  },
+  "542": {
+    "raceName": " Tall Plant",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I08"
+  },
+  "543": {
+    "raceName": " Wine Cask",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I09"
+  },
+  "544": {
+    "raceName": " Elven Boat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B01"
+  },
+  "545": {
+    "raceName": " Gnomish Boat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B02"
+  },
+  "546": {
+    "raceName": " Barrel Barge Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B03"
+  },
+  "547": {
+    "raceName": " Goo",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GUL"
+  },
+  "548": {
+    "raceName": " Goo",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GUM"
+  },
+  "549": {
+    "raceName": " Goo",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GUS"
+  },
+  "550": {
+    "raceName": " Merchant Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B04"
+  },
+  "551": {
+    "raceName": " Pirate Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B05"
+  },
+  "552": {
+    "raceName": " Ghost Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B06"
+  },
+  "553": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G00"
+  },
+  "554": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G01"
+  },
+  "555": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G02"
+  },
+  "556": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G03"
+  },
+  "557": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G04"
+  },
+  "558": {
+    "raceName": " Aviak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AVK"
+  },
+  "559": {
+    "raceName": " Beetle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTL"
+  },
+  "560": {
+    "raceName": " Gorilla",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRL"
+  },
+  "561": {
+    "raceName": " Kedge",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KDG"
+  },
+  "562": {
+    "raceName": " Kerran",
+    "male": "KRM",
+    "female": "KRF",
+    "neutral": "N/A"
+  },
+  "563": {
+    "raceName": " Shissar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHS"
+  },
+  "564": {
+    "raceName": " Siren",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SIN"
+  },
+  "565": {
+    "raceName": " Sphinx",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SPX"
+  },
+  "566": {
+    "raceName": " Human",
+    "male": "HNM",
+    "female": "HNF",
+    "neutral": "N/A"
+  },
+  "567": {
+    "raceName": " Campfire",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I10"
+  },
+  "568": {
+    "raceName": " Brownie",
+    "male": "BNM",
+    "female": "BNF",
+    "neutral": "N/A"
+  },
+  "569": {
+    "raceName": " Dragon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRP"
+  },
+  "570": {
+    "raceName": " Exoskeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "EXO"
+  },
+  "571": {
+    "raceName": " Ghoul",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GHO"
+  },
+  "572": {
+    "raceName": " Clockwork Guardian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GUA"
+  },
+  "573": {
+    "raceName": " Mantrap",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTP"
+  },
+  "574": {
+    "raceName": " Minotaur",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTR"
+  },
+  "575": {
+    "raceName": " Scarecrow",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCC"
+  },
+  "576": {
+    "raceName": " Shade",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SHE"
+  },
+  "577": {
+    "raceName": " Rotocopter",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SWC"
+  },
+  "578": {
+    "raceName": " Tentacle Terror",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TNT"
+  },
+  "579": {
+    "raceName": " Wereorc",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WOK"
+  },
+  "580": {
+    "raceName": " Worg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WOR"
+  },
+  "581": {
+    "raceName": " Wyvern",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WYR"
+  },
+  "582": {
+    "raceName": " Chimera",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MCH"
+  },
+  "583": {
+    "raceName": " Kirin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MKI"
+  },
+  "584": {
+    "raceName": " Puma",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MPU"
+  },
+  "585": {
+    "raceName": " Boulder",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I11"
+  },
+  "586": {
+    "raceName": " Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "G05"
+  },
+  "587": {
+    "raceName": " Elven Ghost",
+    "male": "XEM",
+    "female": "XEF",
+    "neutral": "N/A"
+  },
+  "588": {
+    "raceName": " Human Ghost",
+    "male": "XHM",
+    "female": "XHF",
+    "neutral": "N/A"
+  },
+  "589": {
+    "raceName": " Chest",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I12"
+  },
+  "590": {
+    "raceName": " Chest",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I13"
+  },
+  "591": {
+    "raceName": " Crystal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I14"
+  },
+  "592": {
+    "raceName": " Coffin",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I15"
+  },
+  "593": {
+    "raceName": " Guardian CPU",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I16"
+  },
+  "594": {
+    "raceName": " Worg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MWO"
+  },
+  "595": {
+    "raceName": " Mansion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "OBJ"
+  },
+  "596": {
+    "raceName": " Floating Island",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "OBP"
+  },
+  "597": {
+    "raceName": " Cragslither",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MCS"
+  },
+  "598": {
+    "raceName": " Wrulon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MWR"
+  },
+  "599": {
+    "raceName": " Spell Particle 1",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "S01"
+  },
+  "600": {
+    "raceName": " Invisible Man of Zomm",
+    "male": "IVM",
+    "female": "IVF",
+    "neutral": "N/A"
+  },
+  "601": {
+    "raceName": " Robocopter of Zomm",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SWC"
+  },
+  "602": {
+    "raceName": " Burynai",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BUR"
+  },
+  "603": {
+    "raceName": " Frog",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FGG"
+  },
+  "604": {
+    "raceName": " Dracolich",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DRL"
+  },
+  "605": {
+    "raceName": " Iksar Ghost",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "XIM"
+  },
+  "606": {
+    "raceName": " Iksar Skeleton",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SKI"
+  },
+  "607": {
+    "raceName": " Mephit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MPH"
+  },
+  "608": {
+    "raceName": " Muddite",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MUD"
+  },
+  "609": {
+    "raceName": " Raptor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RPT"
+  },
+  "610": {
+    "raceName": " Sarnak",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SRK"
+  },
+  "611": {
+    "raceName": " Scorpion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SCO"
+  },
+  "612": {
+    "raceName": " Tsetsian",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TSE"
+  },
+  "613": {
+    "raceName": " Wurm",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "WRM"
+  },
+  "614": {
+    "raceName": " Nekhon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BAL"
+  },
+  "615": {
+    "raceName": " Hydra Crystal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HYC"
+  },
+  "616": {
+    "raceName": " Crystal Sphere",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CRY"
+  },
+  "617": {
+    "raceName": " Gnoll",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GND"
+  },
+  "618": {
+    "raceName": " Sokokar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SOK"
+  },
+  "619": {
+    "raceName": " Stone Pylon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PYS"
+  },
+  "620": {
+    "raceName": " Demon Vulture",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DVL"
+  },
+  "621": {
+    "raceName": " Wagon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I17"
+  },
+  "622": {
+    "raceName": " God of Discord",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GOD"
+  },
+  "623": {
+    "raceName": " Feran Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MFR"
+  },
+  "624": {
+    "raceName": " Ogre NPC - Male",
+    "male": "ONM",
+    "female": "ONF",
+    "neutral": "N/A"
+  },
+  "625": {
+    "raceName": " Sokokar Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MSO"
+  },
+  "626": {
+    "raceName": " Giant (Rallosian mats)",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRA"
+  },
+  "627": {
+    "raceName": " Sokokar (w saddle)",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MSO"
+  },
+  "628": {
+    "raceName": " 10th Anniversary Banner",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BNX"
+  },
+  "629": {
+    "raceName": " 10th Anniversary Cake",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CAK"
+  },
+  "630": {
+    "raceName": " Wine Cask",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I18"
+  },
+  "631": {
+    "raceName": " Hydra Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MHY"
+  },
+  "632": {
+    "raceName": " Hydra NPC",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HYD"
+  },
+  "633": {
+    "raceName": " Wedding Flowers",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I19"
+  },
+  "634": {
+    "raceName": " Wedding Arbor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I20"
+  },
+  "635": {
+    "raceName": " Wedding Altar",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I21"
+  },
+  "636": {
+    "raceName": " Powder Keg",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I22"
+  },
+  "637": {
+    "raceName": " Apexus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "APX"
+  },
+  "638": {
+    "raceName": " Bellikos",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BEL"
+  },
+  "639": {
+    "raceName": " Brell's First Creation",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BFC"
+  },
+  "640": {
+    "raceName": " Brell",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRE"
+  },
+  "641": {
+    "raceName": " Crystalskin Ambuloid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CAM"
+  },
+  "642": {
+    "raceName": " Cliknar Queen",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLQ"
+  },
+  "643": {
+    "raceName": " Cliknar Soldier",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLS"
+  },
+  "644": {
+    "raceName": " Cliknar Worker",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CLW"
+  },
+  "645": {
+    "raceName": " Coldain",
+    "male": "CDM",
+    "female": "CDF",
+    "neutral": "N/A"
+  },
+  "647": {
+    "raceName": " Crystalskin Sessiloid",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CSE"
+  },
+  "648": {
+    "raceName": " Genari",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GEN"
+  },
+  "649": {
+    "raceName": " Gigyn",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GIG"
+  },
+  "650": {
+    "raceName": " Greken - Young Adult",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GYA"
+  },
+  "651": {
+    "raceName": " Greken - Young",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GYO"
+  },
+  "652": {
+    "raceName": " Cliknar Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MCL"
+  },
+  "653": {
+    "raceName": " Telmira",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TEL"
+  },
+  "654": {
+    "raceName": " Spider Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTA"
+  },
+  "655": {
+    "raceName": " Bear Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MBR"
+  },
+  "656": {
+    "raceName": " Rat Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MCR"
+  },
+  "657": {
+    "raceName": " Sessiloid Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MSD"
+  },
+  "658": {
+    "raceName": " Morell Thule",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "LTH"
+  },
+  "659": {
+    "raceName": " Marionette",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MRT"
+  },
+  "660": {
+    "raceName": " Book Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BKD"
+  },
+  "661": {
+    "raceName": " Topiary Lion",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TPL"
+  },
+  "662": {
+    "raceName": " Rotdog",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "RDG"
+  },
+  "663": {
+    "raceName": " Amygdalan",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AMY"
+  },
+  "664": {
+    "raceName": " Sandman",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SND"
+  },
+  "665": {
+    "raceName": " Grandfather Clock",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GFC"
+  },
+  "666": {
+    "raceName": " Gingerbread Man",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GBM"
+  },
+  "667": {
+    "raceName": " Royal Guard",
+    "male": "BFR",
+    "female": "BFF",
+    "neutral": "N/A"
+  },
+  "668": {
+    "raceName": " Rabbit",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BNY"
+  },
+  "669": {
+    "raceName": " Blind Dreamer",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BDR"
+  },
+  "670": {
+    "raceName": " Cazic Thule",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CTH"
+  },
+  "671": {
+    "raceName": " Topiary Lion Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MTL"
+  },
+  "672": {
+    "raceName": " Rot Dog Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MRD"
+  },
+  "673": {
+    "raceName": " Goral Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MGL"
+  },
+  "674": {
+    "raceName": " Selyrah Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MSL"
+  },
+  "675": {
+    "raceName": " Sclera Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MSC"
+  },
+  "676": {
+    "raceName": " Braxi Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MBX"
+  },
+  "677": {
+    "raceName": " Kangon Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MKG"
+  },
+  "678": {
+    "raceName": " Erudite",
+    "male": "ERU",
+    "female": "N/A",
+    "neutral": "N/A"
+  },
+  "679": {
+    "raceName": " Wurm Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MWM"
+  },
+  "680": {
+    "raceName": " Raptor Mount",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MRP"
+  },
+  "681": {
+    "raceName": " Invisible Man",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "INV"
+  },
+  "682": {
+    "raceName": " Whirligig",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MWI"
+  },
+  "683": {
+    "raceName": " Gnomish Balloon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MBL"
+  },
+  "684": {
+    "raceName": " Gnomish Rocket Pack",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MRK"
+  },
+  "685": {
+    "raceName": " Gnomish Hovering Transport",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MHB"
+  },
+  "686": {
+    "raceName": " Selyrah",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SEY"
+  },
+  "687": {
+    "raceName": " Goral",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GR1"
+  },
+  "688": {
+    "raceName": " Braxi",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BRX"
+  },
+  "689": {
+    "raceName": " Kangon",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "KNG"
+  },
+  "690": {
+    "raceName": " Invisible Man",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I23"
+  },
+  "691": {
+    "raceName": " Floating Tower",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B07"
+  },
+  "692": {
+    "raceName": " Explosive Cart",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B08"
+  },
+  "693": {
+    "raceName": " Blimp Ship",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B09"
+  },
+  "694": {
+    "raceName": " Tumbleweed",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I24"
+  },
+  "695": {
+    "raceName": " Alaran",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ALA"
+  },
+  "696": {
+    "raceName": " Swinetor",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SWI"
+  },
+  "697": {
+    "raceName": " Triumvirate",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "TRG"
+  },
+  "698": {
+    "raceName": " Hadal",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HDL"
+  },
+  "699": {
+    "raceName": " Hovering Platform",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "B10"
+  },
+  "700": {
+    "raceName": " Parasitic Scavenger",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PSC"
+  },
+  "701": {
+    "raceName": " Grendlaen",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GRD"
+  },
+  "702": {
+    "raceName": " Ship in a Bottle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I25"
+  },
+  "703": {
+    "raceName": " Alaran Sentry Stone",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I26"
+  },
+  "704": {
+    "raceName": " Dervish",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "SDV"
+  },
+  "705": {
+    "raceName": " Regeneration Pool",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I27"
+  },
+  "706": {
+    "raceName": " Teleportation Stand",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I28"
+  },
+  "707": {
+    "raceName": " Relic Case",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I29"
+  },
+  "708": {
+    "raceName": " Alaran Ghost",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ALG"
+  },
+  "709": {
+    "raceName": " Skystrider",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MPG"
+  },
+  "710": {
+    "raceName": " Water Spout",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I30"
+  },
+  "711": {
+    "raceName": " Aviak Pull Along",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I31"
+  },
+  "712": {
+    "raceName": " Gelatinous Cube",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "GCB"
+  },
+  "713": {
+    "raceName": " Cat",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CAT"
+  },
+  "714": {
+    "raceName": " Elk Head",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "I32"
+  },
+  "715": {
+    "raceName": " Holgresh",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HLG"
+  },
+  "716": {
+    "raceName": " Beetle",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "BTS"
+  },
+  "717": {
+    "raceName": " Vine Maw",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "VNM"
+  },
+  "718": {
+    "raceName": " Ratman",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "CHT"
+  },
+  "719": {
+    "raceName": " Fallen Knight",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "FKN"
+  },
+  "720": {
+    "raceName": " Flying Carpet",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MCP"
+  },
+  "721": {
+    "raceName": " Carrier Hand",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "MRH"
+  },
+  "722": {
+    "raceName": " Akheva",
+    "male": "AHM",
+    "female": "AHF",
+    "neutral": "N/A"
+  },
+  "723": {
+    "raceName": " Servant of Shadow",
+    "male": "SOS",
+    "female": "N/A",
+    "neutral": "N/A"
+  },
+  "724": {
+    "raceName": " Luclin",
+    "male": "N/A",
+    "female": "LUC",
+    "neutral": "N/A"
+  },
+  "725": {
+    "raceName": " Xaric the Unspoken",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "AXA"
+  },
+  "726": {
+    "raceName": " Dervish (Ver. 5)",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "HDV"
+  },
+  "727": {
+    "raceName": " Dervish (Ver. 6)",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "DV6"
+  },
+  "728": {
+    "raceName": " God - Luclin (Ver. 2)",
+    "male": "N/A",
+    "female": "LU2",
+    "neutral": "N/A"
+  },
+  "729": {
+    "raceName": " God - Luclin (Ver. 3)",
+    "male": "N/A",
+    "female": "LU3",
+    "neutral": "N/A"
+  },
+  "730": {
+    "raceName": " Orb",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "ORB"
+  },
+  "731": {
+    "raceName": " God - Luclin (Ver. 4)",
+    "male": "N/A",
+    "female": "LU4",
+    "neutral": "N/A"
+  },
+  "732": {
+    "raceName": " Pegasus",
+    "male": "N/A",
+    "female": "N/A",
+    "neutral": "PG3"
+  },
+  "2253": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2254": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2255": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2256": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2257": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2258": {
+    "raceName": " N/A",
+    "male": "PPOINT",
+    "female": "PPOINT",
+    "neutral": "PPOINT"
+  },
+  "2259": {
+    "raceName": " N/A",
+    "male": "ARR",
+    "female": "ARR",
+    "neutral": "ARR"
+  }
+}
