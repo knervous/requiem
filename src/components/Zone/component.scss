@@ -5,15 +5,18 @@
 
 }
 .btn-row {
-  padding: 5px;
+  padding: 7px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   button {
     margin-right: 10px;
   }
   & > * {
-
     margin-right: 13px;
   }
+}
+
+.react-toast-notifications__container {
+  margin-top: 130px;
 }

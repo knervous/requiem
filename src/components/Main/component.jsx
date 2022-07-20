@@ -58,7 +58,7 @@ const CustomToast = ({ children, ...props }) => {
 
 export const Main = () => {
   return (
-    <ToastProvider components={{ Toast: CustomToast }}>
+    <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
       <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
         <div className="app">
           <LeftDrawer />

@@ -80,8 +80,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const LeftDrawer = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [title, setTitle] = useState('Zone');
-  const [content, setContent] = useState(<ZoneViewer />);
+  const [title, setTitle] = useState('Advanced Map');
+  const [content, setContent] = useState(<Zone />);
   
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -138,10 +138,10 @@ export const LeftDrawer = () => {
           <Divider />
           <List>
             {[
-              ['Character', <AccessibilityIcon />, <Character />],
+              // ['Character', <AccessibilityIcon />, <Character />],
               ['Advanced Map', <HouseIcon />, <Zone />],
               ['Zone Viewer', <HouseIcon />, <ZoneViewer />],
-              ['Group', <GroupIcon />, <Group />],
+              // ['Group', <GroupIcon />, <Group />],
             ].map(([text, icon, content = <div />]) => (
               <ListItem
                 onClick={() => {
