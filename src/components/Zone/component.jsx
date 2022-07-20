@@ -98,7 +98,7 @@ export const Zone = () => {
   const { addToast } = useToasts();
 
   const socket = useMemo(() => {
-    const socket = io('ws://192.168.2.102:4500');
+    const socket = io('wss://192.168.2.102:4500');
     socket.on('activeProcesses', setProcesses);
     socket.on('setSpawns', spawns => {
       setSpawns(spawns); 
