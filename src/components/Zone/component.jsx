@@ -13,18 +13,29 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Slider from '@mui/material/Slider';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
-import { InputLabel, MenuItem, Select, Typography, FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
-
 import {
-  Canvas,
-} from '@react-three/fiber';
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Autocomplete,
+  TextField,
+  InputAdornment
+} from '@mui/material';
+
+import { Canvas } from '@react-three/fiber';
 
 import { CameraControls } from './camera-controls';
 import { RenderedZone, PaperComponent } from './rendered-zone';
@@ -32,7 +43,23 @@ import { Loader } from './loader';
 import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { DesktopMacSharp } from '@mui/icons-material';
+import { supportedZones } from './data';
+
+const supportedZoneOptions = supportedZones.map((zone, id) => ({
+  label: zone,
+  id
+}));
+
+const skyboxOptions = [
+  'forest',
+  'fullmoon',
+  'halflife',
+  'interstellar',
+  'meadow',
+  'nebula',
+  'sand',
+  'space'
+];
 
 const spawnColumns = [
   { field: 'displayedName', headerName: 'Name', width: 200 },
@@ -42,25 +69,26 @@ const spawnColumns = [
     headerName : 'Player Type',
     width      : 150,
     sortable   : false,
-    valueGetter: (params) =>
-      params.row.type === 0 ? 'PC' : params.row.type === 1 ? 'NPC' : 'Corpse',
+    valueGetter: params =>
+      params.row.type === 0 ? 'PC' : params.row.type === 1 ? 'NPC' : 'Corpse'
   },
   {
     field      : 'location',
     headerName : 'Location (X,Y,Z)',
     width      : 150,
     sortable   : false,
-    valueGetter: (params) =>
-        `${params.row.x.toFixed(1)}, ${params.row.y.toFixed(
-          1,
-        )}, ${params.row.z.toFixed(1)}`,
+    valueGetter: params =>
+      `${params.row.x.toFixed(1)}, ${params.row.y.toFixed(
+        1
+      )}, ${params.row.z.toFixed(1)}`
   },
   { field: 'hp', headerName: 'Current HP', width: 150, sortable: false },
-  { field: 'maxHp', headerName: 'Max HP', width: 100, sortable: false },
+  { field: 'maxHp', headerName: 'Max HP', width: 100, sortable: false }
 ];
 
+const zoneViewer = { zoneViewer: true };
+
 export const Zone = () => {
-  const dataGridRef = useRef();
   const zoneRef = useRef();
   const canvasRef = useRef(null);
   const threeRef = useRef(null);
@@ -79,62 +107,92 @@ export const Zone = () => {
   const [maxTargetDisplay, setMaxTargetDisplay] = useState(1000);
   const [fontSize, setFontSize] = useState(13);
   const [cameraFollowMe, setCameraFollowMe] = useState(false);
-  const [showNpcs, setShowNpcs] = useState(true);
+  const [showNpcs, setShowNpcs] = useState(false);
   const [showPoi, setShowPoi] = useState(true);
+  const [skybox, setSkybox] = useState('meadow');
+  const [spawnFilter, setSpawnFilter] = useState('');
 
   const [processes, setProcesses] = useState([]);
   const [pendingRetry, setPendingRetry] = useState(false);
-  const [selectedProcess, setSelectedProcess] = useState(null);
+  const [selectedProcess, setSelectedProcess] = useState(zoneViewer);
   const [zone, setZone] = useState(null);
   const [zoneDetails, setZoneDetails] = useState([]);
-  const [nextDateUpdateCallback, setNextDataUpdateCallback] = useState(null);
   const [spawns, setSpawns] = useState([]);
+  const [selectedZone, setSelectedZone] = useState(null);
   const [character, setCharacter] = useState({});
-  const [filteredSpawns, setFilteredSpawns] = useState(spawns);
   const [myTarget, setMyTarget] = useState('');
   const cameraControls = useRef();
   const retryRef = useRef(false);
-
+  const zoneViewerRef = useRef(true);
   const { addToast } = useToasts();
 
   const socket = useMemo(() => {
-    const socket = io('wss://192.168.2.102:4500');
+    const socket = io('ws://192.168.2.102:4500', { secure: true });
     socket.on('activeProcesses', setProcesses);
     socket.on('setSpawns', spawns => {
-      setSpawns(spawns); 
-      setFilteredSpawns(spawns);
+      if (zoneViewerRef.current) {
+        return;
+      }
+      setSpawns(spawns);
     });
 
     socket.on('spawn', spawns => {
+      if (zoneViewerRef.current) {
+        return;
+      }
       spawns.forEach(spawn => {
-        addToast(<><span>Mob spawned: {spawn.displayedName}</span><Button onClick={() => {
-          setMyTarget(spawn); 
-        }}>Jump to Target</Button></>, { appearance: 'info' });
+        addToast(
+          <>
+            <span>Mob spawned: {spawn.displayedName}</span>
+            <Button
+              onClick={() => {
+                setMyTarget(spawn);
+              }}
+            >
+              Jump to Target
+            </Button>
+          </>,
+          { appearance: 'info' }
+        );
       });
-      
     });
     socket.on('despawn', despawns => {
+      if (zoneViewerRef.current) {
+        return;
+      }
       despawns.forEach(spawn => {
-        addToast(`Mob Despawned: ${spawn.displayedName}`, { appearance: 'info' });
+        addToast(`Mob Despawned: ${spawn.displayedName}`, {
+          appearance: 'info'
+        });
       });
     });
     socket.on('charInfo', ({ character, zone }) => {
+      if (zoneViewerRef.current) {
+        return;
+      }
       setCharacter(character);
       setZone(zone);
     });
     socket.on('lostProcess', async processId => {
-      console.log('Got pid', processId);
+      if (zoneViewerRef.current) {
+        return;
+      }
       setSelectedProcess(null);
       setPendingRetry(true);
       let retries = 0;
       while (retries < 10 && retryRef.current === false) {
         await new Promise(res => setTimeout(res, 3000));
-        const newProcess = await new Promise(res => socket.emit('checkProcess', processId, res));
-        
-        console.log('New process', newProcess);
+        const newProcess = await new Promise(res =>
+          socket.emit('checkProcess', processId, res)
+        );
+
         if (newProcess) {
           setSelectedProcess(newProcess);
-          setProcesses(processes => processes.map(p => p.processId === newProcess.processId ? newProcess : p));
+          setProcesses(processes =>
+            processes.map(p =>
+              p.processId === newProcess.processId ? newProcess : p
+            )
+          );
           break;
         }
         retries++;
@@ -143,7 +201,7 @@ export const Zone = () => {
       setPendingRetry(false);
     });
     return socket;
-  }, []);
+  }, []) // eslint-disable-line
 
   const handleRefreshProcess = useCallback(() => {
     socket.emit('refreshProcesses');
@@ -151,67 +209,68 @@ export const Zone = () => {
     retryRef.current = true;
   }, [socket]);
 
-  const onFilterModelChange = useCallback(
-    ({ items }) => {
-      if (!items.every((i) => i.value === undefined)) {
-        setNextDataUpdateCallback(() => ({ filter: { visibleRowsLookup } }) => {
-          setFilteredSpawns(
-            Object.entries(visibleRowsLookup)
-              .filter(([_, visible]) => visible)
-              .map(([visibleRow]) =>
-                spawns.find((s) => +s?.id === +visibleRow),
-              ),
-          );
-          setNextDataUpdateCallback(null);
-        });
-      } else {
-        setFilteredSpawns(spawns);
-      }
-    },
-    [spawns],
-  );
-
-  useEffect(() => {
-    setFilteredSpawns((filteredSpawns) =>
-      filteredSpawns.map((f) => spawns.find((s) => s?.id === f?.id)),
-    );
-  }, [spawns, setFilteredSpawns]);
-
   useEffect(() => {
     if (!selectedProcess) {
       return;
     }
+    if (selectedProcess.zoneViewer) {
+      zoneViewerRef.current = true;
+      setZoneDetails([]);
+      setSpawns([]);
+      setCharacter(null);
+    } else {
+      zoneViewerRef.current = false;
+    }
+    if (canvasRef.current) {
+      const context = canvasRef.current.getContext('2d');
+      context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
     (async () => {
-      const result = await fetch(`/maps/${selectedProcess.zone.shortName}.txt`).then(r => r.text()).catch(() => null);
-      if (result) {
-        // P 636.0752, -299.8139, -0.9990,  0, 0, 0,  3,  Moreo_(Spells)
-        const zoneDetails = [];
-        for (const line of result.split('\n')) {
-          if (line.startsWith('P')) {
-            const [x, y, z, _1, _2, _3, _4, description] = line.slice(1).split(',').map(t => t.trim());
-            zoneDetails.push({ x: +x * -1, y: +y * -1, z: +z, description });
-          }
-        }
-        setZoneDetails(zoneDetails);
-      }
+      const zoneDetails = await import('../../common/zoneDetails.json');
+      setZoneDetails(
+        zoneDetails[
+          selectedProcess.zoneViewer
+            ? selectedZone
+            : selectedProcess.zone.shortName
+        ] ?? []
+      );
     })();
-    
-    socket.emit('selectProcess', selectedProcess.processId);
-  }, [selectedProcess, socket]);
+    if (!selectedProcess.zoneViewer) {
+      socket.emit('selectProcess', selectedProcess.processId);
+    }
+  }, [selectedProcess, socket, selectedZone]);
+
+  const filteredSpawns = useMemo(() => {
+    return selectedProcess?.zoneViewer
+      ? []
+      : showNpcs
+        ? spawns.filter(s => {
+          if (spawnFilter.length) {
+            return s?.displayedName?.includes?.(spawnFilter);
+          }
+          return Boolean(s);
+        })
+        : [];
+  }, [selectedProcess, showNpcs, spawns, spawnFilter]);
+
+  const zoneName = useMemo(
+    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
+    [selectedProcess, selectedZone, zone]
+  );
 
   return (
-    <Paper className="zone-container" elevation={1}>
-      <Card className="zone-header" variant="outlined">
-        <CardContent className="zone-header">
-          <div className="btn-row">
-            <Button variant="outlined" onClick={handleSearchOpen}>
+    <Paper className='zone-container' elevation={1}>
+      <Card className='zone-header' variant='outlined'>
+        <CardContent className='zone-header'>
+          <div className='btn-row'>
+            <Button variant='outlined' onClick={handleSearchOpen}>
               Spawn Search
             </Button>
-            <Button variant="outlined" onClick={handleOptionsOpen}>
+            <Button variant='outlined' onClick={handleOptionsOpen}>
               Options
             </Button>
             <Button
-              variant="outlined"
+              variant='outlined'
               onClick={() => {
                 if (zoneRef.current) {
                   zoneRef.current.targetMe();
@@ -220,25 +279,89 @@ export const Zone = () => {
             >
               Jump to Me
             </Button>
-            <Button variant="outlined" onClick={() => {
-              if (zoneRef.current) {
-                zoneRef.current.followMe(!cameraFollowMe);
-                setCameraFollowMe(!cameraFollowMe);
-              }
-            }}>
+            <Button
+              variant='outlined'
+              onClick={() => {
+                if (zoneRef.current) {
+                  zoneRef.current.followMe(!cameraFollowMe);
+                  setCameraFollowMe(!cameraFollowMe);
+                }
+              }}
+            >
               {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
-            </Button>
-            <Button variant="outlined" onClick={handleRefreshProcess}>
-              Refresh Processes
             </Button>
             <div style={{ maxWidth: 300, minWidth: 300 }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{pendingRetry ? 'Attempting Reconnect...' : 'Process'}</InputLabel>
-                <Select disabled={pendingRetry} value={selectedProcess} label="Process" displayEmpty onChange={({ target: { value } }) => setSelectedProcess(value)}>
-                  {processes.map(p => <MenuItem value={p}>{p.zone.characterName} - {p.zone.longName}</MenuItem>)}
+                <InputLabel id='demo-simple-select-label'>
+                  {pendingRetry ? 'Attempting Reconnect...' : 'Process'}
+                </InputLabel>
+                <Select
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <RefreshIcon sx={{ cursor: 'pointer' }} onClick={() => {
+                        handleRefreshProcess();
+                      }} />
+                    </InputAdornment>
+                  }
+                  sx={{ height: 40 }}
+                  disabled={pendingRetry}
+                  value={selectedProcess ?? ''}
+                  label='Process'
+                  displayEmpty
+                  onChange={({ target: { value } }) =>
+                    setSelectedProcess(value)
+                  }
+                >
+                  {processes.concat(zoneViewer).map(p =>
+                    p.zoneViewer ? (
+                      <MenuItem value={p}>Zone Viewer</MenuItem>
+                    ) : (
+                      <MenuItem value={p}>
+                        {p.zone.characterName} - {p.zone.longName}
+                      </MenuItem>
+                    )
+                  )}
                 </Select>
               </FormControl>
             </div>
+            {selectedProcess?.zoneViewer && (
+              <Autocomplete
+                blurOnSelect
+                disablePortal
+                onChange={(e_, { label = null } = {}) => {
+                  if (label) {
+                    setSelectedZone(null);
+                    setTimeout(() => {
+                      setSelectedZone(label);
+                    }, 1);
+                  }
+                }}
+                id='combo-box-demo'
+                options={supportedZoneOptions}
+                sx={{ width: 300 }}
+                size='small'
+                renderInput={params => (
+                  <TextField
+                    sx={{ height: 38 }}
+                    {...params}
+                    label='Zone'
+                    value={selectedZone}
+                  />
+                )}
+              />
+            )}
+            {
+              spawns.length ? 
+                <TextField
+                  size="small"
+                  onChange={({ target: { value } }) => setSpawnFilter(value)}
+                  label='Spawn Filter'
+                  value={spawnFilter}
+                />
+              
+              
+                : null
+            }
           </div>
 
           {/* Search Dialog */}
@@ -246,9 +369,9 @@ export const Zone = () => {
             open={searchOpen}
             onClose={handleSearchClose}
             PaperComponent={PaperComponent}
-            aria-labelledby="draggable-dialog-title"
+            aria-labelledby='draggable-dialog-title'
           >
-            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+            <DialogTitle style={{ cursor: 'move' }} id='draggable-dialog-title'>
               Spawn Search and Filter
             </DialogTitle>
             <DialogContent>
@@ -257,17 +380,8 @@ export const Zone = () => {
                   onRowClick={({ row }) => {
                     setMyTarget(row);
                   }}
-                  onFilterModelChange={onFilterModelChange}
-                  onStateChange={nextDateUpdateCallback}
-                  ref={dataGridRef}
                   columns={spawnColumns}
                   rows={spawns}
-                  components={{
-                    Toolbar: GridToolbar,
-                  }}
-                  componentProps={{
-                    toolbar: { className: 'myclassname' }
-                  }}
                 />
               </div>
             </DialogContent>
@@ -283,45 +397,79 @@ export const Zone = () => {
             open={optionsOpen}
             onClose={handleOptionsClose}
             PaperComponent={PaperComponent}
-            aria-labelledby="draggable-dialog-title"
+            aria-labelledby='draggable-dialog-title'
           >
-            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+            <DialogTitle style={{ cursor: 'move' }} id='draggable-dialog-title'>
               Options
             </DialogTitle>
             <DialogContent>
               <div style={{ height: 400, width: '100%' }}>
                 <Typography
                   sx={{ fontSize: 14 }}
-                  color="text.secondary"
+                  color='text.secondary'
                   gutterBottom
                 >
                   Max Distance for Spawn Name: {maxTargetDisplay}
                 </Typography>
                 <Slider
                   value={maxTargetDisplay}
-                  onChange={(e) => setMaxTargetDisplay(+e.target.value)}
+                  onChange={e => setMaxTargetDisplay(+e.target.value)}
                   step={10}
                   min={0}
                   max={5000}
                 />
                 <Typography
                   sx={{ fontSize: 14 }}
-                  color="text.secondary"
+                  color='text.secondary'
                   gutterBottom
                 >
                   Font Size: {fontSize}px
                 </Typography>
                 <Slider
                   value={fontSize}
-                  onChange={(e) => setFontSize(+e.target.value)}
+                  onChange={e => setFontSize(+e.target.value)}
                   step={1}
                   min={5}
                   max={25}
                 />
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox checked={showNpcs} onChange={({ target: { checked } }) => setShowNpcs(checked)} />} label="Show NPCs" />
-                  <FormControlLabel control={<Checkbox checked={showPoi} onChange={({ target: { checked } }) => setShowPoi(checked)} />} label="Show points of interest" />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showNpcs}
+                        onChange={({ target: { checked } }) =>
+                          setShowNpcs(checked)
+                        }
+                      />
+                    }
+                    label='Show NPCs'
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showPoi}
+                        onChange={({ target: { checked } }) =>
+                          setShowPoi(checked)
+                        }
+                      />
+                    }
+                    label='Show points of interest'
+                  />
                 </FormGroup>
+                <FormControl sx={{ marginTop: 1 }} fullWidth>
+                  <InputLabel id='demo-simple-select-label'>Skybox</InputLabel>
+                  <Select
+                    disabled={pendingRetry}
+                    value={skybox ?? ''}
+                    label='Skybox'
+                    displayEmpty
+                    onChange={({ target: { value } }) => setSkybox(value)}
+                  >
+                    {skyboxOptions.map(p => (
+                      <MenuItem value={p}>{p}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </div>
             </DialogContent>
             <DialogActions>
@@ -330,24 +478,24 @@ export const Zone = () => {
               </Button>
             </DialogActions>
           </Dialog>
-
           <Canvas ref={threeRef}>
             {/* <SkyBox /> */}
             <CameraControls controls={cameraControls} ref={cameraControls} />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            {selectedProcess && zone && (
+            {selectedProcess && zoneName && (
               <Suspense fallback={<Loader />}>
                 <RenderedZone
                   zoneDetails={showPoi ? zoneDetails : []}
-                  character={character}
+                  character={selectedProcess?.zoneViewer ? null : character}
                   ref={zoneRef}
                   maxTargetDisplay={maxTargetDisplay}
-                  spawns={showNpcs ? filteredSpawns.filter(Boolean) : []}
-                  myTarget={myTarget}
+                  spawns={filteredSpawns}
+                  myTarget={selectedProcess?.zoneViewer ? null : myTarget}
                   setMyTarget={setMyTarget}
                   controls={cameraControls}
-                  zoneName={zone.shortName}
+                  zoneName={zoneName}
+                  skybox={skybox}
                   canvasRef={canvasRef}
                   fontSize={fontSize}
                 />
@@ -361,13 +509,13 @@ export const Zone = () => {
                   position     : 'absolute',
                   top          : 0,
                   left         : 0,
-                  pointerEvents: 'none',
+                  pointerEvents: 'none'
                 }}
                 width={threeRef.current.width}
                 height={threeRef.current.height}
                 ref={canvasRef}
               ></canvas>,
-              threeRef.current.parentNode,
+              threeRef.current.parentNode
             )}
         </CardContent>
         <CardActions></CardActions>

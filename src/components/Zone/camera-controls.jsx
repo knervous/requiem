@@ -1,11 +1,13 @@
 
 import React, {
-  forwardRef,
+  forwardRef, useEffect, useState,
 } from 'react';
 import {
   useFrame,
   useThree,
 } from '@react-three/fiber';
+import * as THREE from 'three';
+
 import { OrbitControls } from '@react-three/drei';
 
 export const CameraControls = forwardRef(({ controls }, ref) => {
@@ -18,7 +20,6 @@ export const CameraControls = forwardRef(({ controls }, ref) => {
   } = useThree();
   
   // Ref to the controls, so that we can update them on every frame using useFrame
-  
   useFrame((state) => {
     state.camera.far = 100000;
     state.camera.near = 0.1;

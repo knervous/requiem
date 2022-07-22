@@ -8,6 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -22,7 +23,6 @@ import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import GroupIcon from '@mui/icons-material/Group';
 import { Character } from '../Character/component';
 import { Zone } from '../Zone/component';
-import { ZoneViewer } from '../ZoneViewer/component';
 import { Group } from '../Group/component';
 
 
@@ -138,16 +138,16 @@ export const LeftDrawer = () => {
           <Divider />
           <List>
             {[
-              // ['Character', <AccessibilityIcon />, <Character />],
-              ['Advanced Map', <HouseIcon />, <Zone />],
-              ['Zone Viewer', <HouseIcon />, <ZoneViewer />],
-              // ['Group', <GroupIcon />, <Group />],
-            ].map(([text, icon, content = <div />]) => (
+              ['Character', <AccessibilityIcon />, Character, true],
+              ['Advanced Map', <HouseIcon />, Zone, false],
+              ['Group', <GroupIcon />, Group, true],
+            ].map(([text, icon, Content, disabled]) => (
               <ListItem
+                disabled={disabled}
                 onClick={() => {
                   setTitle(text);
                   setOpen(false);
-                  setContent(content);
+                  setContent(<Content />);
                 }}
                 button
                 key={text}
