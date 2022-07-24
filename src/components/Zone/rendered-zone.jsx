@@ -49,6 +49,23 @@ const useSkybox = (path) => {
   return null;
 };
 
+const classes = {
+  1 : 'Warrior',
+  2 : 'Cleric',
+  3 : 'Paladin',
+  4 : 'Ranger',
+  5 : 'Shadowknight', 
+  6 : 'Druid',
+  7 : 'Monk',
+  8 : 'Bard',
+  9 : 'Rogue',
+  10: 'Shaman',
+  11: 'Necromancer',
+  12: 'Wizard',
+  13: 'Mage',
+  14: 'Enchanter'
+};
+
 export const RenderedZone = forwardRef(
   (
     {
@@ -62,7 +79,8 @@ export const RenderedZone = forwardRef(
       maxTargetDisplay = 1000,
       fontSize = 15,
       onLoaded = () => {},
-      skybox = 'space'
+      skybox = 'space',
+      charColor = 'white'
     },
     forwardRef,
   ) => {
@@ -153,7 +171,7 @@ export const RenderedZone = forwardRef(
         ctx.font = isTarget
           ? `italic bold ${fontSize + 3}px Arial`
           : `italic ${fontSize}px Arial`;
-        const level = `Level ${spawn.level}`;
+        const level = `Level ${spawn.level} ${classes[spawn.class]}`;
 
         ctx.fillText(
           level,
@@ -228,8 +246,7 @@ export const RenderedZone = forwardRef(
         if (side === -1) {
           ctx.textAlign = 'end';
         }
-
-        ctx.fillStyle = '#FFFFFF';
+        ctx.fillStyle = charColor?.css?.backgroundColor;
         ctx.font = `bold ${fontSize + 3}px Arial`;
         ctx.textAlign = 'center';
         const name = `${character.displayedName} (Me)`;
@@ -246,9 +263,8 @@ export const RenderedZone = forwardRef(
           screen.y - 64 + 6,
         );
 
-        ctx.fillStyle = '#FFFFFF';
         ctx.font = `italic bold ${fontSize + 3}px Arial`;
-        const level = `Level ${character.level}`;
+        const level = `Level ${character.level}  ${classes[character.class]}`;
         ctx.fillText(
           level,
           screen.x -
@@ -403,7 +419,7 @@ export const RenderedZone = forwardRef(
               intensity={5.5}
               angle={0.3}
               penumbra={0.8}
-              color="white"
+              color={'white'}
               target={characterRef.current}
               position={[character.y * -1, character.z + 145, character.x]}
             />

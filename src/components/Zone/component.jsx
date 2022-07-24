@@ -6,7 +6,7 @@ import React, {
   useEffect
 } from 'react';
 import ReactDOM from 'react-dom';
-
+import { ColorPicker } from 'mui-color';
 import { io } from 'socket.io-client';
 
 import Card from '@mui/material/Card';
@@ -61,6 +61,8 @@ const skyboxOptions = [
   'space'
 ];
 
+
+
 const spawnColumns = [
   { field: 'displayedName', headerName: 'Name', width: 200 },
   { field: 'level', headerName: 'Level', type: 'number', width: 100 },
@@ -104,13 +106,27 @@ export const Zone = () => {
   const handleOptionsClose = () => setOptionsOpen(false);
 
   // Options
-  const [maxTargetDisplay, setMaxTargetDisplay] = useState(1000);
-  const [fontSize, setFontSize] = useState(13);
-  const [cameraFollowMe, setCameraFollowMe] = useState(false);
-  const [showNpcs, setShowNpcs] = useState(false);
-  const [showPoi, setShowPoi] = useState(true);
-  const [skybox, setSkybox] = useState('meadow');
   const [spawnFilter, setSpawnFilter] = useState('');
+  const [{ maxTargetDisplay, fontSize, cameraFollowMe, showNpcs, showGroup, showPcs, showPoi, skybox, charColor, groupColor }, setOptions] = useState(JSON.parse(localStorage.getItem('options') ?? JSON.stringify({
+    maxTargetDisplay: 1000,
+    fontSize        : 13,
+    cameraFollowMe  : false,
+    showNpcs        : true,
+    showPcs         : true,
+    showPoi         : true,
+    showGroup       : true,
+    skybox          : 'meadow',
+    charColor       : { css: { backgroundColor: '#FFFFFF' } },
+    groupColor      : { css: { backgroundColor: '#FFFFFF' } }
+  })));
+
+  const setOption = (key, value) => {
+    setOptions(options => { 
+      const newOptions = { ...options, [key]: value };
+      localStorage.setItem('options', JSON.stringify(newOptions));
+      return newOptions;
+    });
+  };
 
   const [processes, setProcesses] = useState([]);
   const [pendingRetry, setPendingRetry] = useState(false);
@@ -243,33 +259,45 @@ export const Zone = () => {
   const filteredSpawns = useMemo(() => {
     return selectedProcess?.zoneViewer
       ? []
-      : showNpcs
-        ? spawns.filter(s => {
-          if (spawnFilter.length) {
-            return s?.displayedName?.includes?.(spawnFilter);
-          }
-          return Boolean(s);
-        })
-        : [];
-  }, [selectedProcess, showNpcs, spawns, spawnFilter]);
+      : spawns.filter(s => {
+        let ret = Boolean(s);
+        if (spawnFilter.length) {
+          ret = ret && s?.displayedName?.includes?.(spawnFilter);
+        }
+        if (showNpcs) {
+          ret = ret && showPcs ? [1, 0].includes(s.type) : s.type === 1;
+        }
+        if (showPcs) {
+          ret = ret && showNpcs ? [1, 0].includes(s.type) : s.type === 0;
+        }
+        if (showGroup) {
+
+        }
+        return ret;
+      });
+  }, [selectedProcess, showNpcs, spawns, spawnFilter, showGroup, showPcs]);
 
   const zoneName = useMemo(
     () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
     [selectedProcess, selectedZone, zone]
   );
+  const isHooked = true;// useMemo(() => !!selectedProcess?.zone?.shortName, [selectedProcess]);
+
+
 
   return (
     <Paper className='zone-container' elevation={1}>
       <Card className='zone-header' variant='outlined'>
         <CardContent className='zone-header'>
           <div className='btn-row'>
-            <Button variant='outlined' onClick={handleSearchOpen}>
+            {isHooked && <Button variant='outlined' onClick={handleSearchOpen}>
               Spawn Search
-            </Button>
+            </Button>}
+            
             <Button variant='outlined' onClick={handleOptionsOpen}>
               Options
             </Button>
-            <Button
+            {isHooked && <><Button
               variant='outlined'
               onClick={() => {
                 if (zoneRef.current) {
@@ -284,12 +312,13 @@ export const Zone = () => {
               onClick={() => {
                 if (zoneRef.current) {
                   zoneRef.current.followMe(!cameraFollowMe);
-                  setCameraFollowMe(!cameraFollowMe);
+                  setOption('cameraFollowMe', !cameraFollowMe);
                 }
               }}
             >
               {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
-            </Button>
+            </Button></>}
+            
             <div style={{ maxWidth: 300, minWidth: 300 }}>
               <FormControl fullWidth>
                 <InputLabel id='demo-simple-select-label'>
@@ -352,13 +381,15 @@ export const Zone = () => {
             )}
             {
               spawns.length ? 
-                <TextField
-                  size="small"
-                  onChange={({ target: { value } }) => setSpawnFilter(value)}
-                  label='Spawn Filter'
-                  value={spawnFilter}
-                />
-              
+                <>
+                  <TextField
+                    size="small"
+                    onChange={({ target: { value } }) => setSpawnFilter(value)}
+                    label='Spawn Filter'
+                    value={spawnFilter}
+                  />
+                  <InputLabel style={{ marginLeft: 5 }} id='demo-simple-select-label'>Showing {filteredSpawns.length} of {spawns.length} Spawns</InputLabel>
+                </>
               
                 : null
             }
@@ -404,20 +435,23 @@ export const Zone = () => {
             </DialogTitle>
             <DialogContent>
               <div style={{ height: 400, width: '100%' }}>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color='text.secondary'
-                  gutterBottom
-                >
+                {isHooked && <>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color='text.secondary'
+                    gutterBottom
+                  >
                   Max Distance for Spawn Name: {maxTargetDisplay}
-                </Typography>
-                <Slider
-                  value={maxTargetDisplay}
-                  onChange={e => setMaxTargetDisplay(+e.target.value)}
-                  step={10}
-                  min={0}
-                  max={5000}
-                />
+                  </Typography>
+                  <Slider
+                    value={maxTargetDisplay}
+                    onChange={e => setOption('maxTargetDisplay', +e.target.value)}
+                    step={10}
+                    min={0}
+                    max={5000}
+                  />
+                </>}
+                
                 <Typography
                   sx={{ fontSize: 14 }}
                   color='text.secondary'
@@ -427,29 +461,55 @@ export const Zone = () => {
                 </Typography>
                 <Slider
                   value={fontSize}
-                  onChange={e => setFontSize(+e.target.value)}
+                  onChange={e => setOption('fontSize', +e.target.value)}
                   step={1}
                   min={5}
                   max={25}
                 />
                 <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={showNpcs}
-                        onChange={({ target: { checked } }) =>
-                          setShowNpcs(checked)
-                        }
-                      />
-                    }
-                    label='Show NPCs'
-                  />
+                  {isHooked && <>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={showNpcs}
+                          onChange={({ target: { checked } }) =>
+                            setOption('showNpcs', checked)
+                          }
+                        />
+                      }
+                      label='Show NPCs'
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={showPcs}
+                          onChange={({ target: { checked } }) =>
+                            setOption('showPcs', checked)
+                          }
+                        />
+                      }
+                      label='Show PCs'
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={showGroup}
+                          onChange={({ target: { checked } }) =>
+                            setOption('showGroup', checked)
+                          }
+                        />
+                      }
+                      label='Show Group Members'
+                    />
+                  
+                  </>}
+                  
                   <FormControlLabel
                     control={
                       <Checkbox
                         checked={showPoi}
                         onChange={({ target: { checked } }) =>
-                          setShowPoi(checked)
+                          setOption('showPoi', checked)
                         }
                       />
                     }
@@ -463,13 +523,28 @@ export const Zone = () => {
                     value={skybox ?? ''}
                     label='Skybox'
                     displayEmpty
-                    onChange={({ target: { value } }) => setSkybox(value)}
+                    onChange={({ target: { value } }) => setOption('skybox', value)}
                   >
                     {skyboxOptions.map(p => (
                       <MenuItem value={p}>{p}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+
+                {isHooked && <div style={{ marginTop: 10 }}>
+                  <InputLabel id='demo-simple-select-label'>Character Text Color</InputLabel>
+                  <ColorPicker
+                    hideTextFIeld
+                    value={charColor ?? '#FFFFFF'}
+                    onChange={color => setOption('charColor', color)}
+                  />
+                  <InputLabel id='demo-simple-select-label'>Group Member Text Color</InputLabel>
+                  <ColorPicker
+                    hideTextFIeld
+                    value={groupColor ?? '#FFFFFF'}
+                    onChange={color => setOption('groupColor', color)}
+                  />
+                </div>}
               </div>
             </DialogContent>
             <DialogActions>
@@ -496,6 +571,8 @@ export const Zone = () => {
                   controls={cameraControls}
                   zoneName={zoneName}
                   skybox={skybox}
+                  charColor={charColor}
+                  groupColor={groupColor}
                   canvasRef={canvasRef}
                   fontSize={fontSize}
                 />
