@@ -281,7 +281,7 @@ export const Zone = () => {
     () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
     [selectedProcess, selectedZone, zone]
   );
-  const isHooked = true;// useMemo(() => !!selectedProcess?.zone?.shortName, [selectedProcess]);
+  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [selectedProcess]);
 
 
 
