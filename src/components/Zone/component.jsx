@@ -3,7 +3,7 @@ import React, {
   useRef,
   Suspense,
   useCallback,
-  useEffect
+  useEffect,
 } from 'react';
 import ReactDOM from 'react-dom';
 import { ColorPicker } from 'mui-color';
@@ -32,7 +32,7 @@ import {
   Checkbox,
   Autocomplete,
   TextField,
-  InputAdornment
+  InputAdornment,
 } from '@mui/material';
 
 import { Canvas } from '@react-three/fiber';
@@ -44,10 +44,14 @@ import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { supportedZones } from './data';
+import { findAllByDisplayValue } from '@testing-library/react';
+
+const processMode =
+  new URLSearchParams(window.location.search).get('mode') === 'process';
 
 const supportedZoneOptions = supportedZones.map((zone, id) => ({
   label: zone,
-  id
+  id,
 }));
 
 const skyboxOptions = [
@@ -58,10 +62,8 @@ const skyboxOptions = [
   'meadow',
   'nebula',
   'sand',
-  'space'
+  'space',
 ];
-
-
 
 const spawnColumns = [
   { field: 'displayedName', headerName: 'Name', width: 200 },
@@ -71,21 +73,21 @@ const spawnColumns = [
     headerName : 'Player Type',
     width      : 150,
     sortable   : false,
-    valueGetter: params =>
-      params.row.type === 0 ? 'PC' : params.row.type === 1 ? 'NPC' : 'Corpse'
+    valueGetter: (params) =>
+      params.row.type === 0 ? 'PC' : params.row.type === 1 ? 'NPC' : 'Corpse',
   },
   {
     field      : 'location',
-    headerName : 'Location (X,Y,Z)',
+    headerName : 'Location (Y,X,Z)',
     width      : 150,
     sortable   : false,
-    valueGetter: params =>
-      `${params.row.x.toFixed(1)}, ${params.row.y.toFixed(
-        1
-      )}, ${params.row.z.toFixed(1)}`
+    valueGetter: (params) =>
+      `${params.row.y.toFixed(1)}, ${params.row.x.toFixed(
+        1,
+      )}, ${params.row.z.toFixed(1)}`,
   },
-  { field: 'hp', headerName: 'Current HP', width: 150, sortable: false },
-  { field: 'maxHp', headerName: 'Max HP', width: 100, sortable: false }
+  { field: 'hp', headerName: 'Current HP%', width: 150, sortable: false },
+  { field: 'maxHp', headerName: 'Max HP%', width: 100, sortable: false },
 ];
 
 const zoneViewer = { zoneViewer: true };
@@ -100,6 +102,10 @@ export const Zone = () => {
   const handleSearchOpen = () => setSearchOpen(true);
   const handleSearchClose = () => setSearchOpen(false);
 
+  // Connection Dialog
+  const [connectionOptionsOpen, setConnectionOptionsOpen] = useState(false);
+  const handleConnectionOptionsOpen = () => setConnectionOptionsOpen(true);
+
   // Options Dialog
   const [optionsOpen, setOptionsOpen] = useState(false);
   const handleOptionsOpen = () => setOptionsOpen(true);
@@ -107,21 +113,46 @@ export const Zone = () => {
 
   // Options
   const [spawnFilter, setSpawnFilter] = useState('');
-  const [{ maxTargetDisplay, fontSize, cameraFollowMe, showNpcs, showGroup, showPcs, showPoi, skybox, charColor, groupColor }, setOptions] = useState(JSON.parse(localStorage.getItem('options') ?? JSON.stringify({
-    maxTargetDisplay: 1000,
-    fontSize        : 13,
-    cameraFollowMe  : false,
-    showNpcs        : true,
-    showPcs         : true,
-    showPoi         : true,
-    showGroup       : true,
-    skybox          : 'meadow',
-    charColor       : { css: { backgroundColor: '#FFFFFF' } },
-    groupColor      : { css: { backgroundColor: '#FFFFFF' } }
-  })));
+  const [options, setOptions] = useState(
+    JSON.parse(
+      localStorage.getItem('options') ??
+        JSON.stringify({
+          maxTargetDisplay: 1000,
+          maxPoiDisplay   : 3000,
+          fontSize        : 13,
+          cameraFollowMe  : false,
+          showNpcs        : true,
+          showPcs         : true,
+          showPoi         : true,
+          showPoiLoc      : true,
+          showGroup       : true,
+          skybox          : 'interstellar',
+          charColor       : { css: { backgroundColor: '#FFFFFF' } },
+          groupColor      : { css: { backgroundColor: '#FFFFFF' } },
+          address         : 'https://localhost:4500',
+          token           : ''
+        }),
+    ),
+  );
+  const {
+    maxTargetDisplay,
+    maxPoiDisplay,
+    fontSize,
+    cameraFollowMe,
+    showNpcs,
+    showGroup,
+    showPcs,
+    showPoi,
+    showPoiLoc,
+    skybox,
+    charColor,
+    groupColor,
+    address,
+    token
+  } = options;
 
   const setOption = (key, value) => {
-    setOptions(options => { 
+    setOptions((options) => {
       const newOptions = { ...options, [key]: value };
       localStorage.setItem('options', JSON.stringify(newOptions));
       return newOptions;
@@ -129,34 +160,67 @@ export const Zone = () => {
   };
 
   const [processes, setProcesses] = useState([]);
+  const [socket, setSocket] = useState(null);
   const [pendingRetry, setPendingRetry] = useState(false);
   const [selectedProcess, setSelectedProcess] = useState(zoneViewer);
   const [zone, setZone] = useState(null);
   const [zoneDetails, setZoneDetails] = useState([]);
   const [spawns, setSpawns] = useState([]);
-  const [selectedZone, setSelectedZone] = useState(null);
+  const [selectedZone, setSelectedZone] = useState('airplane');
   const [character, setCharacter] = useState({});
+  const [groupMembers, setGroupMembers] = useState([]);
   const [myTarget, setMyTarget] = useState('');
   const cameraControls = useRef();
   const retryRef = useRef(false);
   const zoneViewerRef = useRef(true);
   const { addToast } = useToasts();
 
-  const socket = useMemo(() => {
-    const socket = io('ws://192.168.2.102:4500', { secure: true });
-    socket.on('activeProcesses', setProcesses);
-    socket.on('setSpawns', spawns => {
+  const doConnect = async () => {
+    if (socket) {
+      socket.disconnect();
+    }
+    setSocket(null);
+    let newSocket;
+    try {
+      newSocket = await new Promise((res, rej) => {
+        const socket = io(address, { secure: true });
+        socket.on('connect_failed', rej);
+        socket.on('connect', () => res(socket));
+      });
+    } catch (e) {
+      console.warn('Socket connection failed', e);
+      addToast(`Could not connect to ${address}`, {
+        appearance: 'error',
+      });
+      setSocket(null);
+      return;
+    }
+    const validationInfo = await new Promise(res => newSocket.emit('validate', token, res),);
+    if (validationInfo.validated) {
+      addToast(`Successfully Connected to ${address}`, {
+        appearance: 'info',
+      });
+    } else {
+      addToast('Invalid or expired token supplied', {
+        appearance: 'error',
+      });
+      newSocket.disconnect();
+      return;
+    }
+    
+    newSocket.on('activeProcesses', setProcesses);
+    newSocket.on('setSpawns', (spawns) => {
       if (zoneViewerRef.current) {
         return;
       }
       setSpawns(spawns);
     });
 
-    socket.on('spawn', spawns => {
+    newSocket.on('spawn', (spawns) => {
       if (zoneViewerRef.current) {
         return;
       }
-      spawns.forEach(spawn => {
+      spawns.forEach((spawn) => {
         addToast(
           <>
             <span>Mob spawned: {spawn.displayedName}</span>
@@ -168,28 +232,29 @@ export const Zone = () => {
               Jump to Target
             </Button>
           </>,
-          { appearance: 'info' }
+          { appearance: 'info' },
         );
       });
     });
-    socket.on('despawn', despawns => {
+    newSocket.on('despawn', (despawns) => {
       if (zoneViewerRef.current) {
         return;
       }
-      despawns.forEach(spawn => {
+      despawns.forEach((spawn) => {
         addToast(`Mob Despawned: ${spawn.displayedName}`, {
-          appearance: 'info'
+          appearance: 'info',
         });
       });
     });
-    socket.on('charInfo', ({ character, zone }) => {
+    newSocket.on('charInfo', ({ character, zone, groupMembers }) => {
       if (zoneViewerRef.current) {
         return;
       }
       setCharacter(character);
+      setGroupMembers(groupMembers);
       setZone(zone);
     });
-    socket.on('lostProcess', async processId => {
+    newSocket.on('lostProcess', async (processId) => {
       if (zoneViewerRef.current) {
         return;
       }
@@ -197,17 +262,17 @@ export const Zone = () => {
       setPendingRetry(true);
       let retries = 0;
       while (retries < 10 && retryRef.current === false) {
-        await new Promise(res => setTimeout(res, 3000));
-        const newProcess = await new Promise(res =>
-          socket.emit('checkProcess', processId, res)
+        await new Promise((res) => setTimeout(res, 3000));
+        const newProcess = await new Promise((res) =>
+          newSocket.emit('checkProcess', processId, res),
         );
 
         if (newProcess) {
           setSelectedProcess(newProcess);
-          setProcesses(processes =>
-            processes.map(p =>
-              p.processId === newProcess.processId ? newProcess : p
-            )
+          setProcesses((processes) =>
+            processes.map((p) =>
+              p.processId === newProcess.processId ? newProcess : p,
+            ),
           );
           break;
         }
@@ -216,10 +281,14 @@ export const Zone = () => {
       retryRef.current = false;
       setPendingRetry(false);
     });
-    return socket;
-  }, []) // eslint-disable-line
+    setSocket(newSocket);
+    setConnectionOptionsOpen(false);
+  };
 
   const handleRefreshProcess = useCallback(() => {
+    if (!socket) {
+      return;
+    }
     socket.emit('refreshProcesses');
     setPendingRetry(false);
     retryRef.current = true;
@@ -248,7 +317,7 @@ export const Zone = () => {
           selectedProcess.zoneViewer
             ? selectedZone
             : selectedProcess.zone.shortName
-        ] ?? []
+        ] ?? [],
       );
     })();
     if (!selectedProcess.zoneViewer) {
@@ -259,7 +328,7 @@ export const Zone = () => {
   const filteredSpawns = useMemo(() => {
     return selectedProcess?.zoneViewer
       ? []
-      : spawns.filter(s => {
+      : spawns.filter((s) => {
         let ret = Boolean(s);
         if (spawnFilter.length) {
           ret = ret && s?.displayedName?.includes?.(spawnFilter);
@@ -271,7 +340,6 @@ export const Zone = () => {
           ret = ret && showNpcs ? [1, 0].includes(s.type) : s.type === 0;
         }
         if (showGroup) {
-
         }
         return ret;
       });
@@ -279,80 +347,96 @@ export const Zone = () => {
 
   const zoneName = useMemo(
     () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
-    [selectedProcess, selectedZone, zone]
+    [selectedProcess, selectedZone, zone],
   );
-  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [selectedProcess]);
-
-
+  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [
+    selectedProcess,
+  ]);
 
   return (
-    <Paper className='zone-container' elevation={1}>
-      <Card className='zone-header' variant='outlined'>
-        <CardContent className='zone-header'>
-          <div className='btn-row'>
-            {isHooked && <Button variant='outlined' onClick={handleSearchOpen}>
-              Spawn Search
-            </Button>}
-            
-            <Button variant='outlined' onClick={handleOptionsOpen}>
+    <Paper className="zone-container" elevation={1}>
+      <Card className="zone-header" variant="outlined">
+        <CardContent className="zone-header">
+          <div className="btn-row">
+            {isHooked && (
+              <Button variant="outlined" onClick={handleSearchOpen}>
+                Spawn Search
+              </Button>
+            )}
+
+            <Button variant="outlined" onClick={handleOptionsOpen}>
               Options
             </Button>
-            {isHooked && <><Button
-              variant='outlined'
-              onClick={() => {
-                if (zoneRef.current) {
-                  zoneRef.current.targetMe();
-                }
-              }}
-            >
-              Jump to Me
-            </Button>
-            <Button
-              variant='outlined'
-              onClick={() => {
-                if (zoneRef.current) {
-                  zoneRef.current.followMe(!cameraFollowMe);
-                  setOption('cameraFollowMe', !cameraFollowMe);
-                }
-              }}
-            >
-              {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
-            </Button></>}
-            
-            <div style={{ maxWidth: 300, minWidth: 300 }}>
-              <FormControl fullWidth>
-                <InputLabel id='demo-simple-select-label'>
-                  {pendingRetry ? 'Attempting Reconnect...' : 'Process'}
-                </InputLabel>
-                <Select
-                  startAdornment={
-                    <InputAdornment position='start'>
-                      <RefreshIcon sx={{ cursor: 'pointer' }} onClick={() => {
-                        handleRefreshProcess();
-                      }} />
-                    </InputAdornment>
-                  }
-                  sx={{ height: 40 }}
-                  disabled={pendingRetry}
-                  value={selectedProcess ?? ''}
-                  label='Process'
-                  displayEmpty
-                  onChange={({ target: { value } }) =>
-                    setSelectedProcess(value)
-                  }
+            {processMode && (
+              <Button sx={{ color: socket ? 'green' : 'white' }} variant="outlined" onClick={handleConnectionOptionsOpen}>
+                {socket ? 'Connected' : 'Not Connected'}
+              </Button>
+            )}
+            {isHooked && (
+              <>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    if (zoneRef.current) {
+                      zoneRef.current.targetMe();
+                    }
+                  }}
                 >
-                  {processes.concat(zoneViewer).map(p =>
-                    p.zoneViewer ? (
-                      <MenuItem value={p}>Zone Viewer</MenuItem>
-                    ) : (
-                      <MenuItem value={p}>
-                        {p.zone.characterName} - {p.zone.longName}
-                      </MenuItem>
-                    )
-                  )}
-                </Select>
-              </FormControl>
-            </div>
+                  Jump to Me
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    if (zoneRef.current) {
+                      zoneRef.current.followMe(!cameraFollowMe);
+                      setOption('cameraFollowMe', !cameraFollowMe);
+                    }
+                  }}
+                >
+                  {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
+                </Button>
+              </>
+            )}
+            {processMode && (
+              <div style={{ maxWidth: 300, minWidth: 300 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    {pendingRetry ? 'Attempting Reconnect...' : 'Process'}
+                  </InputLabel>
+                  <Select
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <RefreshIcon
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            handleRefreshProcess();
+                          }}
+                        />
+                      </InputAdornment>
+                    }
+                    sx={{ height: 40 }}
+                    disabled={pendingRetry}
+                    value={selectedProcess ?? ''}
+                    label="Process"
+                    displayEmpty
+                    onChange={({ target: { value } }) =>
+                      setSelectedProcess(value)
+                    }
+                  >
+                    {processes.concat(zoneViewer).map((p) =>
+                      p.zoneViewer ? (
+                        <MenuItem value={p}>Zone Viewer</MenuItem>
+                      ) : (
+                        <MenuItem value={p}>
+                          {p.zone.characterName} - {p.zone.longName}
+                        </MenuItem>
+                      ),
+                    )}
+                  </Select>
+                </FormControl>
+              </div>
+            )}
+
             {selectedProcess?.zoneViewer && (
               <Autocomplete
                 blurOnSelect
@@ -365,34 +449,36 @@ export const Zone = () => {
                     }, 1);
                   }
                 }}
-                id='combo-box-demo'
+                id="combo-box-demo"
                 options={supportedZoneOptions}
                 sx={{ width: 300 }}
-                size='small'
-                renderInput={params => (
+                size="small"
+                renderInput={(params) => (
                   <TextField
                     sx={{ height: 38 }}
                     {...params}
-                    label='Zone'
+                    label="Zone"
                     value={selectedZone}
                   />
                 )}
               />
             )}
-            {
-              spawns.length ? 
-                <>
-                  <TextField
-                    size="small"
-                    onChange={({ target: { value } }) => setSpawnFilter(value)}
-                    label='Spawn Filter'
-                    value={spawnFilter}
-                  />
-                  <InputLabel style={{ marginLeft: 5 }} id='demo-simple-select-label'>Showing {filteredSpawns.length} of {spawns.length} Spawns</InputLabel>
-                </>
-              
-                : null
-            }
+            {spawns.length ? (
+              <>
+                <TextField
+                  size="small"
+                  onChange={({ target: { value } }) => setSpawnFilter(value)}
+                  label="Spawn Filter"
+                  value={spawnFilter}
+                />
+                <InputLabel
+                  style={{ marginLeft: 5 }}
+                  id="demo-simple-select-label"
+                >
+                  Showing {filteredSpawns.length} of {spawns.length} Spawns
+                </InputLabel>
+              </>
+            ) : null}
           </div>
 
           {/* Search Dialog */}
@@ -400,9 +486,9 @@ export const Zone = () => {
             open={searchOpen}
             onClose={handleSearchClose}
             PaperComponent={PaperComponent}
-            aria-labelledby='draggable-dialog-title'
+            aria-labelledby="draggable-dialog-title"
           >
-            <DialogTitle style={{ cursor: 'move' }} id='draggable-dialog-title'>
+            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
               Spawn Search and Filter
             </DialogTitle>
             <DialogContent>
@@ -428,82 +514,100 @@ export const Zone = () => {
             open={optionsOpen}
             onClose={handleOptionsClose}
             PaperComponent={PaperComponent}
-            aria-labelledby='draggable-dialog-title'
+            aria-labelledby="draggable-dialog-title"
           >
-            <DialogTitle style={{ cursor: 'move' }} id='draggable-dialog-title'>
+            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
               Options
             </DialogTitle>
             <DialogContent>
               <div style={{ height: 400, width: '100%' }}>
-                {isHooked && <>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                  Max Distance for Spawn Name: {maxTargetDisplay}
-                  </Typography>
-                  <Slider
-                    value={maxTargetDisplay}
-                    onChange={e => setOption('maxTargetDisplay', +e.target.value)}
-                    step={10}
-                    min={0}
-                    max={5000}
-                  />
-                </>}
-                
+                {isHooked && (
+                  <>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      Max Distance for Spawn Name: {maxTargetDisplay}
+                    </Typography>
+                    <Slider
+                      value={maxTargetDisplay}
+                      onChange={(e) =>
+                        setOption('maxTargetDisplay', +e.target.value)
+                      }
+                      step={10}
+                      min={0}
+                      max={5000}
+                    />
+                  </>
+                )}
                 <Typography
                   sx={{ fontSize: 14 }}
-                  color='text.secondary'
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Max Distance for Points of Interest: {maxPoiDisplay}
+                </Typography>
+                <Slider
+                  value={maxPoiDisplay}
+                  onChange={(e) => setOption('maxPoiDisplay', +e.target.value)}
+                  step={10}
+                  min={0}
+                  max={10000}
+                />
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
                   gutterBottom
                 >
                   Font Size: {fontSize}px
                 </Typography>
                 <Slider
                   value={fontSize}
-                  onChange={e => setOption('fontSize', +e.target.value)}
+                  onChange={(e) => setOption('fontSize', +e.target.value)}
                   step={1}
                   min={5}
                   max={25}
                 />
                 <FormGroup>
-                  {isHooked && <>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={showNpcs}
-                          onChange={({ target: { checked } }) =>
-                            setOption('showNpcs', checked)
-                          }
-                        />
-                      }
-                      label='Show NPCs'
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={showPcs}
-                          onChange={({ target: { checked } }) =>
-                            setOption('showPcs', checked)
-                          }
-                        />
-                      }
-                      label='Show PCs'
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={showGroup}
-                          onChange={({ target: { checked } }) =>
-                            setOption('showGroup', checked)
-                          }
-                        />
-                      }
-                      label='Show Group Members'
-                    />
-                  
-                  </>}
-                  
+                  {isHooked && (
+                    <>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={showNpcs}
+                            onChange={({ target: { checked } }) =>
+                              setOption('showNpcs', checked)
+                            }
+                          />
+                        }
+                        label="Show NPCs"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={showPcs}
+                            onChange={({ target: { checked } }) =>
+                              setOption('showPcs', checked)
+                            }
+                          />
+                        }
+                        label="Show PCs"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={showGroup}
+                            onChange={({ target: { checked } }) =>
+                              setOption('showGroup', checked)
+                            }
+                          />
+                        }
+                        label="Show Group Members"
+                      />
+                    </>
+                  )}
+
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -513,43 +617,101 @@ export const Zone = () => {
                         }
                       />
                     }
-                    label='Show points of interest'
+                    label="Show points of interest"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showPoiLoc}
+                        onChange={({ target: { checked } }) =>
+                          setOption('showPoiLoc', checked)
+                        }
+                      />
+                    }
+                    label="Show points of interest location (YXZ)"
                   />
                 </FormGroup>
                 <FormControl sx={{ marginTop: 1 }} fullWidth>
-                  <InputLabel id='demo-simple-select-label'>Skybox</InputLabel>
+                  <InputLabel id="demo-simple-select-label">Skybox</InputLabel>
                   <Select
                     disabled={pendingRetry}
                     value={skybox ?? ''}
-                    label='Skybox'
+                    label="Skybox"
                     displayEmpty
-                    onChange={({ target: { value } }) => setOption('skybox', value)}
+                    onChange={({ target: { value } }) =>
+                      setOption('skybox', value)
+                    }
                   >
-                    {skyboxOptions.map(p => (
+                    {skyboxOptions.map((p) => (
                       <MenuItem value={p}>{p}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
-                {isHooked && <div style={{ marginTop: 10 }}>
-                  <InputLabel id='demo-simple-select-label'>Character Text Color</InputLabel>
-                  <ColorPicker
-                    hideTextFIeld
-                    value={charColor ?? '#FFFFFF'}
-                    onChange={color => setOption('charColor', color)}
-                  />
-                  <InputLabel id='demo-simple-select-label'>Group Member Text Color</InputLabel>
-                  <ColorPicker
-                    hideTextFIeld
-                    value={groupColor ?? '#FFFFFF'}
-                    onChange={color => setOption('groupColor', color)}
-                  />
-                </div>}
+                {isHooked && (
+                  <div style={{ marginTop: 10 }}>
+                    <InputLabel id="demo-simple-select-label">
+                      Character Text Color
+                    </InputLabel>
+                    <ColorPicker
+                      hideTextFIeld
+                      value={charColor ?? '#FFFFFF'}
+                      onChange={(color) => setOption('charColor', color)}
+                    />
+                    <InputLabel id="demo-simple-select-label">
+                      Group Member Text Color
+                    </InputLabel>
+                    <ColorPicker
+                      hideTextFIeld
+                      value={groupColor ?? '#FFFFFF'}
+                      onChange={(color) => setOption('groupColor', color)}
+                    />
+                  </div>
+                )}
               </div>
             </DialogContent>
             <DialogActions>
               <Button autoFocus onClick={handleOptionsClose}>
                 Done
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Connection Dialog */}
+          <Dialog
+            open={connectionOptionsOpen}
+            onClose={() => setConnectionOptionsOpen(false)}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+              Connection
+            </DialogTitle>
+            <DialogContent>
+              <div className="connection-content">
+                <TextField
+                  fullWidth
+                  onChange={({ target: { value } }) => setOption('address', value)}
+                  label="Server Address"
+                  placeholder="https://localhost:4500"
+                  value={address}
+                />
+                <TextField
+                  fullWidth
+                  onChange={({ target: { value } }) => setOption('token', value)}
+                  label="Token"
+                  placeholder=""
+                  multiline
+                  value={token}
+                />
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={() => setConnectionOptionsOpen(false)}>
+                Cancel
+              </Button>
+              <Button autoFocus onClick={doConnect}>
+                Connect
               </Button>
             </DialogActions>
           </Dialog>
@@ -564,17 +726,14 @@ export const Zone = () => {
                   zoneDetails={showPoi ? zoneDetails : []}
                   character={selectedProcess?.zoneViewer ? null : character}
                   ref={zoneRef}
-                  maxTargetDisplay={maxTargetDisplay}
                   spawns={filteredSpawns}
                   myTarget={selectedProcess?.zoneViewer ? null : myTarget}
                   setMyTarget={setMyTarget}
                   controls={cameraControls}
                   zoneName={zoneName}
-                  skybox={skybox}
-                  charColor={charColor}
-                  groupColor={groupColor}
                   canvasRef={canvasRef}
-                  fontSize={fontSize}
+                  groupMembers={showGroup ? groupMembers : []}
+                  {...options}
                 />
               </Suspense>
             )}
@@ -586,13 +745,13 @@ export const Zone = () => {
                   position     : 'absolute',
                   top          : 0,
                   left         : 0,
-                  pointerEvents: 'none'
+                  pointerEvents: 'none',
                 }}
                 width={threeRef.current.width}
                 height={threeRef.current.height}
                 ref={canvasRef}
               ></canvas>,
-              threeRef.current.parentNode
+              threeRef.current.parentNode,
             )}
         </CardContent>
         <CardActions></CardActions>

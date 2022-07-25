@@ -11,3 +11,12 @@
   width: 100vw;
   height: 100vh;
 }
+
+.connection-content {
+  display: block;
+  min-height: 350px;
+  margin: 5px;
+  & > * {
+    margin: 5px 0 !important;
+  }
+}

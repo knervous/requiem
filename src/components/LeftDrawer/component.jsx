@@ -25,10 +25,10 @@ import { Character } from '../Character/component';
 import { Zone } from '../Zone/component';
 import { Group } from '../Group/component';
 
-
-
 // scss
 import './component.scss';
+
+const processMode = new URLSearchParams(window.location.search).get('mode') === 'process';
 
 const drawerWidth = 240;
 
@@ -138,10 +138,10 @@ export const LeftDrawer = () => {
           <Divider />
           <List>
             {[
-              ['Character', <AccessibilityIcon />, Character, true],
+              ['Character', <AccessibilityIcon />, Character, !processMode],
               ['Advanced Map', <HouseIcon />, Zone, false],
-              ['Group', <GroupIcon />, Group, true],
-            ].map(([text, icon, Content, disabled]) => (
+              ['Group', <GroupIcon />, Group, !processMode],
+            ].map(([text, icon, Content, disabled]) => disabled ? null : (
               <ListItem
                 disabled={disabled}
                 onClick={() => {

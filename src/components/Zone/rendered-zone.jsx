@@ -54,7 +54,7 @@ const classes = {
   2 : 'Cleric',
   3 : 'Paladin',
   4 : 'Ranger',
-  5 : 'Shadowknight', 
+  5 : 'Shadowknight',
   6 : 'Druid',
   7 : 'Monk',
   8 : 'Bard',
@@ -63,7 +63,7 @@ const classes = {
   11: 'Necromancer',
   12: 'Wizard',
   13: 'Mage',
-  14: 'Enchanter'
+  14: 'Enchanter',
 };
 
 export const RenderedZone = forwardRef(
@@ -77,10 +77,14 @@ export const RenderedZone = forwardRef(
       myTarget,
       canvasRef,
       maxTargetDisplay = 1000,
+      maxPoiDisplay = 1000,
       fontSize = 15,
       onLoaded = () => {},
       skybox = 'space',
-      charColor = 'white'
+      charColor,
+      groupColor,
+      groupMembers,
+      showPoiLoc,
     },
     forwardRef,
   ) => {
@@ -125,13 +129,18 @@ export const RenderedZone = forwardRef(
           camera.matrixWorldInverse,
         ),
       );
-      for (const spawn of spawns
-        .filter(
-          (s) =>
-            frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
-            camera.position.distanceTo(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) < maxTargetDisplay,
-        )) {
-        const screen = worldToScreen(canvasRef.current, new THREE.Vector3(spawn.y * -1, spawn.z + 15, spawn.x), camera);
+      for (const spawn of spawns.filter(
+        (s) =>
+          frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
+          camera.position.distanceTo(
+            new THREE.Vector3(s.y * -1, s.z + 15, s.x),
+          ) < maxTargetDisplay,
+      )) {
+        const screen = worldToScreen(
+          canvasRef.current,
+          new THREE.Vector3(spawn.y * -1, spawn.z + 15, spawn.x),
+          camera,
+        );
         let side = 1;
         if (screen.x > canvasRef.current.width / 2) {
           side = -1;
@@ -184,7 +193,15 @@ export const RenderedZone = forwardRef(
         );
       }
 
-      for (const zoneDetail of zoneDetails) {
+      for (const zoneDetail of zoneDetails.filter(
+        (zd) =>
+          frustum.containsPoint(
+            new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x),
+          ) &&
+          camera.position.distanceTo(
+            new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x),
+          ) < maxPoiDisplay,
+      )) {
         const screen = worldToScreen(
           canvasRef.current,
           new THREE.Vector3(zoneDetail.y * -1, zoneDetail.z + 15, zoneDetail.x),
@@ -208,10 +225,9 @@ export const RenderedZone = forwardRef(
         }
 
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = `italic bold ${fontSize + 3}px Arial`;
+        ctx.font = `bold ${fontSize + 2}px Arial`;
         ctx.textAlign = 'center';
-        const nameWidth = ctx.measureText(zoneDetail.description)
-          .width;
+        const nameWidth = ctx.measureText(zoneDetail.description).width;
 
         ctx.fillText(
           zoneDetail.description,
@@ -222,9 +238,25 @@ export const RenderedZone = forwardRef(
             (nameWidth * side) / 2,
           screen.y - 64 + 6,
         );
+        if (showPoiLoc) {
+          ctx.font = `italic ${fontSize + 2}px Arial`;
+          const loc = `(${zoneDetail.y}, ${zoneDetail.x}, ${zoneDetail.z})`;
+          ctx.fillText(
+            loc,
+            screen.x -
+              side * 2 -
+              side * nameWidth -
+              side * 16 +
+              (nameWidth * side) / 2,
+            screen.y - 44,
+          );
+        }
       }
 
-      if (character) {
+      const drawNames = (character, name, color) => {
+        if (!character) {
+          return;
+        }
         const screen = worldToScreen(
           canvasRef.current,
           new THREE.Vector3(character.y * -1, character.z + 15, character.x),
@@ -246,12 +278,10 @@ export const RenderedZone = forwardRef(
         if (side === -1) {
           ctx.textAlign = 'end';
         }
-        ctx.fillStyle = charColor?.css?.backgroundColor;
+        ctx.fillStyle = color;
         ctx.font = `bold ${fontSize + 3}px Arial`;
         ctx.textAlign = 'center';
-        const name = `${character.displayedName} (Me)`;
-        const nameWidth = ctx.measureText(name)
-          .width;
+        const nameWidth = ctx.measureText(name).width;
 
         ctx.fillText(
           name,
@@ -274,15 +304,32 @@ export const RenderedZone = forwardRef(
             (nameWidth * side) / 2,
           screen.y - 44,
         );
-      } 
+      };
+
+      drawNames(
+        character,
+        `${character?.displayedName} (Me)`,
+        charColor?.css?.backgroundColor,
+      );
+      for (const groupMember of groupMembers) {
+        drawNames(
+          groupMember,
+          `${groupMember?.displayedName} (Group)`,
+          groupColor?.css?.backgroundColor,
+        );
+      }
     });
 
     useEffect(() => {
       if (myTarget) {
         setTarget(myTarget);
         setTimeout(() => {
-          const associatedTargetPosition = new THREE.Vector3(myTarget.y * -1, myTarget.z + 15, myTarget.x);
-            
+          const associatedTargetPosition = new THREE.Vector3(
+            myTarget.y * -1,
+            myTarget.z + 15,
+            myTarget.x,
+          );
+
           const lookPosition = new THREE.Vector3(
             associatedTargetPosition.x + 100,
             associatedTargetPosition.y + 500,
@@ -292,29 +339,29 @@ export const RenderedZone = forwardRef(
           controls.current.target.copy(associatedTargetPosition);
           camera.lookAt(associatedTargetPosition);
         }, 0);
-        
       }
     }, [myTarget]) //eslint-disable-line
 
     const targetMe = useCallback(() => {
-      if (zoneTexture?.scene && character) {
-        zoneTexture.scene.position.set(0, 0, 0);
-        setTimeout(() => {
-          const charPosition = new THREE.Vector3(
-            character.y * -1,
-            character.z + 15,
-            character.x,
-          );
-          const lookPosition = new THREE.Vector3(
-            charPosition.x + 100,
-            charPosition.y + 100,
-            charPosition.z + 400,
-          );
-          camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
-          controls.current.target.copy(charPosition);
-          camera.lookAt(charPosition);
-        }, 0);
+      if (!zoneTexture.scene) {
+        return;
       }
+      zoneTexture.scene.position.set(0, 0, 0);
+      setTimeout(() => {
+        const charPosition = new THREE.Vector3(
+          character?.y ?? 0 * -1,
+          character?.z ?? 0 + 15,
+          character?.x ?? 0,
+        );
+        const lookPosition = new THREE.Vector3(
+          charPosition.x + 100,
+          charPosition.y + 100,
+          charPosition.z + 400,
+        );
+        camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
+        controls.current.target.copy(charPosition);
+        camera.lookAt(charPosition);
+      }, 0);
     }, [zoneTexture, character]) //eslint-disable-line
 
     useEffect(() => {
@@ -348,12 +395,20 @@ export const RenderedZone = forwardRef(
       if (!character || !doFollow) {
         return;
       }
-      if (!['x', 'y', 'z'].every(key => character?.[key] === prevCharacter?.[key])) {
-        const offset = new THREE.Vector3(0, camera.position.distanceTo(characterRef.current.position), 0);
+      if (
+        !['x', 'y', 'z'].every(
+          (key) => character?.[key] === prevCharacter?.[key],
+        )
+      ) {
+        const offset = new THREE.Vector3(
+          0,
+          camera.position.distanceTo(characterRef.current.position),
+          0,
+        );
         camera.position.addVectors(characterRef.current.position, offset);
         setPrevCharacter(character);
       }
-    }, [character, prevCharacter, doFollow]); // eslint-disable-line
+    }, [character, prevCharacter, doFollow]) // eslint-disable-line
 
     const followMe = (doFollow) => {
       if (doFollow) {
@@ -374,8 +429,7 @@ export const RenderedZone = forwardRef(
     return (
       <>
         {/** Spawns */}
-        {spawns.map(s => {
-          const isTarget = s.id === target?.id;
+        {spawns.map((s) => {
           const color =
             s.level - character.level > 3
               ? 'red'
@@ -406,7 +460,7 @@ export const RenderedZone = forwardRef(
             <primitive
               ref={characterRef}
               scale={[4, 4, 4]}
-              rotation={[1.6, 0, -1.65 + ((character.heading) * -1 / 100)]}
+              rotation={[1.6, 0, -1.65 + (character.heading * -1) / 100]}
               position={[
                 character.y * -1 - 3,
                 character.z + 5,
@@ -449,7 +503,7 @@ export function PaperComponent(props) {
       handle="#draggable-dialog-title"
       cancel={'[class*="MuiDialogContent-root"]'}
     >
-      <Paper sx={{ width: '30vw' }} {...props} />
+      <Paper sx={{ width: '30vw', minWidth: 450 }} {...props} />
     </Draggable>
   );
 }
