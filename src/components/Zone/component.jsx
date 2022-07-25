@@ -44,7 +44,6 @@ import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { supportedZones } from './data';
-import { findAllByDisplayValue } from '@testing-library/react';
 
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
@@ -130,7 +129,7 @@ export const Zone = () => {
           charColor       : { css: { backgroundColor: '#FFFFFF' } },
           groupColor      : { css: { backgroundColor: '#FFFFFF' } },
           address         : 'https://localhost:4500',
-          token           : ''
+          token           : '',
         }),
     ),
   );
@@ -148,8 +147,19 @@ export const Zone = () => {
     charColor,
     groupColor,
     address,
-    token
+    token,
   } = options;
+
+  useEffect(() => {
+    if (socket) {
+      return;
+    }
+    const { token } = JSON.parse(
+      localStorage.getItem('options') ?? '{}');
+    if (token) {
+      doConnect();
+    }
+  }, []); // eslint-disable-line
 
   const setOption = (key, value) => {
     setOptions((options) => {
@@ -184,8 +194,17 @@ export const Zone = () => {
     try {
       newSocket = await new Promise((res, rej) => {
         const socket = io(address, { secure: true });
+        const timeout = setTimeout(() => {
+          socket.disconnect();
+          rej();
+        }, 3000);
         socket.on('connect_failed', rej);
-        socket.on('connect', () => res(socket));
+        socket.on('disconnect', rej);
+        socket.on('error', rej);
+        socket.on('connect', () => {
+          clearTimeout(timeout);
+          res(socket);
+        });
       });
     } catch (e) {
       console.warn('Socket connection failed', e);
@@ -195,7 +214,9 @@ export const Zone = () => {
       setSocket(null);
       return;
     }
-    const validationInfo = await new Promise(res => newSocket.emit('validate', token, res),);
+    const validationInfo = await new Promise((res) =>
+      newSocket.emit('validate', token, res),
+    );
     if (validationInfo.validated) {
       addToast(`Successfully Connected to ${address}`, {
         appearance: 'info',
@@ -207,7 +228,7 @@ export const Zone = () => {
       newSocket.disconnect();
       return;
     }
-    
+
     newSocket.on('activeProcesses', setProcesses);
     newSocket.on('setSpawns', (spawns) => {
       if (zoneViewerRef.current) {
@@ -358,20 +379,20 @@ export const Zone = () => {
       <Card className="zone-header" variant="outlined">
         <CardContent className="zone-header">
           <div className="btn-row">
-            {isHooked && (
-              <Button variant="outlined" onClick={handleSearchOpen}>
-                Spawn Search
+            {processMode && (
+              <Button
+                sx={{ color: socket ? 'green' : 'white' }}
+                variant="outlined"
+                onClick={handleConnectionOptionsOpen}
+              >
+                {socket ? 'Connected' : 'Not Connected'}
               </Button>
             )}
 
             <Button variant="outlined" onClick={handleOptionsOpen}>
               Options
             </Button>
-            {processMode && (
-              <Button sx={{ color: socket ? 'green' : 'white' }} variant="outlined" onClick={handleConnectionOptionsOpen}>
-                {socket ? 'Connected' : 'Not Connected'}
-              </Button>
-            )}
+
             {isHooked && (
               <>
                 <Button
@@ -472,11 +493,14 @@ export const Zone = () => {
                   value={spawnFilter}
                 />
                 <InputLabel
-                  style={{ marginLeft: 5 }}
+                  style={{ marginLeft: 8 }}
                   id="demo-simple-select-label"
                 >
                   Showing {filteredSpawns.length} of {spawns.length} Spawns
                 </InputLabel>
+                <Button variant="outlined" onClick={handleSearchOpen}>
+                  Spawn Search
+                </Button>
               </>
             ) : null}
           </div>
@@ -691,14 +715,18 @@ export const Zone = () => {
               <div className="connection-content">
                 <TextField
                   fullWidth
-                  onChange={({ target: { value } }) => setOption('address', value)}
+                  onChange={({ target: { value } }) =>
+                    setOption('address', value)
+                  }
                   label="Server Address"
                   placeholder="https://localhost:4500"
                   value={address}
                 />
                 <TextField
                   fullWidth
-                  onChange={({ target: { value } }) => setOption('token', value)}
+                  onChange={({ target: { value } }) =>
+                    setOption('token', value)
+                  }
                   label="Token"
                   placeholder=""
                   multiline
