@@ -117,6 +117,7 @@ export const Zone = () => {
 
   // Options
   const [spawnFilter, setSpawnFilter] = useState('');
+  const [poiFilter, setPoiFilter] = useState('');
   const [options, setOptions] = useState(
     JSON.parse(
       localStorage.getItem('options') ??
@@ -135,6 +136,7 @@ export const Zone = () => {
           groupColor      : { css: { backgroundColor: '#FFFFFF' } },
           address         : 'https://localhost:4500',
           token           : '',
+          showPoiFilter   : false,
         }),
     ),
   );
@@ -153,6 +155,7 @@ export const Zone = () => {
     groupColor,
     address,
     token,
+    showPoiFilter
   } = options;
 
   useEffect(() => {
@@ -357,7 +360,7 @@ export const Zone = () => {
       : spawns.filter((s) => {
         let ret = Boolean(s);
         if (spawnFilter.length) {
-          ret = ret && s?.displayedName?.includes?.(spawnFilter);
+          ret = ret && s?.displayedName?.toLowerCase()?.includes?.(spawnFilter.toLowerCase());
         }
         if (showNpcs) {
           ret = ret && showPcs ? [1, 0].includes(s.type) : s.type === 1;
@@ -370,6 +373,16 @@ export const Zone = () => {
         return ret;
       });
   }, [selectedProcess, showNpcs, spawns, spawnFilter, showGroup, showPcs]);
+
+  const filteredZoneDetails = useMemo(() => {
+    if (!showPoi) {
+      return [];
+    }
+    if (!showPoiFilter || !poiFilter.length) {
+      return zoneDetails;
+    }
+    return zoneDetails.filter(z => z.description.toLowerCase().includes(poiFilter.toLowerCase()));
+  }, [poiFilter, showPoiFilter, zoneDetails, showPoi]);
 
   const zoneName = useMemo(
     () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
@@ -508,6 +521,14 @@ export const Zone = () => {
                 </Button>
               </>
             ) : null}
+            {showPoiFilter ? (
+              <TextField
+                size="small"
+                onChange={({ target: { value } }) => setPoiFilter(value)}
+                label="Marker Filter"
+                value={poiFilter}
+              />
+            ) : null}
           </div>
 
           {/* Search Dialog */}
@@ -575,7 +596,7 @@ export const Zone = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  Max Distance for Points of Interest: {maxPoiDisplay}
+                  Max Distance for Markers: {maxPoiDisplay}
                 </Typography>
                 <Slider
                   value={maxPoiDisplay}
@@ -646,7 +667,7 @@ export const Zone = () => {
                         }
                       />
                     }
-                    label="Show points of interest"
+                    label="Show markers"
                   />
                   <FormControlLabel
                     control={
@@ -657,7 +678,18 @@ export const Zone = () => {
                         }
                       />
                     }
-                    label="Show points of interest location (YXZ)"
+                    label="Show marker location (YXZ)"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showPoiFilter}
+                        onChange={({ target: { checked } }) =>
+                          setOption('showPoiFilter', checked)
+                        }
+                      />
+                    }
+                    label="Show marker filter"
                   />
                 </FormGroup>
                 <FormControl sx={{ marginTop: 1 }} fullWidth>
@@ -756,7 +788,7 @@ export const Zone = () => {
             {selectedProcess && zoneName && (
               <Suspense fallback={<Loader />}>
                 <RenderedZone
-                  zoneDetails={showPoi ? zoneDetails : []}
+                  zoneDetails={filteredZoneDetails}
                   character={selectedProcess?.zoneViewer ? null : character}
                   ref={zoneRef}
                   spawns={filteredSpawns}
