@@ -48,11 +48,16 @@ import { supportedZones } from './data';
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
 
+let initialZone =
+  new URLSearchParams(window.location.search).get('zone');
+if (!supportedZones.includes(initialZone)) {
+  initialZone = 'airplane';
+}
 const supportedZoneOptions = supportedZones.map((zone, id) => ({
   label: zone,
   id,
 }));
-
+// https://192.168.2.102:4500
 const skyboxOptions = [
   'forest',
   'fullmoon',
@@ -151,7 +156,7 @@ export const Zone = () => {
   } = options;
 
   useEffect(() => {
-    if (socket) {
+    if (socket || !processMode) {
       return;
     }
     const { token } = JSON.parse(
@@ -176,7 +181,7 @@ export const Zone = () => {
   const [zone, setZone] = useState(null);
   const [zoneDetails, setZoneDetails] = useState([]);
   const [spawns, setSpawns] = useState([]);
-  const [selectedZone, setSelectedZone] = useState('airplane');
+  const [selectedZone, setSelectedZone] = useState(initialZone);
   const [character, setCharacter] = useState({});
   const [groupMembers, setGroupMembers] = useState([]);
   const [myTarget, setMyTarget] = useState('');
