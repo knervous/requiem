@@ -131,7 +131,8 @@ export const RenderedZone = forwardRef(
       );
       for (const spawn of spawns.filter(
         (s) =>
-          frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
+          !groupMembers.some(g => g.displayedName === s.displayedName) &&  
+        frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
           camera.position.distanceTo(
             new THREE.Vector3(s.y * -1, s.z + 15, s.x),
           ) < maxTargetDisplay,
@@ -180,7 +181,7 @@ export const RenderedZone = forwardRef(
         ctx.font = isTarget
           ? `italic bold ${fontSize + 3}px Arial`
           : `italic ${fontSize}px Arial`;
-        const level = `Level ${spawn.level} ${classes[spawn.class]}`;
+        const level = `Level ${spawn.level} ${classes[spawn.class] ?? ''}`;
 
         ctx.fillText(
           level,
@@ -349,8 +350,8 @@ export const RenderedZone = forwardRef(
       zoneTexture.scene.position.set(0, 0, 0);
       setTimeout(() => {
         const charPosition = new THREE.Vector3(
-          character?.y ?? 0 * -1,
-          character?.z ?? 0 + 15,
+          (character?.y ?? 0) * -1,
+          (character?.z ?? 0) + 15,
           character?.x ?? 0,
         );
         const lookPosition = new THREE.Vector3(

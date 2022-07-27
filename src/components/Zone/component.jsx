@@ -132,8 +132,8 @@ export const Zone = () => {
           showPoiLoc      : true,
           showGroup       : true,
           skybox          : 'interstellar',
-          charColor       : { css: { backgroundColor: '#FFFFFF' } },
-          groupColor      : { css: { backgroundColor: '#FFFFFF' } },
+          charColor       : { css: { backgroundColor: '#00FF00' } },
+          groupColor      : { css: { backgroundColor: '#0000FF' } },
           address         : 'https://localhost:4500',
           token           : '',
           showPoiFilter   : false,
@@ -360,19 +360,17 @@ export const Zone = () => {
       : spawns.filter((s) => {
         let ret = Boolean(s);
         if (spawnFilter.length) {
-          ret = ret && s?.displayedName?.toLowerCase()?.includes?.(spawnFilter.toLowerCase());
+          ret = s?.displayedName?.toLowerCase()?.includes?.(spawnFilter.toLowerCase());
         }
         if (showNpcs) {
-          ret = ret && showPcs ? [1, 0].includes(s.type) : s.type === 1;
+          ret = ret && (showPcs ? [1, 0].includes(s.type) : s.type === 1);
         }
         if (showPcs) {
-          ret = ret && showNpcs ? [1, 0].includes(s.type) : s.type === 0;
-        }
-        if (showGroup) {
+          ret = ret && (showNpcs ? [1, 0].includes(s.type) : s.type === 0);
         }
         return ret;
       });
-  }, [selectedProcess, showNpcs, spawns, spawnFilter, showGroup, showPcs]);
+  }, [selectedProcess, showNpcs, spawns, spawnFilter, showGroup, showPcs, groupMembers]);
 
   const filteredZoneDetails = useMemo(() => {
     if (!showPoi) {
@@ -412,8 +410,9 @@ export const Zone = () => {
             </Button>
 
             {isHooked && (
-              <>
+              <div className="overlay-buttons">
                 <Button
+                  sx={{ color: 'white' }}
                   variant="outlined"
                   onClick={() => {
                     if (zoneRef.current) {
@@ -424,6 +423,7 @@ export const Zone = () => {
                   Jump to Me
                 </Button>
                 <Button
+                  sx={{ color: 'white' }}
                   variant="outlined"
                   onClick={() => {
                     if (zoneRef.current) {
@@ -434,7 +434,7 @@ export const Zone = () => {
                 >
                   {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
                 </Button>
-              </>
+              </div>
             )}
             {processMode && (
               <div style={{ maxWidth: 300, minWidth: 300 }}>
@@ -521,7 +521,7 @@ export const Zone = () => {
                 </Button>
               </>
             ) : null}
-            {showPoiFilter ? (
+            {showPoiFilter && showPoi ? (
               <TextField
                 size="small"
                 onChange={({ target: { value } }) => setPoiFilter(value)}

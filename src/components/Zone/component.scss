@@ -29,3 +29,10 @@
   width: calc(100%);
   height: calc(100vh - 64px);
 }
+
+.overlay-buttons {
+  position: absolute;
+  top: 120px;
+  z-index:1000;
+  color: white;
+}
