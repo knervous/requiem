@@ -15,6 +15,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import ListItemText from '@mui/material/ListItemText';
 import HouseIcon from '@mui/icons-material/House';
 import { useState } from 'react';
@@ -140,6 +141,10 @@ export const LeftDrawer = () => {
             {[
               ['Character', <AccessibilityIcon />, Character, !processMode],
               ['Advanced Map', <HouseIcon />, Zone, false],
+              ['Contact', <ContactMailIcon />, () => <div>  
+                <p>Site is a work in progress by temp0. Feel free to email comments and suggestions to eqadvancedmaps@gmail.com</p>
+
+              </div>, false],
               ['Group', <GroupIcon />, Group, !processMode],
             ].map(([text, icon, Content, disabled]) => disabled ? null : (
               <ListItem
