@@ -190,7 +190,7 @@ export const RenderedZone = forwardRef(
             side * nameWidth -
             side * 16 +
             (nameWidth * side) / 2,
-          screen.y - 44,
+          screen.y - 44 + (fontSize - 13),
         );
       }
 
@@ -249,7 +249,7 @@ export const RenderedZone = forwardRef(
               side * nameWidth -
               side * 16 +
               (nameWidth * side) / 2,
-            screen.y - 44,
+            screen.y - 44 + (fontSize - 13),
           );
         }
       }

@@ -370,7 +370,22 @@ export const Zone = () => {
         }
         return ret;
       });
-  }, [selectedProcess, showNpcs, spawns, spawnFilter, showGroup, showPcs, groupMembers]);
+  }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs]);
+
+  useEffect(() => {
+    if (!threeRef.current) {
+      return;
+    }
+    const current = threeRef.current;
+    const resizeObserver = new ResizeObserver(() => {
+      canvasRef.current.height = current.height;
+      canvasRef.current.width = current.width;
+    });
+    resizeObserver.observe(current);
+    return () => {
+      resizeObserver.unobserve(current);
+    };
+  },[]) // eslint-disable-line
 
   const filteredZoneDetails = useMemo(() => {
     if (!showPoi) {
