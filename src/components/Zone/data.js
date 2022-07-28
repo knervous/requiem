@@ -13,7 +13,7 @@ export const supportedZones = [
   'burningwood',
   'butcher',
   'cabeast',
-  'cabwest',
+  'cshome',
   'cauldron',
   'cazicthule',
   'charasis',
