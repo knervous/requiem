@@ -213,6 +213,7 @@ export const supportedZones = [
   'ssratemple',
   'steamfont',
   'stonebrunt',
+  'sro',
   'swampofnohope',
   'tacvi',
   'taka',
