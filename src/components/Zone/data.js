@@ -142,6 +142,7 @@ export const supportedZones = [
   'northkarana',
   'nro',
   'nurga',
+  'oasis',
   'oggok',
   'overthere',
   'paineel',

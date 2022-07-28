@@ -282,7 +282,9 @@ export const RenderedZone = forwardRef(
             ctx.fillStyle = '#FFFFFF';
             ctx.font = `bold italic ${fontSize + 1}px Arial`;
             const details = '[Click for additional spawns/locations]';
-
+            if (!showStaticSpawnDetails) {
+              yOffset -= 20;
+            }
             ctx.fillText(
               details,
               screen.x -
