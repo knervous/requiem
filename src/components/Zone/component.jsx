@@ -137,6 +137,8 @@ export const Zone = () => {
           address         : 'https://localhost:4500',
           token           : '',
           showPoiFilter   : false,
+          cameraType      : 'orbit',
+          flySpeed        : 1
         }),
     ),
   );
@@ -155,7 +157,9 @@ export const Zone = () => {
     groupColor,
     address,
     token,
-    showPoiFilter
+    showPoiFilter,
+    cameraType,
+    flySpeed
   } = options;
 
   useEffect(() => {
@@ -586,6 +590,35 @@ export const Zone = () => {
             </DialogTitle>
             <DialogContent>
               <div style={{ height: 400, width: '100%' }}>
+                <FormControl sx={{ marginTop: 1 }} fullWidth>
+                  <InputLabel id="demo-simple-select-label">Camera Type</InputLabel>
+                  <Select
+                    value={cameraType}
+                    label="Camera Type"
+                    displayEmpty
+                    onChange={({ target: { value } }) =>
+                      setOption('cameraType', value)
+                    }
+                  >
+                    <MenuItem value={'orbit'}>Orbit</MenuItem>
+                    <MenuItem value={'fly'}>Fly</MenuItem>
+                  </Select>
+                </FormControl>
+                <Typography
+                  sx={{ fontSize: 14, marginTop: 2, width: '80%' }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Camera Fly Speed: {flySpeed}
+                </Typography>
+                <Slider
+                  disabled={cameraType !== 'fly'}
+                  value={flySpeed}
+                  onChange={(e) => setOption('flySpeed', +e.target.value)}
+                  step={0.5}
+                  min={0.5}
+                  max={20}
+                />
                 {isHooked && (
                   <>
                     <Typography
@@ -723,7 +756,6 @@ export const Zone = () => {
                     ))}
                   </Select>
                 </FormControl>
-
                 {isHooked && (
                   <div style={{ marginTop: 10 }}>
                     <InputLabel id="demo-simple-select-label">
@@ -797,7 +829,7 @@ export const Zone = () => {
           </Dialog>
           <Canvas ref={threeRef}>
             {/* <SkyBox /> */}
-            <CameraControls controls={cameraControls} ref={cameraControls} />
+            <CameraControls controls={cameraControls} type={cameraType} flySpeed={flySpeed} ref={cameraControls} />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {selectedProcess && zoneName && (
