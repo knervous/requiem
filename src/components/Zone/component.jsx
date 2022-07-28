@@ -48,8 +48,7 @@ import { supportedZones } from './data';
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
 
-let initialZone =
-  new URLSearchParams(window.location.search).get('zone');
+let initialZone = new URLSearchParams(window.location.search).get('zone');
 if (!supportedZones.includes(initialZone)) {
   initialZone = 'airplane';
 }
@@ -117,28 +116,34 @@ export const Zone = () => {
 
   // Options
   const [spawnFilter, setSpawnFilter] = useState('');
+  const [staticSpawnFilter, setStaticSpawnFilter] = useState('');
   const [poiFilter, setPoiFilter] = useState('');
+
   const [options, setOptions] = useState(
     JSON.parse(
       localStorage.getItem('options') ??
         JSON.stringify({
-          maxTargetDisplay: 1000,
-          maxPoiDisplay   : 3000,
-          fontSize        : 13,
-          cameraFollowMe  : false,
-          showNpcs        : true,
-          showPcs         : true,
-          showPoi         : true,
-          showPoiLoc      : true,
-          showGroup       : true,
-          skybox          : 'interstellar',
-          charColor       : { css: { backgroundColor: '#00FF00' } },
-          groupColor      : { css: { backgroundColor: '#0000FF' } },
-          address         : 'https://localhost:4500',
-          token           : '',
-          showPoiFilter   : false,
-          cameraType      : 'orbit',
-          flySpeed        : 1
+          maxTargetDisplay      : 1000,
+          maxPoiDisplay         : 3000,
+          fontSize              : 13,
+          cameraFollowMe        : false,
+          showNpcs              : true,
+          showPcs               : true,
+          showPoi               : true,
+          showStaticSpawns      : true,
+          showStaticSpawnDetails: true,
+          showStaticSpawnFilter : true,
+          showPoiLoc            : true,
+          showGroup             : true,
+          skybox                : 'interstellar',
+          charColor             : { css: { backgroundColor: '#00FF00' } },
+          groupColor            : { css: { backgroundColor: '#0000FF' } },
+          staticSpawnColor      : { css: { backgroundColor: '#0000FF' } },
+          address               : 'https://localhost:4500',
+          token                 : '',
+          showPoiFilter         : false,
+          cameraType            : 'orbit',
+          flySpeed              : 1,
         }),
     ),
   );
@@ -151,6 +156,10 @@ export const Zone = () => {
     showGroup,
     showPcs,
     showPoi,
+    showStaticSpawns,
+    showStaticSpawnDetails,
+    showStaticSpawnFilter,
+    staticSpawnColor,
     showPoiLoc,
     skybox,
     charColor,
@@ -159,27 +168,8 @@ export const Zone = () => {
     token,
     showPoiFilter,
     cameraType,
-    flySpeed
+    flySpeed,
   } = options;
-
-  useEffect(() => {
-    if (socket || !processMode) {
-      return;
-    }
-    const { token } = JSON.parse(
-      localStorage.getItem('options') ?? '{}');
-    if (token) {
-      doConnect();
-    }
-  }, []); // eslint-disable-line
-
-  const setOption = (key, value) => {
-    setOptions((options) => {
-      const newOptions = { ...options, [key]: value };
-      localStorage.setItem('options', JSON.stringify(newOptions));
-      return newOptions;
-    });
-  };
 
   const [processes, setProcesses] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -188,6 +178,7 @@ export const Zone = () => {
   const [zone, setZone] = useState(null);
   const [zoneDetails, setZoneDetails] = useState([]);
   const [spawns, setSpawns] = useState([]);
+  const [staticSpawns, setStaticSpawns] = useState([]);
   const [selectedZone, setSelectedZone] = useState(initialZone);
   const [character, setCharacter] = useState({});
   const [groupMembers, setGroupMembers] = useState([]);
@@ -196,6 +187,14 @@ export const Zone = () => {
   const retryRef = useRef(false);
   const zoneViewerRef = useRef(true);
   const { addToast } = useToasts();
+
+  const setOption = (key, value) => {
+    setOptions((options) => {
+      const newOptions = { ...options, [key]: value };
+      localStorage.setItem('options', JSON.stringify(newOptions));
+      return newOptions;
+    });
+  };
 
   const doConnect = async () => {
     if (socket) {
@@ -327,6 +326,59 @@ export const Zone = () => {
     retryRef.current = true;
   }, [socket]);
 
+  const filteredSpawns = useMemo(() => {
+    return selectedProcess?.zoneViewer
+      ? []
+      : spawns.filter((s) => {
+        let ret = Boolean(s);
+        if (spawnFilter.length) {
+          ret = s?.displayedName
+            ?.toLowerCase()
+            ?.includes?.(spawnFilter.toLowerCase());
+        }
+        if (showNpcs) {
+          ret = ret && (showPcs ? [1, 0].includes(s.type) : s.type === 1);
+        }
+        if (showPcs) {
+          ret = ret && (showNpcs ? [1, 0].includes(s.type) : s.type === 0);
+        }
+        return ret;
+      });
+  }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs]);
+
+  const filteredZoneDetails = useMemo(() => {
+    if (!showPoi) {
+      return [];
+    }
+    if (!showPoiFilter || !poiFilter.length) {
+      return zoneDetails;
+    }
+    return zoneDetails.filter((z) =>
+      z.description.toLowerCase().includes(poiFilter.toLowerCase()),
+    );
+  }, [poiFilter, showPoiFilter, zoneDetails, showPoi]);
+
+  const filteredStaticSpawns = useMemo(() => {
+    if (!showStaticSpawns) {
+      return [];
+    }
+    return staticSpawnFilter.length
+      ? staticSpawns.filter((sg) =>
+        sg.some((entry) =>
+          entry.name.toLowerCase().includes(staticSpawnFilter.toLowerCase()),
+        ),
+      )
+      : staticSpawns;
+  }, [showStaticSpawns, staticSpawns, staticSpawnFilter]);
+
+  const zoneName = useMemo(
+    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
+    [selectedProcess, selectedZone, zone],
+  );
+  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [
+    selectedProcess,
+  ]);
+
   useEffect(() => {
     if (!selectedProcess) {
       return;
@@ -334,6 +386,8 @@ export const Zone = () => {
     if (selectedProcess.zoneViewer) {
       zoneViewerRef.current = true;
       setZoneDetails([]);
+      setStaticSpawnFilter('');
+      setStaticSpawns([]);
       setSpawns([]);
       setCharacter(null);
     } else {
@@ -352,29 +406,18 @@ export const Zone = () => {
             : selectedProcess.zone.shortName
         ] ?? [],
       );
+
+      try {
+        const zoneStaticSpawns = await fetch(
+          `/zones/${zoneName}.json`,
+        ).then((r) => r.json());
+        setStaticSpawns(zoneStaticSpawns);
+      } catch {}
     })();
     if (!selectedProcess.zoneViewer) {
       socket.emit('selectProcess', selectedProcess.processId);
     }
-  }, [selectedProcess, socket, selectedZone]);
-
-  const filteredSpawns = useMemo(() => {
-    return selectedProcess?.zoneViewer
-      ? []
-      : spawns.filter((s) => {
-        let ret = Boolean(s);
-        if (spawnFilter.length) {
-          ret = s?.displayedName?.toLowerCase()?.includes?.(spawnFilter.toLowerCase());
-        }
-        if (showNpcs) {
-          ret = ret && (showPcs ? [1, 0].includes(s.type) : s.type === 1);
-        }
-        if (showPcs) {
-          ret = ret && (showNpcs ? [1, 0].includes(s.type) : s.type === 0);
-        }
-        return ret;
-      });
-  }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs]);
+  }, [selectedProcess, socket, selectedZone, zoneName]);
 
   useEffect(() => {
     if (!threeRef.current) {
@@ -389,26 +432,17 @@ export const Zone = () => {
     return () => {
       resizeObserver.unobserve(current);
     };
-  },[]) // eslint-disable-line
+  }, []) // eslint-disable-line
 
-  const filteredZoneDetails = useMemo(() => {
-    if (!showPoi) {
-      return [];
+  useEffect(() => {
+    if (socket || !processMode) {
+      return;
     }
-    if (!showPoiFilter || !poiFilter.length) {
-      return zoneDetails;
+    const { token } = JSON.parse(localStorage.getItem('options') ?? '{}');
+    if (token) {
+      doConnect();
     }
-    return zoneDetails.filter(z => z.description.toLowerCase().includes(poiFilter.toLowerCase()));
-  }, [poiFilter, showPoiFilter, zoneDetails, showPoi]);
-
-  const zoneName = useMemo(
-    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
-    [selectedProcess, selectedZone, zone],
-  );
-  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [
-    selectedProcess,
-  ]);
-
+  }, []) // eslint-disable-line
   return (
     <Paper className="zone-container" elevation={1}>
       <Card className="zone-header" variant="outlined">
@@ -548,6 +582,22 @@ export const Zone = () => {
                 value={poiFilter}
               />
             ) : null}
+            {staticSpawns.length && showStaticSpawnFilter ? (
+              <>
+                <TextField
+                  size="small"
+                  onChange={({ target: { value } }) => setStaticSpawnFilter(value)}
+                  label="Spawn Filter"
+                  value={staticSpawnFilter}
+                />
+                <InputLabel
+                  style={{ marginLeft: 8 }}
+                  id="demo-simple-select-label"
+                >
+                  Showing {filteredStaticSpawns.length} of {staticSpawns.length} Static Spawns
+                </InputLabel>
+              </>
+            ) : null}
           </div>
 
           {/* Search Dialog */}
@@ -591,7 +641,9 @@ export const Zone = () => {
             <DialogContent>
               <div style={{ height: 400, width: '100%' }}>
                 <FormControl sx={{ marginTop: 1 }} fullWidth>
-                  <InputLabel id="demo-simple-select-label">Camera Type</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    Camera Type
+                  </InputLabel>
                   <Select
                     value={cameraType}
                     label="Camera Type"
@@ -644,7 +696,7 @@ export const Zone = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  Max Distance for Markers: {maxPoiDisplay}
+                  Max Distance for Spawns and Markers: {maxPoiDisplay}
                 </Typography>
                 <Slider
                   value={maxPoiDisplay}
@@ -705,7 +757,47 @@ export const Zone = () => {
                       />
                     </>
                   )}
-
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showStaticSpawns}
+                        onChange={({ target: { checked } }) =>
+                          setOption('showStaticSpawns', checked)
+                        }
+                      />
+                    }
+                    label="Show static spawns"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showStaticSpawnDetails}
+                        onChange={({ target: { checked } }) =>
+                          setOption('showStaticSpawnDetails', checked)
+                        }
+                      />
+                    }
+                    label="Show static spawn details"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showStaticSpawnFilter}
+                        onChange={({ target: { checked } }) =>
+                          setOption('showStaticSpawnFilter', checked)
+                        }
+                      />
+                    }
+                    label="Show static spawn filter"
+                  />
+                  <InputLabel id="demo-simple-select-label">
+                      Static Spawn Color
+                  </InputLabel>
+                  <ColorPicker
+                    hideTextFIeld
+                    value={staticSpawnColor ?? '#FFFFFF'}
+                    onChange={(color) => setOption('staticSpawnColor', color)}
+                  />
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -829,7 +921,12 @@ export const Zone = () => {
           </Dialog>
           <Canvas ref={threeRef}>
             {/* <SkyBox /> */}
-            <CameraControls controls={cameraControls} type={cameraType} flySpeed={flySpeed} ref={cameraControls} />
+            <CameraControls
+              controls={cameraControls}
+              type={cameraType}
+              flySpeed={flySpeed}
+              ref={cameraControls}
+            />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {selectedProcess && zoneName && (
@@ -839,6 +936,7 @@ export const Zone = () => {
                   character={selectedProcess?.zoneViewer ? null : character}
                   ref={zoneRef}
                   spawns={filteredSpawns}
+                  staticSpawns={filteredStaticSpawns}
                   myTarget={selectedProcess?.zoneViewer ? null : myTarget}
                   setMyTarget={setMyTarget}
                   controls={cameraControls}

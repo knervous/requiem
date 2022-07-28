@@ -4,6 +4,7 @@ import React, {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useMemo,
 } from 'react';
 
 import Paper from '@mui/material/Paper';
@@ -64,6 +65,24 @@ const classes = {
   12: 'Wizard',
   13: 'Mage',
   14: 'Enchanter',
+  20: 'Warrior GM',
+  21: 'Cleric GM',
+  22: 'Paladin GM',
+  23: 'Ranger GM',
+  24: 'Shadowknight GM',
+  25: 'Druid GM',
+  26: 'Monk GM',
+  27: 'Bard GM',
+  28: 'Rogue GM',
+  29: 'Shaman GM',
+  30: 'Necromancer GM',
+  31: 'Wizard GM',
+  32: 'Mage GM',
+  33: 'Enchanter GM',
+  41: 'Merchant',
+  60: 'LDON Recruiter',
+  61: 'LDON Merchant',
+  63: 'Tribute Master',
 };
 
 export const RenderedZone = forwardRef(
@@ -85,6 +104,9 @@ export const RenderedZone = forwardRef(
       groupColor,
       groupMembers,
       showPoiLoc,
+      staticSpawns,
+      staticSpawnColor,
+      showStaticSpawnDetails,
     },
     forwardRef,
   ) => {
@@ -100,6 +122,7 @@ export const RenderedZone = forwardRef(
     const [doFollow, setDoFollow] = useState(false);
     const [prevCharacter, setPrevCharacter] = useState(character);
     const [target, setTarget] = useState(myTarget);
+    const [staticIndex, setStaticIndex] = useState(-1);
     const [{ bannerScale, bannerLoc }, setBanner] = useState({
       bannerScale: 0,
       bannerLoc  : { x: 0, y: 0, z: 0 },
@@ -116,6 +139,16 @@ export const RenderedZone = forwardRef(
       `${storageUrl}/textures/sword2.glb`,
     );
 
+    useEffect(() => {
+      const listener = (e) => {
+        if (e.key === 'Escape') {
+          setStaticIndex(-1);
+        }
+      };
+      window.addEventListener('keydown', listener);
+      return () => window.removeEventListener('keydown', listener);
+    }, []);
+
     useFrame(() => {
       const ctx = canvasRef.current?.getContext?.('2d');
       if (!ctx) {
@@ -131,8 +164,8 @@ export const RenderedZone = forwardRef(
       );
       for (const spawn of spawns.filter(
         (s) =>
-          !groupMembers.some(g => g.displayedName === s.displayedName) &&  
-        frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
+          !groupMembers.some((g) => g.displayedName === s.displayedName) &&
+          frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
           camera.position.distanceTo(
             new THREE.Vector3(s.y * -1, s.z + 15, s.x),
           ) < maxTargetDisplay,
@@ -192,6 +225,136 @@ export const RenderedZone = forwardRef(
             (nameWidth * side) / 2,
           screen.y - 44 + (fontSize - 13),
         );
+      }
+      for (const spawnGroup of staticSpawns.filter(
+        (spawnGroup) =>
+          spawnGroup[0] &&
+          frustum.containsPoint(
+            new THREE.Vector3(
+              spawnGroup[0].y * -1,
+              spawnGroup[0].z + 15,
+              spawnGroup[0].x,
+            ),
+          ) &&
+          camera.position.distanceTo(
+            new THREE.Vector3(
+              spawnGroup[0].y * -1,
+              spawnGroup[0].z + 15,
+              spawnGroup[0].x,
+            ),
+          ) < maxPoiDisplay,
+      )) {
+        const screen = worldToScreen(
+          canvasRef.current,
+          new THREE.Vector3(
+            spawnGroup[0].y * -1,
+            spawnGroup[0].z + 15,
+            spawnGroup[0].x,
+          ),
+          camera,
+        );
+        let side = 1;
+        if (screen.x > canvasRef.current.width / 2) {
+          side = -1;
+        }
+        ctx.strokeStyle = '#FFFFFF';
+
+        ctx.beginPath();
+        ctx.moveTo(screen.x, screen.y);
+        ctx.lineTo(screen.x - side * 12, screen.y);
+        ctx.lineTo(screen.x - side * 60, screen.y - 40);
+        ctx.stroke();
+
+        ctx.textAlign = 'start';
+        if (side === -1) {
+          ctx.textAlign = 'end';
+        }
+        let yOffset = 0;
+        let idx = 0;
+        for (const staticSpawn of spawnGroup) {
+         
+
+         
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `bold ${fontSize + 2}px Arial`;
+          ctx.textAlign = 'center';
+          const name = `${staticSpawn.name.replace(/_/g, ' ')} ${staticSpawn.chance}% Spawn Chance`;
+          const nameWidth = ctx.measureText(name).width;
+
+          if (staticIndex !== staticSpawns.indexOf(spawnGroup) && idx > 0) {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = `bold italic ${fontSize + 1}px Arial`;
+            const details = '[Click for additional spawns/locations]';
+
+            ctx.fillText(
+              details,
+              screen.x -
+                side * 2 -
+                side * nameWidth -
+                side * 16 +
+                (nameWidth * side) / 2,
+              screen.y - 64 + 6 + yOffset,
+            );
+            break;
+          }
+
+
+          idx++;
+
+          ctx.fillText(
+            name,
+            screen.x -
+              side * 2 -
+              side * nameWidth -
+              side * 16 +
+              (nameWidth * side) / 2,
+            screen.y - 64 + 6 + yOffset,
+          );
+          if (showStaticSpawnDetails) {
+            yOffset += 5;
+            ctx.font = `italic ${fontSize + 2}px Arial`;
+            const level = `Level ${staticSpawn.level} ${
+              classes[staticSpawn.class]
+            } :: Health: ${staticSpawn.hp}`;
+            ctx.fillText(
+              level,
+              screen.x -
+                side * 2 -
+                side * nameWidth -
+                side * 16 +
+                (nameWidth * side) / 2,
+              screen.y - 44 + (fontSize - 13) + yOffset,
+            );
+            yOffset += 20;
+
+            const loc = `(${staticSpawn.y}, ${staticSpawn.x}, ${staticSpawn.z})`;
+            ctx.fillText(
+              loc,
+              screen.x -
+                side * 2 -
+                side * nameWidth -
+                side * 16 +
+                (nameWidth * side) / 2,
+              screen.y - 44 + (fontSize - 13) + yOffset,
+            );
+
+            yOffset += 20;
+
+            const respawn = `Respawn Timer: ${(
+              staticSpawn.respawnTime / 60
+            ).toFixed(2)} minutes`;
+            ctx.fillText(
+              respawn,
+              screen.x -
+                side * 2 -
+                side * nameWidth -
+                side * 16 +
+                (nameWidth * side) / 2,
+              screen.y - 44 + (fontSize - 13) + yOffset,
+            );
+          }
+          yOffset += 35;
+        }
       }
 
       for (const zoneDetail of zoneDetails.filter(
@@ -427,6 +590,10 @@ export const RenderedZone = forwardRef(
       followMe,
     }));
 
+    const renderedStaticSpawns = useMemo(() => staticSpawns.map((s) => s[0]), [
+      staticSpawns,
+    ]);
+
     return (
       <>
         {/** Spawns */}
@@ -445,6 +612,25 @@ export const RenderedZone = forwardRef(
                 spawn={s}
                 onClick={() => {
                   setTarget(s);
+                }}
+                position={[s.y * -1, s.z + 15, s.x]}
+              >
+                <octahedronBufferGeometry args={[10]} />
+                <meshStandardMaterial color={color} />
+              </mesh>
+            </React.Fragment>
+          );
+        })}
+
+        {/** Static Spawns */}
+        {renderedStaticSpawns.map((s, i) => {
+          const color = staticSpawnColor?.css?.backgroundColor ?? 'blue';
+          return (
+            <React.Fragment key={`spawn-${s.id}-${i}`}>
+              <mesh
+                spawn={s}
+                onClick={() => {
+                  setStaticIndex(i);
                 }}
                 position={[s.y * -1, s.z + 15, s.x]}
               >
