@@ -239,6 +239,7 @@ export const supportedZones = [
   'tutorial',
   'tutoriala',
   'tutorialb',
+  'tox',
   'twilight',
   'txevu',
   'umbral',
