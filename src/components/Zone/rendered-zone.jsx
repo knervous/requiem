@@ -248,7 +248,7 @@ export const RenderedZone = forwardRef(
           canvasRef.current,
           new THREE.Vector3(
             spawnGroup[0].y * -1,
-            spawnGroup[0].z + 15,
+            spawnGroup[0].z + 5,
             spawnGroup[0].x,
           ),
           camera,
@@ -272,9 +272,6 @@ export const RenderedZone = forwardRef(
         let yOffset = 0;
         let idx = 0;
         for (const staticSpawn of spawnGroup) {
-         
-
-         
           ctx.fillStyle = '#FFFFFF';
           ctx.font = `bold ${fontSize + 2}px Arial`;
           ctx.textAlign = 'center';
@@ -632,9 +629,9 @@ export const RenderedZone = forwardRef(
                 onClick={() => {
                   setStaticIndex(i);
                 }}
-                position={[s.y * -1, s.z + 15, s.x]}
+                position={[s.y * -1, s.z + 5, s.x]}
               >
-                <octahedronBufferGeometry args={[10]} />
+                <octahedronBufferGeometry args={[7]} />
                 <meshStandardMaterial color={color} />
               </mesh>
             </React.Fragment>
