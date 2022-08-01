@@ -44,6 +44,7 @@ import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { supportedZones } from './data';
+import { SocketHandler } from './socketHandler';
 
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
@@ -77,7 +78,7 @@ const spawnColumns = [
     width      : 150,
     sortable   : false,
     valueGetter: (params) =>
-      params.row.type === 0 ? 'PC' : params.row.type === 1 ? 'NPC' : 'Corpse',
+      params.row.spawnType === 0 ? 'PC' : params.row.spawnType === 1 ? 'NPC' : 'Corpse',
   },
   {
     field      : 'location',
@@ -198,25 +199,13 @@ export const Zone = () => {
 
   const doConnect = async () => {
     if (socket) {
-      socket.disconnect();
+      socket.close();
     }
     setSocket(null);
     let newSocket;
     try {
-      newSocket = await new Promise((res, rej) => {
-        const socket = io(address, { secure: true });
-        const timeout = setTimeout(() => {
-          socket.disconnect();
-          rej();
-        }, 3000);
-        socket.on('connect_failed', rej);
-        socket.on('disconnect', rej);
-        socket.on('error', rej);
-        socket.on('connect', () => {
-          clearTimeout(timeout);
-          res(socket);
-        });
-      });
+      newSocket = new SocketHandler(address);
+      await newSocket.connected;
     } catch (e) {
       console.warn('Socket connection failed', e);
       addToast(`Could not connect to ${address}`, {
@@ -225,20 +214,26 @@ export const Zone = () => {
       setSocket(null);
       return;
     }
-    const validationInfo = await new Promise((res) =>
-      newSocket.emit('validate', token, res),
-    );
-    if (validationInfo.validated) {
-      addToast(`Successfully Connected to ${address}`, {
-        appearance: 'info',
-      });
-    } else {
-      addToast('Invalid or expired token supplied', {
-        appearance: 'error',
-      });
-      newSocket.disconnect();
-      return;
-    }
+
+    addToast(`Successfully Connected to ${address}`, {
+      appearance: 'info',
+    });
+
+
+    // const validationInfo = await new Promise((res) =>
+    //   newSocket.emit('validate', token, res),
+    // );
+    // if (validationInfo.validated) {
+    //   addToast(`Successfully Connected to ${address}`, {
+    //     appearance: 'info',
+    //   });
+    // } else {
+    //   addToast('Invalid or expired token supplied', {
+    //     appearance: 'error',
+    //   });
+    //   newSocket.disconnect();
+    //   return;
+    // }
 
     newSocket.on('activeProcesses', setProcesses);
     newSocket.on('setSpawns', (spawns) => {
@@ -303,7 +298,7 @@ export const Zone = () => {
           setSelectedProcess(newProcess);
           setProcesses((processes) =>
             processes.map((p) =>
-              p.processId === newProcess.processId ? newProcess : p,
+              p.pid === newProcess.pid ? newProcess : p,
             ),
           );
           break;
@@ -321,7 +316,7 @@ export const Zone = () => {
     if (!socket) {
       return;
     }
-    socket.emit('refreshProcesses');
+    socket?.emit?.('refreshProcesses');
     setPendingRetry(false);
     retryRef.current = true;
   }, [socket]);
@@ -337,10 +332,10 @@ export const Zone = () => {
             ?.includes?.(spawnFilter.toLowerCase());
         }
         if (showNpcs) {
-          ret = ret && (showPcs ? [1, 0].includes(s.type) : s.type === 1);
+          ret = ret && (showPcs ? [1, 0].includes(s.spawnType) : s.spawnType === 1);
         }
         if (showPcs) {
-          ret = ret && (showNpcs ? [1, 0].includes(s.type) : s.type === 0);
+          ret = ret && (showNpcs ? [1, 0].includes(s.spawnType) : s.spawnType === 0);
         }
         return ret;
       });
@@ -372,10 +367,10 @@ export const Zone = () => {
   }, [showStaticSpawns, staticSpawns, staticSpawnFilter]);
 
   const zoneName = useMemo(
-    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName),
+    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName ?? selectedProcess?.shortName),
     [selectedProcess, selectedZone, zone],
   );
-  const isHooked = useMemo(() => !!selectedProcess?.zone?.shortName, [
+  const isHooked = useMemo(() => !!selectedProcess?.shortName, [
     selectedProcess,
   ]);
 
@@ -397,13 +392,14 @@ export const Zone = () => {
       const context = canvasRef.current.getContext('2d');
       context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
+    console.log('sel pro', selectedProcess);
     (async () => {
       const zoneDetails = await import('../../common/zoneDetails.json');
       setZoneDetails(
         zoneDetails[
           selectedProcess.zoneViewer
             ? selectedZone
-            : selectedProcess.zone.shortName
+            : selectedProcess.shortName
         ] ?? [],
       );
 
@@ -415,7 +411,7 @@ export const Zone = () => {
       } catch {}
     })();
     if (!selectedProcess.zoneViewer) {
-      socket.emit('selectProcess', selectedProcess.processId);
+      socket?.emit?.('selectProcess', selectedProcess.pid);
     }
   }, [selectedProcess, socket, selectedZone, zoneName]);
 
@@ -443,6 +439,13 @@ export const Zone = () => {
       doConnect();
     }
   }, []) // eslint-disable-line
+
+  const doTarget = useCallback(id => {
+    if (!socket || !selectedProcess?.pid) {
+      return;
+    }
+    socket.emit('doAction', { processId: selectedProcess.pid, payload: { id }, type: 'target' });
+  }, [socket, selectedProcess]);
   return (
     <Paper className="zone-container" elevation={1}>
       <Card className="zone-header" variant="outlined">
@@ -520,7 +523,7 @@ export const Zone = () => {
                         <MenuItem value={p}>Zone Viewer</MenuItem>
                       ) : (
                         <MenuItem value={p}>
-                          {p.zone.characterName} - {p.zone.longName}
+                          {p.characterName} - {p.longName}
                         </MenuItem>
                       ),
                     )}
@@ -942,6 +945,7 @@ export const Zone = () => {
                   controls={cameraControls}
                   zoneName={zoneName}
                   canvasRef={canvasRef}
+                  doTarget={doTarget}
                   groupMembers={showGroup ? groupMembers : []}
                   {...options}
                 />

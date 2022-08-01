@@ -107,6 +107,7 @@ export const RenderedZone = forwardRef(
       staticSpawns,
       staticSpawnColor,
       showStaticSpawnDetails,
+      doTarget = () => {}
     },
     forwardRef,
   ) => {
@@ -214,7 +215,7 @@ export const RenderedZone = forwardRef(
         ctx.font = isTarget
           ? `italic bold ${fontSize + 3}px Arial`
           : `italic ${fontSize}px Arial`;
-        const level = `Level ${spawn.level} ${classes[spawn.class] ?? ''}`;
+        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}`;
 
         ctx.fillText(
           level,
@@ -457,7 +458,7 @@ export const RenderedZone = forwardRef(
         );
 
         ctx.font = `italic bold ${fontSize + 3}px Arial`;
-        const level = `Level ${character.level}  ${classes[character.class]}`;
+        const level = `Level ${character.level}  ${classes[character.classId]}`;
         ctx.fillText(
           level,
           screen.x -
@@ -611,6 +612,9 @@ export const RenderedZone = forwardRef(
                 spawn={s}
                 onClick={() => {
                   setTarget(s);
+                }}
+                onDoubleClick={() => {
+                  doTarget(s.id);
                 }}
                 position={[s.y * -1, s.z + 15, s.x]}
               >

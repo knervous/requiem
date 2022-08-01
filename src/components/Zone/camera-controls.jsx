@@ -25,8 +25,11 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
     right      : 0,
     up         : 0,
     down       : 0,
-    doubleSpeed: false
+    doubleSpeed: false,
+    jump       : false,
+    duck       : false
   });
+  const lockState = useRef(false);
   useEffect(() => {
     if (type === 'orbit') {
       return;
@@ -55,6 +58,12 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
         case 16: // Shift
           newState.doubleSpeed = Boolean(val);
           break;
+        case 32: // Space
+          newState.jump = Boolean(val);
+          break;
+        case 88: // Space
+          newState.duck = Boolean(val);
+          break;
         default:
           break;
       }
@@ -62,11 +71,31 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
     };
     const downListener = listener(1);
     const upListener = listener(0);
+   
+
+    const mouseDown = e => {
+      if (e.button === 2) {
+        lockState.current = true;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    const mouseUp = () => {
+      lockState.current = false;
+    };
+    const preventDefault = e => e.preventDefault();
+
     window.addEventListener('keydown', downListener);
     window.addEventListener('keyup', upListener);
+    window.addEventListener('contextmenu', preventDefault);
+    window.addEventListener('mousedown', mouseDown);
+    window.addEventListener('mouseup', mouseUp);
     return () => {
       window.removeEventListener('keydown', downListener);
       window.removeEventListener('keyup', upListener);
+      window.removeEventListener('contextmenu', preventDefault);
+      window.removeEventListener('mousedown', mouseDown);
+      window.removeEventListener('mouseup', mouseUp);
     };
   }, [type]);
   
@@ -94,7 +123,21 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
       }
   
       velocity.multiplyScalar(flySpeed * (moveState.current.doubleSpeed ? 2 : 1)).applyQuaternion(state.camera.quaternion);
+
+      if (moveState.current.jump || moveState.current.duck) {
+        const jumpvel = new THREE.Vector3();
+        jumpvel.y = moveState.current.jump ? 1 : -1;
+        jumpvel.multiplyScalar(flySpeed * (moveState.current.doubleSpeed ? 2 : 1));
+        state.camera.position.add(jumpvel);
+      }
       state.camera.position.add(velocity);
+
+      if (lockState.current) {
+        controls.current.connect();
+        controls.current.lock();
+      } else {
+        controls.current.unlock();
+      }
     }
 
     // if (type === 'orbit') {
