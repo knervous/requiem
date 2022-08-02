@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { ColorPicker } from 'mui-color';
-import { io } from 'socket.io-client';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -136,6 +135,7 @@ export const Zone = () => {
           showStaticSpawnFilter : true,
           showPoiLoc            : true,
           showGroup             : true,
+          follow                : false,
           skybox                : 'interstellar',
           charColor             : { css: { backgroundColor: '#00FF00' } },
           groupColor            : { css: { backgroundColor: '#0000FF' } },
@@ -160,6 +160,7 @@ export const Zone = () => {
     showStaticSpawns = true,
     showStaticSpawnDetails = false,
     showStaticSpawnFilter = true,
+    follow = false,
     staticSpawnColor,
     showPoiLoc,
     skybox,
@@ -392,7 +393,6 @@ export const Zone = () => {
       const context = canvasRef.current.getContext('2d');
       context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
-    console.log('sel pro', selectedProcess);
     (async () => {
       const zoneDetails = await import('../../common/zoneDetails.json');
       setZoneDetails(
@@ -421,6 +421,9 @@ export const Zone = () => {
     }
     const current = threeRef.current;
     const resizeObserver = new ResizeObserver(() => {
+      if (!canvasRef.current) {
+        return;
+      }
       canvasRef.current.height = current.height;
       canvasRef.current.width = current.width;
     });
@@ -468,8 +471,9 @@ export const Zone = () => {
             {isHooked && (
               <div className="overlay-buttons">
                 <Button
-                  sx={{ color: 'white' }}
+                  sx={{ color: 'white', background: 'skyblue' }}
                   variant="outlined"
+                
                   onClick={() => {
                     if (zoneRef.current) {
                       zoneRef.current.targetMe();
@@ -479,7 +483,7 @@ export const Zone = () => {
                   Jump to Me
                 </Button>
                 <Button
-                  sx={{ color: 'white' }}
+                  sx={{ color: 'white', background: 'skyblue' }}
                   variant="outlined"
                   onClick={() => {
                     if (zoneRef.current) {
@@ -489,6 +493,22 @@ export const Zone = () => {
                   }}
                 >
                   {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
+                </Button>
+                <Button
+                  sx={{ color: 'white', background: 'skyblue' }}
+                  variant="outlined"
+                  onClick={() => {
+                    if (zoneRef.current) {
+                      zoneRef.current.doTel(true);
+                    }
+                    setTimeout(() => {
+                      if (document.activeElement) {
+                        document.activeElement.blur();
+                      }
+                    }, 100);
+                  }}
+                >
+                  {'Cam Tel'}
                 </Button>
               </div>
             )}
@@ -758,6 +778,17 @@ export const Zone = () => {
                         }
                         label="Show Group Members"
                       />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={follow}
+                            onChange={({ target: { checked } }) =>
+                              setOption('follow', checked)
+                            }
+                          />
+                        }
+                        label="Follow Character"
+                      />
                     </>
                   )}
                   <FormControlLabel
@@ -935,6 +966,7 @@ export const Zone = () => {
             {selectedProcess && zoneName && (
               <Suspense fallback={<Loader />}>
                 <RenderedZone
+                  socket={socket}
                   zoneDetails={filteredZoneDetails}
                   character={selectedProcess?.zoneViewer ? null : character}
                   ref={zoneRef}
@@ -947,6 +979,7 @@ export const Zone = () => {
                   canvasRef={canvasRef}
                   doTarget={doTarget}
                   groupMembers={showGroup ? groupMembers : []}
+                  selectedProcess={selectedProcess}
                   {...options}
                 />
               </Suspense>

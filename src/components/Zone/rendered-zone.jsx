@@ -22,6 +22,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { Text } from 'troika-three-text';
+import { useThrottledCallback } from 'use-debounce';
 
 extend({
   EffectComposer,
@@ -107,7 +108,10 @@ export const RenderedZone = forwardRef(
       staticSpawns,
       staticSpawnColor,
       showStaticSpawnDetails,
-      doTarget = () => {}
+      doTarget = () => {},
+      socket,
+      follow,
+      selectedProcess
     },
     forwardRef,
   ) => {
@@ -129,6 +133,13 @@ export const RenderedZone = forwardRef(
       bannerLoc  : { x: 0, y: 0, z: 0 },
     });
     const characterRef = useRef();
+
+    const followPulse = useThrottledCallback((override = false) => {
+      if (!character || !socket || (!override && !follow)) {
+        return;
+      }
+      socket.emit('doAction', { processId: selectedProcess.pid, payload: { x: camera.position.z, z: camera.position.y - 15, y: camera.position.x * -1 }, type: 'tel' });
+    }, 50, { trailing: true });
 
     const zoneTexture = useLoader(GLTFLoader, `${storageUrl}/${zoneName}.glb`);
     const bannerTexture = useLoader(
@@ -163,6 +174,7 @@ export const RenderedZone = forwardRef(
           camera.matrixWorldInverse,
         ),
       );
+      followPulse();
       for (const spawn of spawns.filter(
         (s) =>
           !groupMembers.some((g) => g.displayedName === s.displayedName) &&
@@ -588,6 +600,7 @@ export const RenderedZone = forwardRef(
     useImperativeHandle(forwardRef, () => ({
       targetMe,
       followMe,
+      doTel: followPulse
     }));
 
     const renderedStaticSpawns = useMemo(() => staticSpawns.map((s) => s[0]), [
