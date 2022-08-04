@@ -50,7 +50,7 @@ export function RenderedSpawn({ spawn, fallback, maxDisplay }) {
       setCanView(false);
     }
 
-  }, 500));
+  }, 200));
   const { actions, mixer } = useAnimations(animations, spawnRef);
   const copiedScene = useMemo(() => {
     const clone = SkeletonUtils.clone(scene, true);
