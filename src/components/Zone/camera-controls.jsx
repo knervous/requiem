@@ -75,7 +75,9 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
    
 
     const mouseDown = e => {
-      
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
       if (e.button === 2) {
         lockState.current = true;
         e.preventDefault();
