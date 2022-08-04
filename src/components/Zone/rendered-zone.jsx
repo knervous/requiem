@@ -661,7 +661,7 @@ export const RenderedZone = forwardRef(
         {renderedStaticSpawns.map((s, i) => {
           const color = staticSpawnColor?.css?.backgroundColor ?? 'blue';
           const fallback = (
-            <mesh spawn={s} position={[s.y * -1, s.z + 5, s.x]}>
+            <mesh onClick={() => setStaticIndex(i)} spawn={s} position={[s.y * -1, s.z + 5, s.x]}>
               <octahedronBufferGeometry args={[7]} />
               <meshStandardMaterial color={color} />
             </mesh>
