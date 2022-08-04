@@ -207,6 +207,7 @@ export const Zone = () => {
     try {
       newSocket = new SocketHandler(address);
       await newSocket.connected;
+ 
     } catch (e) {
       console.warn('Socket connection failed', e);
       addToast(`Could not connect to ${address}`, {
@@ -274,13 +275,13 @@ export const Zone = () => {
         });
       });
     });
-    newSocket.on('charInfo', ({ character, zone, groupMembers }) => {
+    newSocket.on('charInfo', ({ character, zoneInfo, groupMembers }) => {
       if (zoneViewerRef.current) {
         return;
       }
       setCharacter(character);
       setGroupMembers(groupMembers);
-      setZone(zone);
+      setZone(zoneInfo);
     });
     newSocket.on('lostProcess', async (processId) => {
       if (zoneViewerRef.current) {
@@ -374,7 +375,9 @@ export const Zone = () => {
   const isHooked = useMemo(() => !!selectedProcess?.shortName, [
     selectedProcess,
   ]);
-
+  useEffect(() => {
+    setOption('follow', false);
+  }, [zoneName]);
   useEffect(() => {
     if (!selectedProcess) {
       return;
@@ -412,6 +415,9 @@ export const Zone = () => {
     })();
     if (!selectedProcess.zoneViewer) {
       socket?.emit?.('selectProcess', selectedProcess.pid);
+      window.socketAction = (type, payload) => {
+        socket.emit('doAction', { processId: selectedProcess.pid, payload, type });
+      };
     }
   }, [selectedProcess, socket, selectedZone, zoneName]);
 
@@ -494,7 +500,7 @@ export const Zone = () => {
                 >
                   {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
                 </Button>
-                <Button
+                {/* <Button
                   sx={{ color: 'white', background: 'skyblue' }}
                   variant="outlined"
                   onClick={() => {
@@ -508,7 +514,22 @@ export const Zone = () => {
                     }, 100);
                   }}
                 >
-                  {'Cam Tel'}
+                  {'Cam Tel'} */}
+                {/* </Button> */}
+                <Button
+                  sx={{ color: 'white', background: follow ? 'lightgreen' : 'skyblue' }}
+                  variant="outlined"
+                  onClick={() => {
+                    socket.emit('doAction', { processId: selectedProcess.pid, payload: { gravity: !follow ? 0.0 : 0.4 }, type: 'grav' });
+                    setOption('follow', !follow);
+                    setTimeout(() => {
+                      if (document.activeElement) {
+                        document.activeElement.blur();
+                      }
+                    }, 100);
+                  }}
+                >
+                  {follow ? 'Unfollow Tel' : 'Follow Tel'}
                 </Button>
               </div>
             )}
@@ -712,6 +733,27 @@ export const Zone = () => {
                       min={0}
                       max={5000}
                     />
+                    {/* <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      Zone Gravity: {zone?.gravity}
+                    </Typography>
+                    <Slider
+                      value={zone?.gravity}
+                      onChange={(e) => {
+                        if (!socket) {
+                          return;
+                        }
+                        socket.emit('doAction', { processId: selectedProcess.pid, payload: { gravity: 0 }, type: 'grav' });
+                      }
+                        // setOption('zoneGravity', +e.target.value)
+                      }
+                      step={0.1}
+                      min={0}
+                      max={5}
+                    /> */}
                   </>
                 )}
                 <Typography
@@ -777,17 +819,6 @@ export const Zone = () => {
                           />
                         }
                         label="Show Group Members"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={follow}
-                            onChange={({ target: { checked } }) =>
-                              setOption('follow', checked)
-                            }
-                          />
-                        }
-                        label="Follow Character"
                       />
                     </>
                   )}

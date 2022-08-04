@@ -19,7 +19,7 @@ export class SocketHandler {
     });
       
     this.#websocket.onclose = () => {
-      console.log('Disconnected');
+      console.log('Disconnected'); // eslint-disable-line
     };
   
     this.#websocket.onmessage = ({ data }) => {
@@ -44,7 +44,7 @@ export class SocketHandler {
     };
   }
   emit(message, payload, callback) {
-    console.log('Emit', message, payload, callback);
+    console.log('Emit', message, payload, callback); // eslint-disable-line
     let callbackId;
     if (typeof callback === 'function') {
       const id = v4();

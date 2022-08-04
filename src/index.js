@@ -3,10 +3,5 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { Main } from './components/Main';
 
-
-ReactDOM.render(
-  <React.StrictMode>
-    <Main />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Main />);

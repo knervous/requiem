@@ -1,3313 +1,3313 @@
 [
     {
-        "id": 0,
-        "name": "Human",
-        "male": "HUM",
-        "female": "HUF",
-        "neutral": ""
-    },
-    {
+        "0": "HUM",
+        "1": "HUF",
+        "2": "",
         "id": 1,
-        "name": "Barbarian",
-        "male": "BAM",
-        "female": "BAF",
-        "neutral": ""
+        "name": "Human"
     },
     {
+        "0": "BAM",
+        "1": "BAF",
+        "2": "",
         "id": 2,
-        "name": "Erudite",
-        "male": "ERM",
-        "female": "ERF",
-        "neutral": ""
+        "name": "Barbarian"
     },
     {
+        "0": "ERM",
+        "1": "ERF",
+        "2": "",
         "id": 3,
-        "name": "Wood Elf",
-        "male": "ELM",
-        "female": "ELF",
-        "neutral": ""
+        "name": "Erudite"
     },
     {
+        "0": "ELM",
+        "1": "ELF",
+        "2": "",
         "id": 4,
-        "name": "High Elf",
-        "male": "HIM",
-        "female": "HIF",
-        "neutral": ""
+        "name": "Wood Elf"
     },
     {
+        "0": "HIM",
+        "1": "HIF",
+        "2": "",
         "id": 5,
-        "name": "Dark Elf",
-        "male": "DAM",
-        "female": "DAF",
-        "neutral": ""
+        "name": "High Elf"
     },
     {
+        "0": "DAM",
+        "1": "DAF",
+        "2": "",
         "id": 6,
-        "name": "Half Elf",
-        "male": "HAM",
-        "female": "HAF",
-        "neutral": ""
+        "name": "Dark Elf"
     },
     {
+        "0": "HAM",
+        "1": "HAF",
+        "2": "",
         "id": 7,
-        "name": "Dwarf",
-        "male": "DWM",
-        "female": "DWF",
-        "neutral": ""
+        "name": "Half Elf"
     },
     {
+        "0": "DWM",
+        "1": "DWF",
+        "2": "",
         "id": 8,
-        "name": "Troll",
-        "male": "TRM",
-        "female": "TRF",
-        "neutral": ""
+        "name": "Dwarf"
     },
     {
+        "0": "TRM",
+        "1": "TRF",
+        "2": "",
         "id": 9,
-        "name": "Ogre",
-        "male": "OGM",
-        "female": "OGF",
-        "neutral": ""
+        "name": "Troll"
     },
     {
+        "0": "OGM",
+        "1": "OGF",
+        "2": "",
         "id": 10,
-        "name": "Halfling",
-        "male": "HOM",
-        "female": "HOF",
-        "neutral": ""
+        "name": "Ogre"
     },
     {
+        "0": "HOM",
+        "1": "HOF",
+        "2": "",
         "id": 11,
-        "name": "Gnome",
-        "male": "GNM",
-        "female": "GNF",
-        "neutral": ""
+        "name": "Halfling"
     },
     {
+        "0": "GNM",
+        "1": "GNF",
+        "2": "",
         "id": 12,
-        "name": "Aviak",
-        "male": "",
-        "female": "",
-        "neutral": "AVI"
+        "name": "Gnome"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "AVI",
         "id": 13,
-        "name": "Werewolf",
-        "male": "",
-        "female": "",
-        "neutral": "WER"
+        "name": "Aviak"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WER",
         "id": 14,
-        "name": "Brownie",
-        "male": "BRM",
-        "female": "BRF",
-        "neutral": ""
+        "name": "Werewolf"
     },
     {
+        "0": "BRM",
+        "1": "BRF",
+        "2": "",
         "id": 15,
-        "name": "Centaur",
-        "male": "CEM",
-        "female": "CEF",
-        "neutral": "CEN"
+        "name": "Brownie"
     },
     {
+        "0": "CEM",
+        "1": "CEF",
+        "2": "CEN",
         "id": 16,
-        "name": "Golem",
-        "male": "GOM",
-        "female": "GOF",
-        "neutral": "GOL"
+        "name": "Centaur"
     },
     {
+        "0": "GOM",
+        "1": "GOF",
+        "2": "GOL",
         "id": 17,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "GIA"
+        "name": "Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GIA",
         "id": 18,
-        "name": "Trakanon",
-        "male": "",
-        "female": "",
-        "neutral": "TRK"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRK",
         "id": 19,
-        "name": "Venril Sathir",
-        "male": "",
-        "female": "",
-        "neutral": "VST"
+        "name": "Trakanon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VST",
         "id": 20,
-        "name": "Evil Eye",
-        "male": "",
-        "female": "",
-        "neutral": "BEH"
+        "name": "Venril Sathir"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BEH",
         "id": 21,
-        "name": "Beetle",
-        "male": "",
-        "female": "",
-        "neutral": "BET"
+        "name": "Evil Eye"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BET",
         "id": 22,
-        "name": "Kerran",
-        "male": "CPM",
-        "female": "CPF",
-        "neutral": ""
+        "name": "Beetle"
     },
     {
+        "0": "CPM",
+        "1": "CPF",
+        "2": "",
         "id": 23,
-        "name": "Fish",
-        "male": "",
-        "female": "",
-        "neutral": "FIS"
+        "name": "Kerran"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FIS",
         "id": 24,
-        "name": "Fairy",
-        "male": "FAM",
-        "female": "FAF",
-        "neutral": ""
+        "name": "Fish"
     },
     {
+        "0": "FAM",
+        "1": "FAF",
+        "2": "",
         "id": 25,
-        "name": "Froglok",
-        "male": "",
-        "female": "",
-        "neutral": "FRO"
+        "name": "Fairy"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FRO",
         "id": 26,
-        "name": "Froglok",
-        "male": "",
-        "female": "",
-        "neutral": "FRG"
+        "name": "Froglok"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FRG",
         "id": 27,
-        "name": "Fungusman",
-        "male": "",
-        "female": "",
-        "neutral": "FUN"
+        "name": "Froglok"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FUN",
         "id": 28,
-        "name": "Gargoyle",
-        "male": "GAM",
-        "female": "",
-        "neutral": "GAR"
+        "name": "Fungusman"
     },
     {
+        "0": "GAM",
+        "1": "",
+        "2": "GAR",
         "id": 29,
-        "name": "Gasbag",
-        "male": "",
-        "female": "",
-        "neutral": "BEH"
+        "name": "Gargoyle"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BEH",
         "id": 30,
-        "name": "Gelatinous Cube",
-        "male": "",
-        "female": "",
-        "neutral": "CUB"
+        "name": "Gasbag"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CUB",
         "id": 31,
-        "name": "Ghost",
-        "male": "GHM",
-        "female": "GHF",
-        "neutral": ""
+        "name": "Gelatinous Cube"
     },
     {
+        "0": "GHM",
+        "1": "GHF",
+        "2": "",
         "id": 32,
-        "name": "Ghoul",
-        "male": "",
-        "female": "",
-        "neutral": "GHU"
+        "name": "Ghost"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GHU",
         "id": 33,
-        "name": "Bat",
-        "male": "",
-        "female": "",
-        "neutral": "BAT"
+        "name": "Ghoul"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BAT",
         "id": 34,
-        "name": "Rat",
-        "male": "",
-        "female": "",
-        "neutral": "RAT"
+        "name": "Bat"
     },
     {
-        "id": 35,
-        "name": "Snake",
-        "male": "",
-        "female": "",
-        "neutral": "SNA"
-    },
-    {
+        "0": "",
+        "1": "",
+        "2": "RAT",
         "id": 36,
-        "name": "Spider",
-        "male": "",
-        "female": "",
-        "neutral": "SPI"
+        "name": "Rat"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SNA",
         "id": 37,
-        "name": "Gnoll",
-        "male": "",
-        "female": "",
-        "neutral": "GNN"
+        "name": "Snake"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPI",
         "id": 38,
-        "name": "Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "GOB"
+        "name": "Spider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GNN",
         "id": 39,
-        "name": "Gorilla",
-        "male": "",
-        "female": "",
-        "neutral": "GOR"
+        "name": "Gnoll"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GOB",
         "id": 40,
-        "name": "Wolf",
-        "male": "WOM",
-        "female": "WOF",
-        "neutral": "WOL"
+        "name": "Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GOR",
         "id": 41,
-        "name": "Bear",
-        "male": "",
-        "female": "",
-        "neutral": "BEA"
+        "name": "Gorilla"
     },
     {
+        "0": "WOM",
+        "1": "WOF",
+        "2": "WOL",
         "id": 42,
-        "name": "Guard",
-        "male": "FPM",
-        "female": "FPF",
-        "neutral": ""
+        "name": "Wolf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BEA",
         "id": 43,
-        "name": "Demi Lich",
-        "male": "",
-        "female": "",
-        "neutral": "DML"
+        "name": "Bear"
     },
     {
+        "0": "FPM",
+        "1": "FPF",
+        "2": "",
         "id": 44,
-        "name": "Imp",
-        "male": "",
-        "female": "",
-        "neutral": "IMP"
+        "name": "Guard"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DML",
         "id": 45,
-        "name": "Griffin",
-        "male": "",
-        "female": "",
-        "neutral": "GRI"
+        "name": "Demi Lich"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IMP",
         "id": 46,
-        "name": "Kobold",
-        "male": "",
-        "female": "",
-        "neutral": "KOB"
+        "name": "Imp"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GRI",
         "id": 47,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "DRA"
+        "name": "Griffin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KOB",
         "id": 48,
-        "name": "Lion",
-        "male": "LIM",
-        "female": "LIF",
-        "neutral": ""
+        "name": "Kobold"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRA",
         "id": 49,
-        "name": "Lizard Man",
-        "male": "",
-        "female": "",
-        "neutral": "LIZ"
+        "name": "Dragon"
     },
     {
+        "0": "LIM",
+        "1": "LIF",
+        "2": "",
         "id": 50,
-        "name": "Mimic",
-        "male": "MIM",
-        "female": "MIF",
-        "neutral": ""
+        "name": "Lion"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LIZ",
         "id": 51,
-        "name": "Minotaur",
-        "male": "",
-        "female": "",
-        "neutral": "MIN"
+        "name": "Lizard Man"
     },
     {
+        "0": "MIM",
+        "1": "MIF",
+        "2": "",
         "id": 52,
-        "name": "Orc",
-        "male": "",
-        "female": "",
-        "neutral": "ORC"
+        "name": "Mimic"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MIN",
         "id": 53,
-        "name": "Beggar",
-        "male": "BGM",
-        "female": "BGF",
-        "neutral": ""
+        "name": "Minotaur"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ORC",
         "id": 54,
-        "name": "Pixie",
-        "male": "PIM",
-        "female": "PIF",
-        "neutral": ""
+        "name": "Orc"
     },
     {
+        "0": "BGM",
+        "1": "BGF",
+        "2": "",
         "id": 55,
-        "name": "Drachnid",
-        "male": "DRM",
-        "female": "DRF",
-        "neutral": ""
+        "name": "Beggar"
     },
     {
+        "0": "PIM",
+        "1": "PIF",
+        "2": "",
         "id": 56,
-        "name": "Solusek Ro",
-        "male": "",
-        "female": "",
-        "neutral": "SOL"
+        "name": "Pixie"
     },
     {
+        "0": "DRM",
+        "1": "DRF",
+        "2": "",
         "id": 57,
-        "name": "Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "BGG"
+        "name": "Drachnid"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SOL",
         "id": 58,
-        "name": "Skeleton",
-        "male": "",
-        "female": "",
-        "neutral": "SKE"
+        "name": "Solusek Ro"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BGG",
         "id": 59,
-        "name": "Shark",
-        "male": "",
-        "female": "",
-        "neutral": "SHA"
+        "name": "Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKE",
         "id": 60,
-        "name": "Tunare",
-        "male": "",
-        "female": "",
-        "neutral": "TUN"
+        "name": "Skeleton"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SHA",
         "id": 61,
-        "name": "Tiger",
-        "male": "",
-        "female": "",
-        "neutral": "TIG"
+        "name": "Shark"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TUN",
         "id": 62,
-        "name": "Treant",
-        "male": "",
-        "female": "",
-        "neutral": "TRE"
+        "name": "Tunare"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TIG",
         "id": 63,
-        "name": "Vampire",
-        "male": "DVM",
-        "female": "DVF",
-        "neutral": ""
+        "name": "Tiger"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRE",
         "id": 64,
-        "name": "Rallos Zek",
-        "male": "",
-        "female": "",
-        "neutral": "RAL"
+        "name": "Treant"
     },
     {
+        "0": "DVM",
+        "1": "DVF",
+        "2": "",
         "id": 65,
-        "name": "Human",
-        "male": "HHM",
-        "female": "HHF",
-        "neutral": ""
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RAL",
         "id": 66,
-        "name": "Tentacle Terror",
-        "male": "TEM",
-        "female": "TEF",
-        "neutral": "TEN"
+        "name": "Rallos Zek"
     },
     {
+        "0": "HHM",
+        "1": "HHF",
+        "2": "",
         "id": 67,
-        "name": "Will-O-Wisp",
-        "male": "",
-        "female": "",
-        "neutral": "WIL"
+        "name": "Human"
     },
     {
+        "0": "TEM",
+        "1": "TEF",
+        "2": "TEN",
         "id": 68,
-        "name": "Zombie",
-        "male": "ZOM",
-        "female": "ZOF",
-        "neutral": ""
+        "name": "Tentacle Terror"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WIL",
         "id": 69,
-        "name": "Human",
-        "male": "QCM",
-        "female": "QCN",
-        "neutral": "QCF"
+        "name": "Will-O-Wisp"
     },
     {
+        "0": "ZOM",
+        "1": "ZOF",
+        "2": "",
         "id": 70,
-        "name": "Ship",
-        "male": "SHIP",
-        "female": "PRE",
-        "neutral": "PRE"
+        "name": "Zombie"
     },
     {
+        "0": "QCM_00",
+        "1": "QCM_00",
+        "2": "QCM",
         "id": 71,
-        "name": "Launch",
-        "male": "LAUNCHM",
-        "female": "",
-        "neutral": "LAUNCH"
+        "name": "Human"
     },
     {
+        "0": "SHIP",
+        "1": "PRE",
+        "2": "PRE",
         "id": 72,
-        "name": "Piranha",
-        "male": "",
-        "female": "",
-        "neutral": "PIR"
+        "name": "Ship"
     },
     {
+        "0": "LAUNCHM",
+        "1": "",
+        "2": "LAUNCH",
         "id": 73,
-        "name": "Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "ELE"
+        "name": "Launch"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PIR",
         "id": 74,
-        "name": "Puma",
-        "male": "",
-        "female": "",
-        "neutral": "PUM"
+        "name": "Piranha"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ELE",
         "id": 75,
-        "name": "Dark Elf",
-        "male": "NGM",
-        "female": "NGF",
-        "neutral": ""
+        "name": "Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PUM",
         "id": 76,
-        "name": "Erudite",
-        "male": "EGM",
-        "female": "EGF",
-        "neutral": ""
+        "name": "Puma"
     },
     {
+        "0": "NGM",
+        "1": "NGF",
+        "2": "",
         "id": 77,
-        "name": "Bixie",
-        "male": "",
-        "female": "",
-        "neutral": "BIX"
+        "name": "Dark Elf"
     },
     {
+        "0": "EGM",
+        "1": "EGF",
+        "2": "",
         "id": 78,
-        "name": "Reanimated Hand",
-        "male": "",
-        "female": "",
-        "neutral": "REA"
+        "name": "Erudite"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BIX",
         "id": 79,
-        "name": "Halfling",
-        "male": "RIM",
-        "female": "RIF",
-        "neutral": ""
+        "name": "Bixie"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "REA",
         "id": 80,
-        "name": "Scarecrow",
-        "male": "",
-        "female": "",
-        "neutral": "SCA"
+        "name": "Reanimated Hand"
     },
     {
+        "0": "RIM",
+        "1": "RIF",
+        "2": "",
         "id": 81,
-        "name": "Skunk",
-        "male": "",
-        "female": "",
-        "neutral": "SKU"
+        "name": "Halfling"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCA",
         "id": 82,
-        "name": "Snake Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "SNE"
+        "name": "Scarecrow"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKU",
         "id": 83,
-        "name": "Spectre",
-        "male": "",
-        "female": "",
-        "neutral": "SPE"
+        "name": "Skunk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SNE",
         "id": 84,
-        "name": "Sphinx",
-        "male": "",
-        "female": "",
-        "neutral": "SPH"
+        "name": "Snake Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPE",
         "id": 85,
-        "name": "Armadillo",
-        "male": "",
-        "female": "",
-        "neutral": "ARM"
+        "name": "Spectre"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPH",
         "id": 86,
-        "name": "Clockwork Gnome",
-        "male": "CLM",
-        "female": "CLF",
-        "neutral": "CLN"
+        "name": "Sphinx"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ARM",
         "id": 87,
-        "name": "Drake",
-        "male": "",
-        "female": "",
-        "neutral": "DRK"
+        "name": "Armadillo"
     },
     {
+        "0": "CLM",
+        "1": "CLF",
+        "2": "CLN",
         "id": 88,
-        "name": "Barbarian",
-        "male": "HLM",
-        "female": "HLF",
-        "neutral": ""
+        "name": "Clockwork Gnome"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRK",
         "id": 89,
-        "name": "Alligator",
-        "male": "",
-        "female": "",
-        "neutral": "ALL"
+        "name": "Drake"
     },
     {
+        "0": "HLM",
+        "1": "HLF",
+        "2": "",
         "id": 90,
-        "name": "Troll",
-        "male": "GRM",
-        "female": "GRF",
-        "neutral": ""
+        "name": "Barbarian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ALL",
         "id": 91,
-        "name": "Ogre",
-        "male": "OKM",
-        "female": "OKF",
-        "neutral": ""
+        "name": "Alligator"
     },
     {
+        "0": "GRM",
+        "1": "GRF",
+        "2": "",
         "id": 92,
-        "name": "Dwarf",
-        "male": "KAM",
-        "female": "KAF",
-        "neutral": "KAN"
+        "name": "Troll"
     },
     {
+        "0": "OKM",
+        "1": "OKF",
+        "2": "",
         "id": 93,
-        "name": "Cazic Thule",
-        "male": "",
-        "female": "",
-        "neutral": "CAZ"
+        "name": "Ogre"
     },
     {
+        "0": "KAM",
+        "1": "KAF",
+        "2": "KAN",
         "id": 94,
-        "name": "Cockatrice",
-        "male": "",
-        "female": "",
-        "neutral": "COC"
+        "name": "Dwarf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CAZ",
         "id": 95,
-        "name": "Daisy Man",
-        "male": "",
-        "female": "",
-        "neutral": "DIA"
+        "name": "Cazic Thule"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "COC",
         "id": 96,
-        "name": "Vampire",
-        "male": "VSM",
-        "female": "VSF",
-        "neutral": ""
+        "name": "Cockatrice"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DIA",
         "id": 97,
-        "name": "Amygdalan",
-        "male": "",
-        "female": "",
-        "neutral": "DEN"
+        "name": "Daisy Man"
     },
     {
+        "0": "VSM",
+        "1": "VSF",
+        "2": "",
         "id": 98,
-        "name": "Dervish",
-        "male": "",
-        "female": "",
-        "neutral": "DER"
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DEN",
         "id": 99,
-        "name": "Efreeti",
-        "male": "",
-        "female": "",
-        "neutral": "EFR"
+        "name": "Amygdalan"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DER",
         "id": 100,
-        "name": "Tadpole",
-        "male": "",
-        "female": "",
-        "neutral": "FRT"
+        "name": "Dervish"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EFR",
         "id": 101,
-        "name": "Kedge",
-        "male": "",
-        "female": "",
-        "neutral": "KED"
+        "name": "Efreeti"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FRT",
         "id": 102,
-        "name": "Leech",
-        "male": "",
-        "female": "",
-        "neutral": "LEE"
+        "name": "Tadpole"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KED",
         "id": 103,
-        "name": "Swordfish",
-        "male": "",
-        "female": "",
-        "neutral": "SWO"
+        "name": "Kedge"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LEE",
         "id": 104,
-        "name": "Guard",
-        "male": "FEM",
-        "female": "FEF",
-        "neutral": ""
+        "name": "Leech"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SWO",
         "id": 105,
-        "name": "Mammoth",
-        "male": "",
-        "female": "",
-        "neutral": "MAM"
+        "name": "Swordfish"
     },
     {
+        "0": "FEM",
+        "1": "FEF",
+        "2": "",
         "id": 106,
-        "name": "Eye",
-        "male": "",
-        "female": "",
-        "neutral": "EYE"
+        "name": "Guard"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MAM",
         "id": 107,
-        "name": "Wasp",
-        "male": "",
-        "female": "",
-        "neutral": "WAS"
+        "name": "Mammoth"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EYE",
         "id": 108,
-        "name": "Mermaid",
-        "male": "",
-        "female": "",
-        "neutral": "MER"
+        "name": "Eye"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WAS",
         "id": 109,
-        "name": "Harpy",
-        "male": "",
-        "female": "",
-        "neutral": "HAR"
+        "name": "Wasp"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MER",
         "id": 110,
-        "name": "Guard",
-        "male": "GFM",
-        "female": "GFF",
-        "neutral": ""
+        "name": "Mermaid"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "HAR",
         "id": 111,
-        "name": "Drixie",
-        "male": "",
-        "female": "",
-        "neutral": "DRI"
+        "name": "Harpy"
     },
     {
+        "0": "GFM",
+        "1": "GFF",
+        "2": "",
         "id": 112,
-        "name": "Ghost Ship",
-        "male": "",
-        "female": "",
-        "neutral": "GSP"
+        "name": "Guard"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRI",
         "id": 113,
-        "name": "Clam",
-        "male": "",
-        "female": "",
-        "neutral": "CLA"
+        "name": "Drixie"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GSP",
         "id": 114,
-        "name": "Seahorse",
-        "male": "",
-        "female": "",
-        "neutral": "SEA"
+        "name": "Ghost Ship"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CLA",
         "id": 115,
-        "name": "Ghost",
-        "male": "GDM",
-        "female": "GDF",
-        "neutral": ""
+        "name": "Clam"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SEA",
         "id": 116,
-        "name": "Ghost",
-        "male": "GEM",
-        "female": "GEF",
-        "neutral": ""
+        "name": "Seahorse"
     },
     {
+        "0": "GDM",
+        "1": "GDF",
+        "2": "",
         "id": 117,
-        "name": "Sabertooth",
-        "male": "",
-        "female": "",
-        "neutral": "STC"
+        "name": "Ghost"
     },
     {
+        "0": "GEM",
+        "1": "GEF",
+        "2": "",
         "id": 118,
-        "name": "Wolf",
-        "male": "",
-        "female": "",
-        "neutral": "WOE"
+        "name": "Ghost"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "STC",
         "id": 119,
-        "name": "Gorgon",
-        "male": "",
-        "female": "",
-        "neutral": "GRG"
+        "name": "Sabertooth"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WOE",
         "id": 120,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "DRU"
+        "name": "Wolf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GRG",
         "id": 121,
-        "name": "Innoruuk",
-        "male": "",
-        "female": "",
-        "neutral": "INN"
+        "name": "Gorgon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRU",
         "id": 122,
-        "name": "Unicorn",
-        "male": "",
-        "female": "",
-        "neutral": "UNI"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "INN",
         "id": 123,
-        "name": "Pegasus",
-        "male": "",
-        "female": "",
-        "neutral": "PEG"
+        "name": "Innoruuk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "UNI",
         "id": 124,
-        "name": "Djinn",
-        "male": "",
-        "female": "",
-        "neutral": "DJI"
+        "name": "Unicorn"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PEG",
         "id": 125,
-        "name": "Invisible Man",
-        "male": "IVM",
-        "female": "IVF",
-        "neutral": ""
+        "name": "Pegasus"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DJI",
         "id": 126,
-        "name": "Iksar",
-        "male": "IKM",
-        "female": "IKF",
-        "neutral": ""
+        "name": "Djinn"
     },
     {
+        "0": "IVM",
+        "1": "IVF",
+        "2": "",
         "id": 127,
-        "name": "Scorpion",
-        "male": "",
-        "female": "",
-        "neutral": "SCR"
+        "name": "Invisible Man"
     },
     {
+        "0": "IKM",
+        "1": "IKF",
+        "2": "",
         "id": 128,
-        "name": "Vah Shir",
-        "male": "KEM",
-        "female": "KEF",
-        "neutral": ""
+        "name": "Iksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCR",
         "id": 129,
-        "name": "Sarnak",
-        "male": "",
-        "female": "",
-        "neutral": "SRW"
+        "name": "Scorpion"
     },
     {
+        "0": "KEM",
+        "1": "KEF",
+        "2": "",
         "id": 130,
-        "name": "Draglock",
-        "male": "",
-        "female": "",
-        "neutral": "DLK"
+        "name": "Vah Shir"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SRW",
         "id": 131,
-        "name": "Drolvarg",
-        "male": "",
-        "female": "",
-        "neutral": "LYC"
+        "name": "Sarnak"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DLK",
         "id": 132,
-        "name": "Mosquito",
-        "male": "",
-        "female": "",
-        "neutral": "MOS"
+        "name": "Draglock"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LYC",
         "id": 133,
-        "name": "Rhinoceros",
-        "male": "",
-        "female": "",
-        "neutral": "RHI"
+        "name": "Drolvarg"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MOS",
         "id": 134,
-        "name": "Xalgoz",
-        "male": "",
-        "female": "",
-        "neutral": "XAL"
+        "name": "Mosquito"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RHI",
         "id": 135,
-        "name": "Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "KGO"
+        "name": "Rhinoceros"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "XAL",
         "id": 136,
-        "name": "Yeti",
-        "male": "",
-        "female": "",
-        "neutral": "YET"
+        "name": "Xalgoz"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KGO",
         "id": 137,
-        "name": "Iksar",
-        "male": "ICM",
-        "female": "ICF",
-        "neutral": "ICN"
+        "name": "Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "YET",
         "id": 138,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "FGI"
+        "name": "Yeti"
     },
     {
+        "0": "ICM",
+        "1": "ICF",
+        "2": "ICN",
         "id": 139,
-        "name": "Boat",
-        "male": "BOAT",
-        "female": "BOAT",
-        "neutral": "BOAT"
+        "name": "Iksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FGI",
         "id": 140,
-        "name": "Burynai",
-        "male": "",
-        "female": "",
-        "neutral": "BRN"
+        "name": "Giant"
     },
     {
+        "0": "BOAT",
+        "1": "BOAT",
+        "2": "BOAT",
         "id": 141,
-        "name": "Goo",
-        "male": "",
-        "female": "",
-        "neutral": "GOO"
+        "name": "Boat"
     },
     {
-        "id": 142,
-        "name": "Sarnak Spirit",
-        "male": "",
-        "female": "",
-        "neutral": "SSN"
-    },
-    {
-        "id": 143,
-        "name": "Iksar Spirit",
-        "male": "SIM",
-        "female": "SIF",
-        "neutral": "SIN"
-    },
-    {
+        "0": "",
+        "1": "",
+        "2": "BRN",
         "id": 144,
-        "name": "Fish",
-        "male": "",
-        "female": "",
-        "neutral": "BAC"
+        "name": "Burynai"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GOO",
         "id": 145,
-        "name": "Scorpion",
-        "male": "",
-        "female": "",
-        "neutral": "ISC"
+        "name": "Goo"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SSN",
         "id": 146,
-        "name": "Erollisi",
-        "male": "",
-        "female": "",
-        "neutral": "ERO"
+        "name": "Sarnak Spirit"
     },
     {
+        "0": "SIM",
+        "1": "SIF",
+        "2": "SIN",
         "id": 147,
-        "name": "Tribunal",
-        "male": "",
-        "female": "",
-        "neutral": "TRI"
+        "name": "Iksar Spirit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BAC",
         "id": 148,
-        "name": "Bertoxxulous",
-        "male": "",
-        "female": "",
-        "neutral": "BER"
+        "name": "Fish"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ISC",
         "id": 149,
-        "name": "Bristlebane",
-        "male": "",
-        "female": "",
-        "neutral": "BRI"
+        "name": "Scorpion"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ERO",
         "id": 150,
-        "name": "Fay Drake",
-        "male": "",
-        "female": "",
-        "neutral": "FDR"
+        "name": "Erollisi"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRI",
         "id": 151,
-        "name": "Undead Sarnak",
-        "male": "",
-        "female": "",
-        "neutral": "SSK"
+        "name": "Tribunal"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BER",
         "id": 152,
-        "name": "Ratman",
-        "male": "",
-        "female": "",
-        "neutral": "VRM"
+        "name": "Bertoxxulous"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BRI",
         "id": 153,
-        "name": "Wyvern",
-        "male": "",
-        "female": "",
-        "neutral": "WYV"
+        "name": "Bristlebane"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FDR",
         "id": 154,
-        "name": "Wurm",
-        "male": "",
-        "female": "",
-        "neutral": "WUR"
+        "name": "Fay Drake"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SSK",
         "id": 155,
-        "name": "Devourer",
-        "male": "",
-        "female": "",
-        "neutral": "DEV"
+        "name": "Undead Sarnak"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VRM",
         "id": 156,
-        "name": "Iksar Golem",
-        "male": "",
-        "female": "",
-        "neutral": "IKG"
+        "name": "Ratman"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WYV",
         "id": 157,
-        "name": "Undead Iksar",
-        "male": "",
-        "female": "",
-        "neutral": "IKS"
+        "name": "Wyvern"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WUR",
         "id": 158,
-        "name": "Man-Eating Plant",
-        "male": "",
-        "female": "",
-        "neutral": "MEP"
+        "name": "Wurm"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DEV",
         "id": 159,
-        "name": "Raptor",
-        "male": "",
-        "female": "",
-        "neutral": "RAP"
+        "name": "Devourer"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IKG",
         "id": 160,
-        "name": "Sarnak Golem",
-        "male": "",
-        "female": "",
-        "neutral": "SGO"
+        "name": "Iksar Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IKS",
         "id": 161,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "SED"
+        "name": "Undead Iksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MEP",
         "id": 162,
-        "name": "Animated Hand",
-        "male": "",
-        "female": "",
-        "neutral": "IKH"
+        "name": "Man-Eating Plant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RAP",
         "id": 163,
-        "name": "Succulent",
-        "male": "",
-        "female": "",
-        "neutral": "SUC"
+        "name": "Raptor"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SGO",
         "id": 164,
-        "name": "Holgresh",
-        "male": "",
-        "female": "",
-        "neutral": "FMO"
+        "name": "Sarnak Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SED",
         "id": 165,
-        "name": "Brontotherium",
-        "male": "",
-        "female": "",
-        "neutral": "BTM"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IKH",
         "id": 166,
-        "name": "Snow Dervish",
-        "male": "",
-        "female": "",
-        "neutral": "SDE"
+        "name": "Animated Hand"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SUC",
         "id": 167,
-        "name": "Dire Wolf",
-        "male": "",
-        "female": "",
-        "neutral": "DIW"
+        "name": "Succulent"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FMO",
         "id": 168,
-        "name": "Manticore",
-        "male": "",
-        "female": "",
-        "neutral": "MTC"
+        "name": "Holgresh"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BTM",
         "id": 169,
-        "name": "Totem",
-        "male": "",
-        "female": "",
-        "neutral": "TOT"
+        "name": "Brontotherium"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SDE",
         "id": 170,
-        "name": "Ice Spectre",
-        "male": "",
-        "female": "",
-        "neutral": "SPC"
+        "name": "Snow Dervish"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DIW",
         "id": 171,
-        "name": "Enchanted Armor",
-        "male": "",
-        "female": "",
-        "neutral": "ENA"
+        "name": "Dire Wolf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MTC",
         "id": 172,
-        "name": "Snow Rabbit",
-        "male": "",
-        "female": "",
-        "neutral": "SBU"
+        "name": "Manticore"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TOT",
         "id": 173,
-        "name": "Walrus",
-        "male": "",
-        "female": "",
-        "neutral": "WAL"
+        "name": "Totem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPC",
         "id": 174,
-        "name": "Geonid",
-        "male": "",
-        "female": "",
-        "neutral": "RGM"
+        "name": "Ice Spectre"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ENA",
         "id": 175,
-        "name": "Yakkar",
-        "male": "",
-        "female": "",
-        "neutral": "YAK"
+        "name": "Enchanted Armor"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SBU",
         "id": 176,
-        "name": "Faun",
-        "male": "",
-        "female": "",
-        "neutral": "FAN"
+        "name": "Snow Rabbit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WAL",
         "id": 177,
-        "name": "Coldain",
-        "male": "COM",
-        "female": "COF",
-        "neutral": "COK"
+        "name": "Walrus"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RGM",
         "id": 178,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "DR2"
+        "name": "Geonid"
     },
     {
-        "id": 179,
-        "name": "Hag",
-        "male": "",
-        "female": "",
-        "neutral": "HAG"
-    },
-    {
-        "id": 180,
-        "name": "Hippogriff",
-        "male": "",
-        "female": "",
-        "neutral": "HIP"
-    },
-    {
+        "0": "",
+        "1": "",
+        "2": "YAK",
         "id": 181,
-        "name": "Siren",
-        "male": "",
-        "female": "",
-        "neutral": "SIR"
+        "name": "Yakkar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FAN",
         "id": 182,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "FSG"
+        "name": "Faun"
     },
     {
+        "0": "COM",
+        "1": "COF",
+        "2": "COK",
         "id": 183,
-        "name": "Giant",
-        "male": "STM",
-        "female": "",
-        "neutral": "STG"
+        "name": "Coldain"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DR2",
         "id": 184,
-        "name": "Othmir",
-        "male": "",
-        "female": "",
-        "neutral": "OTM"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "HAG",
         "id": 185,
-        "name": "Ulthork",
-        "male": "",
-        "female": "",
-        "neutral": "WLM"
+        "name": "Hag"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "HIP",
         "id": 186,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "CCD"
+        "name": "Hippogriff"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SIR",
         "id": 187,
-        "name": "Abhorrent",
-        "male": "",
-        "female": "",
-        "neutral": "ABH"
+        "name": "Siren"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FSG",
         "id": 188,
-        "name": "Sea Turtle",
-        "male": "",
-        "female": "",
-        "neutral": "STU"
+        "name": "Giant"
     },
     {
+        "0": "STM",
+        "1": "",
+        "2": "STG",
         "id": 189,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "BWD"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "OTM",
         "id": 190,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "GDR"
+        "name": "Othmir"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WLM",
         "id": 191,
-        "name": "Ronnie Test",
-        "male": "",
-        "female": "",
-        "neutral": "RON"
+        "name": "Ulthork"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CCD",
         "id": 192,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "PRI"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ABH",
         "id": 193,
-        "name":"Shik\\'Nar",
-        "male": "",
-        "female": "",
-        "neutral": "SKN"
+        "name": "Abhorrent"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "STU",
         "id": 194,
-        "name": "Rockhopper",
-        "male": "",
-        "female": "",
-        "neutral": "RHP"
+        "name": "Sea Turtle"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BWD",
         "id": 195,
-        "name": "Underbulk",
-        "male": "",
-        "female": "",
-        "neutral": "UNB"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GDR",
         "id": 196,
-        "name": "Grimling",
-        "male": "GMM",
-        "female": "GMF",
-        "neutral": "GMN"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RON",
         "id": 197,
-        "name": "Worm",
-        "male": "",
-        "female": "",
-        "neutral": "VAC"
+        "name": "Ronnie Test"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PRI",
         "id": 198,
-        "name": "Evan Test",
-        "male": "",
-        "female": "",
-        "neutral": "ECS"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKN",
         "id": 199,
-        "name": "Shadel",
-        "male": "",
-        "female": "",
-        "neutral": "KHA"
+        "name":"Shik\\'Nar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RHP",
         "id": 200,
-        "name": "Owlbear",
-        "male": "",
-        "female": "",
-        "neutral": "OWB"
+        "name": "Rockhopper"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "UNB",
         "id": 201,
-        "name": "Rhino Beetle",
-        "male": "",
-        "female": "",
-        "neutral": "RNB"
+        "name": "Underbulk"
     },
     {
+        "0": "GMM",
+        "1": "GMF",
+        "2": "GMN",
         "id": 202,
-        "name": "Vampire",
-        "male": "VPM",
-        "female": "VPF",
-        "neutral": ""
+        "name": "Grimling"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VAC",
         "id": 203,
-        "name": "Earth Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "EEL"
+        "name": "Worm"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ECS",
         "id": 204,
-        "name": "Air Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "AEL"
+        "name": "Evan Test"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KHA",
         "id": 205,
-        "name": "Water Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "WEL"
+        "name": "Shadel"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "OWB",
         "id": 206,
-        "name": "Fire Elemental",
-        "male": "",
-        "female": "",
-        "neutral": "FEL"
+        "name": "Owlbear"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RNB",
         "id": 207,
-        "name": "Wetfang Minnow",
-        "male": "",
-        "female": "",
-        "neutral": "WET"
+        "name": "Rhino Beetle"
     },
     {
+        "0": "VPM",
+        "1": "VPF",
+        "2": "",
         "id": 208,
-        "name": "Thought Horror",
-        "male": "",
-        "female": "",
-        "neutral": "THO"
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EEL",
         "id": 209,
-        "name": "Tegi",
-        "male": "",
-        "female": "",
-        "neutral": "TEG"
+        "name": "Earth Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "AEL",
         "id": 210,
-        "name": "Horse",
-        "male": "HSM",
-        "female": "HSF",
-        "neutral": "HSN"
+        "name": "Air Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WEL",
         "id": 211,
-        "name": "Shissar",
-        "male": "SHM",
-        "female": "SHF",
-        "neutral": "SHN"
+        "name": "Water Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FEL",
         "id": 212,
-        "name": "Fungal Fiend",
-        "male": "",
-        "female": "",
-        "neutral": "FUG"
+        "name": "Fire Elemental"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WET",
         "id": 213,
-        "name": "Vampire",
-        "male": "",
-        "female": "",
-        "neutral": "VOL"
+        "name": "Wetfang Minnow"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "THO",
         "id": 214,
-        "name": "Stonegrabber",
-        "male": "",
-        "female": "",
-        "neutral": "SGR"
+        "name": "Thought Horror"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TEG",
         "id": 215,
-        "name": "Scarlet Cheetah",
-        "male": "",
-        "female": "",
-        "neutral": "SCH"
+        "name": "Tegi"
     },
     {
+        "0": "HSM",
+        "1": "HSF",
+        "2": "HSN",
         "id": 216,
-        "name": "Zelniak",
-        "male": "",
-        "female": "",
-        "neutral": "ZEL"
+        "name": "Horse"
     },
     {
+        "0": "SHM",
+        "1": "SHF",
+        "2": "SHN",
         "id": 217,
-        "name": "Lightcrawler",
-        "male": "",
-        "female": "",
-        "neutral": "LCR"
+        "name": "Shissar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FUG",
         "id": 218,
-        "name": "Shade",
-        "male": "SDM",
-        "female": "SDF",
-        "neutral": ""
+        "name": "Fungal Fiend"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VOL",
         "id": 219,
-        "name": "Sunflower",
-        "male": "",
-        "female": "",
-        "neutral": "SNN"
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SGR",
         "id": 220,
-        "name": "Sun Revenant",
-        "male": "",
-        "female": "",
-        "neutral": "SRV"
+        "name": "Stonegrabber"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCH",
         "id": 221,
-        "name": "Shrieker",
-        "male": "",
-        "female": "",
-        "neutral": "SHR"
+        "name": "Scarlet Cheetah"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ZEL",
         "id": 222,
-        "name": "Galorian",
-        "male": "",
-        "female": "",
-        "neutral": "GAL"
+        "name": "Zelniak"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LCR",
         "id": 223,
-        "name": "Netherbian",
-        "male": "",
-        "female": "",
-        "neutral": "NET"
+        "name": "Lightcrawler"
     },
     {
+        "0": "SDM",
+        "1": "SDF",
+        "2": "",
         "id": 224,
-        "name": "Akheva",
-        "male": "AKM",
-        "female": "AKF",
-        "neutral": "AKN"
+        "name": "Shade"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SNN",
         "id": 225,
-        "name": "Grieg Veneficus",
-        "male": "",
-        "female": "",
-        "neutral": "SPR"
+        "name": "Sunflower"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SRV",
         "id": 226,
-        "name": "Sonic Wolf",
-        "male": "",
-        "female": "",
-        "neutral": "SOW"
+        "name": "Sun Revenant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SHR",
         "id": 227,
-        "name": "Ground Shaker",
-        "male": "GSM",
-        "female": "GSF",
-        "neutral": "GSN"
+        "name": "Shrieker"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GAL",
         "id": 228,
-        "name": "Vah Shir Skeleton",
-        "male": "",
-        "female": "",
-        "neutral": "KES"
+        "name": "Galorian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NET",
         "id": 229,
-        "name": "Wretch",
-        "male": "",
-        "female": "",
-        "neutral": "MUH"
+        "name": "Netherbian"
     },
     {
+        "0": "AKM",
+        "1": "AKF",
+        "2": "AKN",
         "id": 230,
-        "name": "Seru",
-        "male": "",
-        "female": "",
-        "neutral": "SER"
+        "name": "Akheva"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPR",
         "id": 231,
-        "name": "Recuso",
-        "male": "REM",
-        "female": "REF",
-        "neutral": "REN"
+        "name": "Grieg Veneficus"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SOW",
         "id": 232,
-        "name": "Vah Shir",
-        "male": "",
-        "female": "",
-        "neutral": "VSK"
+        "name": "Sonic Wolf"
     },
     {
+        "0": "GSM",
+        "1": "GSF",
+        "2": "GSN",
         "id": 233,
-        "name": "Guard",
-        "male": "",
-        "female": "",
-        "neutral": "VSG"
+        "name": "Ground Shaker"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KES",
         "id": 234,
-        "name": "Teleport Man",
-        "male": "TPM",
-        "female": "TPF",
-        "neutral": "TPN"
+        "name": "Vah Shir Skeleton"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MUH",
         "id": 235,
-        "name": "Werewolf",
-        "male": "",
-        "female": "",
-        "neutral": "LUJ"
+        "name": "Wretch"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SER",
         "id": 236,
-        "name": "Nymph",
-        "male": "",
-        "female": "",
-        "neutral": "NYD"
+        "name": "Seru"
     },
     {
+        "0": "REM",
+        "1": "REF",
+        "2": "REN",
         "id": 237,
-        "name": "Dryad",
-        "male": "",
-        "female": "",
-        "neutral": "NYM"
+        "name": "Recuso"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VSK",
         "id": 238,
-        "name": "Treant",
-        "male": "",
-        "female": "",
-        "neutral": "TRN"
+        "name": "Vah Shir"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VSG",
         "id": 239,
-        "name": "Fly",
-        "male": "",
-        "female": "",
-        "neutral": "WRF"
+        "name": "Guard"
     },
     {
+        "0": "TPM",
+        "1": "TPF",
+        "2": "TPN",
         "id": 240,
-        "name": "Tarew Marr",
-        "male": "",
-        "female": "",
-        "neutral": "TMR"
+        "name": "Teleport Man"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LUJ",
         "id": 241,
-        "name": "Solusek Ro",
-        "male": "",
-        "female": "",
-        "neutral": "SRO"
+        "name": "Werewolf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NYD",
         "id": 242,
-        "name": "Clockwork Golem",
-        "male": "",
-        "female": "",
-        "neutral": "CLG"
+        "name": "Nymph"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NYM",
         "id": 243,
-        "name": "Clockwork Brain",
-        "male": "",
-        "female": "",
-        "neutral": "CLB"
+        "name": "Dryad"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRN",
         "id": 244,
-        "name": "Banshee",
-        "male": "",
-        "female": "",
-        "neutral": "SKB"
+        "name": "Treant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WRF",
         "id": 245,
-        "name": "Guard of Justice",
-        "male": "",
-        "female": "",
-        "neutral": "GOJ"
+        "name": "Fly"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TMR",
         "id": 246,
-        "name": "Mini POM",
-        "male": "MINIPOM200",
-        "female": "MINIPOM200",
-        "neutral": "MINIPOM200"
+        "name": "Tarew Marr"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SRO",
         "id": 247,
-        "name": "Diseased Fiend",
-        "male": "",
-        "female": "",
-        "neutral": "DSB"
+        "name": "Solusek Ro"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CLG",
         "id": 248,
-        "name": "Solusek Ro Guard",
-        "male": "",
-        "female": "",
-        "neutral": "SRG"
+        "name": "Clockwork Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CLB",
         "id": 249,
-        "name": "Bertoxxulous",
-        "male": "",
-        "female": "",
-        "neutral": "BTX"
+        "name": "Clockwork Brain"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKB",
         "id": 250,
-        "name": "The Tribunal",
-        "male": "",
-        "female": "",
-        "neutral": "TBU"
+        "name": "Banshee"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GOJ",
         "id": 251,
-        "name": "Terris Thule",
-        "male": "",
-        "female": "",
-        "neutral": "TRT"
+        "name": "Guard of Justice"
     },
     {
+        "0": "MINIPOM200",
+        "1": "MINIPOM200",
+        "2": "MINIPOM200",
         "id": 252,
-        "name": "Vegerog",
-        "male": "",
-        "female": "",
-        "neutral": "VEG"
+        "name": "Mini POM"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DSB",
         "id": 253,
-        "name": "Crocodile",
-        "male": "",
-        "female": "",
-        "neutral": "CRO"
+        "name": "Diseased Fiend"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SRG",
         "id": 254,
-        "name": "Bat",
-        "male": "",
-        "female": "",
-        "neutral": "NBT"
+        "name": "Solusek Ro Guard"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BTX",
         "id": 255,
-        "name": "Hraquis",
-        "male": "",
-        "female": "",
-        "neutral": "SLG"
+        "name": "Bertoxxulous"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TBU",
         "id": 256,
-        "name": "Tranquilion",
-        "male": "",
-        "female": "",
-        "neutral": "TRQ"
+        "name": "The Tribunal"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRT",
         "id": 257,
-        "name": "Tin Soldier",
-        "male": "",
-        "female": "",
-        "neutral": "TIN"
+        "name": "Terris Thule"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VEG",
         "id": 258,
-        "name": "Nightmare Wraith",
-        "male": "",
-        "female": "",
-        "neutral": "NMW"
+        "name": "Vegerog"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CRO",
         "id": 259,
-        "name": "Malarian",
-        "male": "",
-        "female": "",
-        "neutral": "MAL"
+        "name": "Crocodile"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NBT",
         "id": 260,
-        "name": "Knight of Pestilence",
-        "male": "",
-        "female": "",
-        "neutral": "KOP"
+        "name": "Bat"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SLG",
         "id": 261,
-        "name": "Lepertoloth",
-        "male": "",
-        "female": "",
-        "neutral": "LEP"
+        "name": "Hraquis"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRQ",
         "id": 262,
-        "name": "Bubonian",
-        "male": "",
-        "female": "",
-        "neutral": "BUB"
+        "name": "Tranquilion"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TIN",
         "id": 263,
-        "name": "Bubonian Underling",
-        "male": "",
-        "female": "",
-        "neutral": "BUU"
+        "name": "Tin Soldier"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NMW",
         "id": 264,
-        "name": "Pusling",
-        "male": "",
-        "female": "",
-        "neutral": "PUS"
+        "name": "Nightmare Wraith"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MAL",
         "id": 265,
-        "name": "Water Mephit",
-        "male": "",
-        "female": "",
-        "neutral": "WMP"
+        "name": "Malarian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KOP",
         "id": 266,
-        "name": "Stormrider",
-        "male": "",
-        "female": "",
-        "neutral": "STR"
+        "name": "Knight of Pestilence"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LEP",
         "id": 267,
-        "name": "Junk Beast",
-        "male": "",
-        "female": "",
-        "neutral": "JUB"
+        "name": "Lepertoloth"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BUB",
         "id": 268,
-        "name": "Broken Clockwork",
-        "male": "",
-        "female": "",
-        "neutral": "BRC"
+        "name": "Bubonian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BUU",
         "id": 269,
-        "name": "Giant Clockwork",
-        "male": "",
-        "female": "",
-        "neutral": "GLC"
+        "name": "Bubonian Underling"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PUS",
         "id": 270,
-        "name": "Clockwork Beetle",
-        "male": "",
-        "female": "",
-        "neutral": "CWB"
+        "name": "Pusling"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WMP",
         "id": 271,
-        "name": "Nightmare Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "NMG"
+        "name": "Water Mephit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "STR",
         "id": 272,
-        "name": "Karana",
-        "male": "",
-        "female": "",
-        "neutral": "KAR"
+        "name": "Stormrider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "JUB",
         "id": 273,
-        "name": "Blood Raven",
-        "male": "",
-        "female": "",
-        "neutral": "BRV"
+        "name": "Junk Beast"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BRC",
         "id": 274,
-        "name": "Nightmare Gargoyle",
-        "male": "",
-        "female": "",
-        "neutral": "GGL"
+        "name": "Broken Clockwork"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GLC",
         "id": 275,
-        "name": "Mouth of Insanity",
-        "male": "",
-        "female": "",
-        "neutral": "MOI"
+        "name": "Giant Clockwork"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CWB",
         "id": 276,
-        "name": "Skeletal Horse",
-        "male": "",
-        "female": "",
-        "neutral": "HSS"
+        "name": "Clockwork Beetle"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NMG",
         "id": 277,
-        "name": "Saryrn",
-        "male": "",
-        "female": "",
-        "neutral": "SAR"
+        "name": "Nightmare Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KAR",
         "id": 278,
-        "name": "Fennin Ro",
-        "male": "",
-        "female": "",
-        "neutral": "FEN"
+        "name": "Karana"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BRV",
         "id": 279,
-        "name": "Tormentor",
-        "male": "",
-        "female": "",
-        "neutral": "TRW"
+        "name": "Blood Raven"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GGL",
         "id": 280,
-        "name": "Soul Devourer",
-        "male": "",
-        "female": "",
-        "neutral": "NPT"
+        "name": "Nightmare Gargoyle"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MOI",
         "id": 281,
-        "name": "Nightmare",
-        "male": "",
-        "female": "",
-        "neutral": "NMH"
+        "name": "Mouth of Insanity"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "HSS",
         "id": 282,
-        "name": "Rallos Zek",
-        "male": "",
-        "female": "",
-        "neutral": "RAZ"
+        "name": "Skeletal Horse"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SAR",
         "id": 283,
-        "name": "Vallon Zek",
-        "male": "",
-        "female": "",
-        "neutral": "VAZ"
+        "name": "Saryrn"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FEN",
         "id": 284,
-        "name": "Tallon Zek",
-        "male": "",
-        "female": "",
-        "neutral": "TAZ"
+        "name": "Fennin Ro"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TRW",
         "id": 285,
-        "name": "Air Mephit",
-        "male": "",
-        "female": "",
-        "neutral": "AMP"
+        "name": "Tormentor"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NPT",
         "id": 286,
-        "name": "Earth Mephit",
-        "male": "",
-        "female": "",
-        "neutral": "EMP"
+        "name": "Soul Devourer"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NMH",
         "id": 287,
-        "name": "Fire Mephit",
-        "male": "",
-        "female": "",
-        "neutral": "FMP"
+        "name": "Nightmare"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RAZ",
         "id": 288,
-        "name": "Nightmare Mephit",
-        "male": "",
-        "female": "",
-        "neutral": "NMP"
+        "name": "Rallos Zek"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VAZ",
         "id": 289,
-        "name": "Zebuxoruk",
-        "male": "",
-        "female": "",
-        "neutral": "ZEB"
+        "name": "Vallon Zek"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TAZ",
         "id": 290,
-        "name": "Mithaniel Marr",
-        "male": "",
-        "female": "",
-        "neutral": "MAR"
+        "name": "Tallon Zek"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "AMP",
         "id": 291,
-        "name": "Undead Knight",
-        "male": "",
-        "female": "",
-        "neutral": "UDK"
+        "name": "Air Mephit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EMP",
         "id": 292,
-        "name": "The Rathe",
-        "male": "",
-        "female": "",
-        "neutral": "RTH"
+        "name": "Earth Mephit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FMP",
         "id": 293,
-        "name": "Xegony",
-        "male": "",
-        "female": "",
-        "neutral": "XEG"
+        "name": "Fire Mephit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NMP",
         "id": 294,
-        "name": "Fiend",
-        "male": "",
-        "female": "",
-        "neutral": "GTD"
+        "name": "Nightmare Mephit"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ZEB",
         "id": 295,
-        "name": "Test Object",
-        "male": "",
-        "female": "",
-        "neutral": "ONT"
+        "name": "Zebuxoruk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MAR",
         "id": 296,
-        "name": "Crab",
-        "male": "",
-        "female": "",
-        "neutral": "CRB"
+        "name": "Mithaniel Marr"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "UDK",
         "id": 297,
-        "name": "Phoenix",
-        "male": "",
-        "female": "",
-        "neutral": "PHX"
+        "name": "Undead Knight"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RTH",
         "id": 298,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "TMT"
+        "name": "The Rathe"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "XEG",
         "id": 299,
-        "name": "Bear",
-        "male": "",
-        "female": "",
-        "neutral": "PBR"
+        "name": "Xegony"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GTD",
         "id": 300,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "STA"
+        "name": "Fiend"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ONT",
         "id": 301,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "SSA"
+        "name": "Test Object"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CRB",
         "id": 302,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "SKR"
+        "name": "Crab"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PHX",
         "id": 303,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "SVO"
+        "name": "Phoenix"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TMT",
         "id": 304,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "SMA"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PBR",
         "id": 305,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "STF"
+        "name": "Bear"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "STA",
         "id": 306,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "SCE"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SSA",
         "id": 307,
-        "name": "War Wraith",
-        "male": "",
-        "female": "",
-        "neutral": "WRW"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKR",
         "id": 308,
-        "name": "Wrulon",
-        "male": "",
-        "female": "",
-        "neutral": "WRU"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SVO",
         "id": 309,
-        "name": "Kraken",
-        "male": "",
-        "female": "",
-        "neutral": "KRK"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SMA",
         "id": 310,
-        "name": "Poison Frog",
-        "male": "",
-        "female": "",
-        "neutral": "PAF"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "STF",
         "id": 311,
-        "name": "Nilborien",
-        "male": "",
-        "female": "",
-        "neutral": "QZT"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCE",
         "id": 312,
-        "name": "Valorian",
-        "male": "",
-        "female": "",
-        "neutral": "VAL"
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WRW",
         "id": 313,
-        "name": "War Boar",
-        "male": "",
-        "female": "",
-        "neutral": "WRB"
+        "name": "War Wraith"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WRU",
         "id": 314,
-        "name": "Efreeti",
-        "male": "",
-        "female": "",
-        "neutral": "EFE"
+        "name": "Wrulon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KRK",
         "id": 315,
-        "name": "War Boar",
-        "male": "",
-        "female": "",
-        "neutral": "WBU"
+        "name": "Kraken"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PAF",
         "id": 316,
-        "name": "Valorian",
-        "male": "",
-        "female": "",
-        "neutral": "BKN"
+        "name": "Poison Frog"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "QZT",
         "id": 317,
-        "name": "Animated Armor",
-        "male": "",
-        "female": "",
-        "neutral": "AAM"
+        "name": "Nilborien"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VAL",
         "id": 318,
-        "name": "Undead Footman",
-        "male": "",
-        "female": "",
-        "neutral": "UDF"
+        "name": "Valorian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WRB",
         "id": 319,
-        "name": "Rallos Zek Minion",
-        "male": "",
-        "female": "",
-        "neutral": "RZM"
+        "name": "War Boar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EFE",
         "id": 320,
-        "name": "Arachnid",
-        "male": "",
-        "female": "",
-        "neutral": "SPD"
+        "name": "Efreeti"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WBU",
         "id": 321,
-        "name": "Crystal Spider",
-        "male": "",
-        "female": "",
-        "neutral": "SPL"
+        "name": "War Boar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BKN",
         "id": 322,
-        "name":"Zebuxoruk\'s Cage",
-        "male": "",
-        "female": "",
-        "neutral": "ZBC"
+        "name": "Valorian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "AAM",
         "id": 323,
-        "name": "BoT Portal",
-        "male": "",
-        "female": "",
-        "neutral": "BTP"
+        "name": "Animated Armor"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "UDF",
         "id": 324,
-        "name": "Froglok",
-        "male": "FRM",
-        "female": "FRF",
-        "neutral": ""
+        "name": "Undead Footman"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RZM",
         "id": 325,
-        "name": "Troll",
-        "male": "TBM",
-        "female": "TBF",
-        "neutral": ""
+        "name": "Rallos Zek Minion"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPD",
         "id": 326,
-        "name": "Troll",
-        "male": "FBM",
-        "female": "FBF",
-        "neutral": ""
+        "name": "Arachnid"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPL",
         "id": 327,
-        "name": "Troll",
-        "male": "TSM",
-        "female": "TSF",
-        "neutral": ""
+        "name": "Crystal Spider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ZBC",
         "id": 328,
-        "name": "Ghost",
-        "male": "",
-        "female": "",
-        "neutral": "SPB"
+        "name":"Zebuxoruk\\'s Cage"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BTP",
         "id": 329,
-        "name": "Pirate",
-        "male": "",
-        "female": "",
-        "neutral": "TPB"
+        "name": "BoT Portal"
     },
     {
+        "0": "FRM",
+        "1": "FRF",
+        "2": "",
         "id": 330,
-        "name": "Pirate",
-        "male": "",
-        "female": "",
-        "neutral": "TVP"
+        "name": "Froglok"
     },
     {
+        "0": "TBM",
+        "1": "TBF",
+        "2": "",
         "id": 331,
-        "name": "Pirate",
-        "male": "",
-        "female": "",
-        "neutral": "TPO"
+        "name": "Troll"
     },
     {
+        "0": "FBM",
+        "1": "FBF",
+        "2": "",
         "id": 332,
-        "name": "Pirate",
-        "male": "GPM",
-        "female": "GPF",
-        "neutral": ""
+        "name": "Troll"
     },
     {
+        "0": "TSM",
+        "1": "TSF",
+        "2": "",
         "id": 333,
-        "name": "Pirate",
-        "male": "DPM",
-        "female": "DPF",
-        "neutral": ""
+        "name": "Troll"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPB",
         "id": 334,
-        "name": "Pirate",
-        "male": "OPM",
-        "female": "OPF",
-        "neutral": ""
+        "name": "Ghost"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TPB",
         "id": 335,
-        "name": "Pirate",
-        "male": "HPM",
-        "female": "HPF",
-        "neutral": ""
+        "name": "Pirate"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TVP",
         "id": 336,
-        "name": "Pirate",
-        "male": "EPM",
-        "female": "EPF",
-        "neutral": ""
+        "name": "Pirate"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TPO",
         "id": 337,
-        "name": "Frog",
-        "male": "",
-        "female": "",
-        "neutral": "RPF"
+        "name": "Pirate"
     },
     {
+        "0": "GPM",
+        "1": "GPF",
+        "2": "",
         "id": 338,
-        "name": "Troll Zombie",
-        "male": "TZM",
-        "female": "TZF",
-        "neutral": ""
+        "name": "Pirate"
     },
     {
+        "0": "DPM",
+        "1": "DPF",
+        "2": "",
         "id": 339,
-        "name": "Luggald",
-        "male": "",
-        "female": "",
-        "neutral": "LUG"
+        "name": "Pirate"
     },
     {
+        "0": "OPM",
+        "1": "OPF",
+        "2": "",
         "id": 340,
-        "name": "Luggald",
-        "male": "",
-        "female": "",
-        "neutral": "LGA"
+        "name": "Pirate"
     },
     {
+        "0": "HPM",
+        "1": "HPF",
+        "2": "",
         "id": 341,
-        "name": "Luggalds",
-        "male": "",
-        "female": "",
-        "neutral": "LGR"
+        "name": "Pirate"
     },
     {
+        "0": "EPM",
+        "1": "EPF",
+        "2": "",
         "id": 342,
-        "name": "Drogmore",
-        "male": "",
-        "female": "",
-        "neutral": "FMT"
+        "name": "Pirate"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RPF",
         "id": 343,
-        "name": "Froglok Skeleton",
-        "male": "",
-        "female": "",
-        "neutral": "FSK"
+        "name": "Frog"
     },
     {
+        "0": "TZM",
+        "1": "TZF",
+        "2": "",
         "id": 344,
-        "name": "Undead Froglok",
-        "male": "",
-        "female": "",
-        "neutral": "FUD"
+        "name": "Troll Zombie"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LUG",
         "id": 345,
-        "name": "Knight of Hate",
-        "male": "IWM",
-        "female": "IWF",
-        "neutral": ""
+        "name": "Luggald"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LGA",
         "id": 346,
-        "name": "Arcanist of Hate",
-        "male": "IZM",
-        "female": "IZF",
-        "neutral": ""
+        "name": "Luggald"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LGR",
         "id": 347,
-        "name": "Veksar",
-        "male": "",
-        "female": "",
-        "neutral": "VEK"
+        "name": "Luggalds"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FMT",
         "id": 348,
-        "name": "Veksar",
-        "male": "",
-        "female": "",
-        "neutral": "GVK"
+        "name": "Drogmore"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FSK",
         "id": 349,
-        "name": "Veksar",
-        "male": "",
-        "female": "",
-        "neutral": "BVK"
+        "name": "Froglok Skeleton"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FUD",
         "id": 350,
-        "name": "Chokadai",
-        "male": "",
-        "female": "",
-        "neutral": "WOF"
+        "name": "Undead Froglok"
     },
     {
+        "0": "IWM",
+        "1": "IWF",
+        "2": "",
         "id": 351,
-        "name": "Undead Chokadai",
-        "male": "",
-        "female": "",
-        "neutral": "WUF"
+        "name": "Knight of Hate"
     },
     {
+        "0": "IZM",
+        "1": "IZF",
+        "2": "",
         "id": 352,
-        "name": "Undead Veksar",
-        "male": "",
-        "female": "",
-        "neutral": "UVK"
+        "name": "Arcanist of Hate"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VEK",
         "id": 353,
-        "name": "Vampire",
-        "male": "LMM",
-        "female": "LMF",
-        "neutral": ""
+        "name": "Veksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GVK",
         "id": 354,
-        "name": "Vampire",
-        "male": "MMM",
-        "female": "MMF",
-        "neutral": ""
+        "name": "Veksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BVK",
         "id": 355,
-        "name": "Rujarkian Orc",
-        "male": "",
-        "female": "",
-        "neutral": "ROM"
+        "name": "Veksar"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WOF",
         "id": 356,
-        "name": "Bone Golem",
-        "male": "",
-        "female": "",
-        "neutral": "BGB"
+        "name": "Chokadai"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WUF",
         "id": 357,
-        "name": "Synarcana",
-        "male": "",
-        "female": "",
-        "neutral": "SYN"
+        "name": "Undead Chokadai"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "UVK",
         "id": 358,
-        "name": "Sand Elf",
-        "male": "SEM",
-        "female": "SEF",
-        "neutral": ""
+        "name": "Undead Veksar"
     },
     {
+        "0": "LMM",
+        "1": "LMF",
+        "2": "",
         "id": 359,
-        "name": "Vampire",
-        "male": "",
-        "female": "",
-        "neutral": "MMV"
+        "name": "Vampire"
     },
     {
+        "0": "MMM",
+        "1": "MMF",
+        "2": "",
         "id": 360,
-        "name": "Rujarkian Orc",
-        "male": "",
-        "female": "",
-        "neutral": "ROE"
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ROM",
         "id": 361,
-        "name": "Skeleton",
-        "male": "",
-        "female": "",
-        "neutral": "SKT"
+        "name": "Rujarkian Orc"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BGB",
         "id": 362,
-        "name": "Mummy",
-        "male": "",
-        "female": "",
-        "neutral": "MMY"
+        "name": "Bone Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SYN",
         "id": 363,
-        "name": "Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "GBL"
+        "name": "Synarcana"
     },
     {
+        "0": "SEM",
+        "1": "SEF",
+        "2": "",
         "id": 364,
-        "name": "Insect",
-        "male": "",
-        "female": "",
-        "neutral": "NIN"
+        "name": "Sand Elf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MMV",
         "id": 365,
-        "name": "Froglok Ghost",
-        "male": "",
-        "female": "",
-        "neutral": "FGH"
+        "name": "Vampire"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ROE",
         "id": 366,
-        "name": "Dervish",
-        "male": "",
-        "female": "",
-        "neutral": "DRV"
+        "name": "Rujarkian Orc"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SKT",
         "id": 367,
-        "name": "Shade",
-        "male": "",
-        "female": "",
-        "neutral": "SDC"
+        "name": "Skeleton"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MMY",
         "id": 368,
-        "name": "Golem",
-        "male": "",
-        "female": "",
-        "neutral": "GLM"
+        "name": "Mummy"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GBL",
         "id": 369,
-        "name": "Evil Eye",
-        "male": "",
-        "female": "",
-        "neutral": "EEY"
+        "name": "Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "NIN",
         "id": 370,
-        "name": "Box",
-        "male": "",
-        "female": "",
-        "neutral": "BOX"
+        "name": "Insect"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FGH",
         "id": 371,
-        "name": "Barrel",
-        "male": "",
-        "female": "",
-        "neutral": "BRL"
+        "name": "Froglok Ghost"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRV",
         "id": 372,
-        "name": "Chest",
-        "male": "",
-        "female": "",
-        "neutral": "CST"
+        "name": "Dervish"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SDC",
         "id": 373,
-        "name": "Vase",
-        "male": "",
-        "female": "",
-        "neutral": "VAS"
+        "name": "Shade"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GLM",
         "id": 374,
-        "name": "Table",
-        "male": "",
-        "female": "",
-        "neutral": "TBL"
+        "name": "Golem"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EEY",
         "id": 375,
-        "name": "Weapon Rack",
-        "male": "",
-        "female": "",
-        "neutral": "RAK"
+        "name": "Evil Eye"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BOX",
         "id": 376,
-        "name": "Coffin",
-        "male": "",
-        "female": "",
-        "neutral": "CPT"
+        "name": "Box"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BRL",
         "id": 377,
-        "name": "Bones",
-        "male": "",
-        "female": "",
-        "neutral": "BON"
+        "name": "Barrel"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CST",
         "id": 378,
-        "name": "Jokester",
-        "male": "",
-        "female": "",
-        "neutral": "JKR"
+        "name": "Chest"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "VAS",
         "id": 379,
-        "name": "Nihil",
-        "male": "TNM",
-        "female": "TNF",
-        "neutral": ""
+        "name": "Vase"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TBL",
         "id": 380,
-        "name": "Trusik",
-        "male": "TEM",
-        "female": "TEF",
-        "neutral": ""
+        "name": "Table"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RAK",
         "id": 381,
-        "name": "Stone Worker",
-        "male": "",
-        "female": "",
-        "neutral": "TGL"
+        "name": "Weapon Rack"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CPT",
         "id": 382,
-        "name": "Hynid",
-        "male": "",
-        "female": "",
-        "neutral": "TWF"
+        "name": "Coffin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BON",
         "id": 383,
-        "name": "Turepta",
-        "male": "",
-        "female": "",
-        "neutral": "TAC"
+        "name": "Bones"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "JKR",
         "id": 384,
-        "name": "Cragbeast",
-        "male": "",
-        "female": "",
-        "neutral": "TMB"
+        "name": "Jokester"
     },
     {
+        "0": "TNM",
+        "1": "TNF",
+        "2": "",
         "id": 385,
-        "name": "Stonemite",
-        "male": "",
-        "female": "",
-        "neutral": "TTB"
+        "name": "Nihil"
     },
     {
+        "0": "TEM",
+        "1": "TEF",
+        "2": "",
         "id": 386,
-        "name": "Ukun",
-        "male": "",
-        "female": "",
-        "neutral": "IWH"
+        "name": "Trusik"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TGL",
         "id": 387,
-        "name": "Ixt",
-        "male": "",
-        "female": "",
-        "neutral": "IEC"
+        "name": "Stone Worker"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TWF",
         "id": 388,
-        "name": "Ikaav",
-        "male": "",
-        "female": "",
-        "neutral": "ILA"
+        "name": "Hynid"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TAC",
         "id": 389,
-        "name": "Aneuk",
-        "male": "",
-        "female": "",
-        "neutral": "ICY"
+        "name": "Turepta"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TMB",
         "id": 390,
-        "name": "Kyv",
-        "male": "",
-        "female": "",
-        "neutral": "IHU"
+        "name": "Cragbeast"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TTB",
         "id": 391,
-        "name": "Noc",
-        "male": "",
-        "female": "",
-        "neutral": "ISB"
+        "name": "Stonemite"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IWH",
         "id": 392,
-        "name": "Ra`tuk",
-        "male": "",
-        "female": "",
-        "neutral": "IBR"
+        "name": "Ukun"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IEC",
         "id": 393,
-        "name": "Taneth",
-        "male": "",
-        "female": "",
-        "neutral": "IFC"
+        "name": "Ixt"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ILA",
         "id": 394,
-        "name": "Huvul",
-        "male": "",
-        "female": "",
-        "neutral": "ILB"
+        "name": "Ikaav"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ICY",
         "id": 395,
-        "name": "Mutna",
-        "male": "",
-        "female": "",
-        "neutral": "IWB"
+        "name": "Aneuk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IHU",
         "id": 396,
-        "name": "Mastruq",
-        "male": "",
-        "female": "",
-        "neutral": "ISE"
+        "name": "Kyv"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ISB",
         "id": 397,
-        "name": "Taelosian",
-        "male": "",
-        "female": "",
-        "neutral": "TLN"
+        "name": "Noc"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IBR",
         "id": 398,
-        "name": "Discord Ship",
-        "male": "",
-        "female": "",
-        "neutral": "SHP"
+        "name": "Ra`tuk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IFC",
         "id": 399,
-        "name": "Stone Worker",
-        "male": "",
-        "female": "",
-        "neutral": "TGO"
+        "name": "Taneth"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ILB",
         "id": 400,
-        "name": "Mata Muram",
-        "male": "",
-        "female": "",
-        "neutral": "CLV"
+        "name": "Huvul"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "IWB",
         "id": 401,
-        "name": "Lightning Warrior",
-        "male": "",
-        "female": "",
-        "neutral": "MUR"
+        "name": "Mutna"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ISE",
         "id": 402,
-        "name": "Succubus",
-        "male": "",
-        "female": "",
-        "neutral": "SCU"
+        "name": "Mastruq"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TLN",
         "id": 403,
-        "name": "Bazu",
-        "male": "",
-        "female": "",
-        "neutral": "DSG"
+        "name": "Taelosian"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SHP",
         "id": 404,
-        "name": "Feran",
-        "male": "",
-        "female": "",
-        "neutral": "FRA"
+        "name": "Discord Ship"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TGO",
         "id": 405,
-        "name": "Pyrilen",
-        "male": "",
-        "female": "",
-        "neutral": "SCU"
+        "name": "Stone Worker"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CLV",
         "id": 406,
-        "name": "Chimera",
-        "male": "",
-        "female": "",
-        "neutral": "CHM"
+        "name": "Mata Muram"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MUR",
         "id": 407,
-        "name": "Dragorn",
-        "male": "",
-        "female": "",
-        "neutral": "DDM"
+        "name": "Lightning Warrior"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCU",
         "id": 408,
-        "name": "Murkglider",
-        "male": "",
-        "female": "",
-        "neutral": "DMA"
+        "name": "Succubus"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DSG",
         "id": 409,
-        "name": "Rat",
-        "male": "",
-        "female": "",
-        "neutral": "RTN"
+        "name": "Bazu"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FRA",
         "id": 410,
-        "name": "Bat",
-        "male": "",
-        "female": "",
-        "neutral": "BTN"
+        "name": "Feran"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SCU",
         "id": 411,
-        "name": "Gelidran",
-        "male": "",
-        "female": "",
-        "neutral": "FRD"
+        "name": "Pyrilen"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CHM",
         "id": 412,
-        "name": "Discordling",
-        "male": "",
-        "female": "",
-        "neutral": "DSF"
+        "name": "Chimera"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DDM",
         "id": 413,
-        "name": "Girplan",
-        "male": "",
-        "female": "",
-        "neutral": "DDV"
+        "name": "Dragorn"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DMA",
         "id": 414,
-        "name": "Minotaur",
-        "male": "",
-        "female": "",
-        "neutral": "MNT"
+        "name": "Murkglider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RTN",
         "id": 415,
-        "name": "Dragorn Box",
-        "male": "",
-        "female": "",
-        "neutral": "DBX"
+        "name": "Rat"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BTN",
         "id": 416,
-        "name": "Runed Orb",
-        "male": "",
-        "female": "",
-        "neutral": "ROB"
+        "name": "Bat"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FRD",
         "id": 417,
-        "name": "Dragon Bones",
-        "male": "",
-        "female": "",
-        "neutral": "DBP"
+        "name": "Gelidran"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DSF",
         "id": 418,
-        "name": "Muramite Armor Pile",
-        "male": "",
-        "female": "",
-        "neutral": "MAP"
+        "name": "Discordling"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DDV",
         "id": 419,
-        "name": "Crystal Shard",
-        "male": "",
-        "female": "",
-        "neutral": "CRS"
+        "name": "Girplan"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MNT",
         "id": 420,
-        "name": "Portal",
-        "male": "",
-        "female": "",
-        "neutral": "PRT"
+        "name": "Minotaur"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DBX",
         "id": 421,
-        "name": "Coin Purse",
-        "male": "",
-        "female": "",
-        "neutral": "CNP"
+        "name": "Dragorn Box"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ROB",
         "id": 422,
-        "name": "Rock Pile",
-        "male": "",
-        "female": "",
-        "neutral": "RKP"
+        "name": "Runed Orb"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DBP",
         "id": 423,
-        "name": "Murkglider Egg Sack",
-        "male": "",
-        "female": "",
-        "neutral": "MES"
+        "name": "Dragon Bones"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MAP",
         "id": 424,
-        "name": "Drake",
-        "male": "",
-        "female": "",
-        "neutral": "CDR"
+        "name": "Muramite Armor Pile"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CRS",
         "id": 425,
-        "name": "Dervish",
-        "male": "",
-        "female": "",
-        "neutral": "DVS"
+        "name": "Crystal Shard"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PRT",
         "id": 426,
-        "name": "Drake",
-        "male": "",
-        "female": "",
-        "neutral": "DKE"
+        "name": "Portal"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CNP",
         "id": 427,
-        "name": "Goblin",
-        "male": "",
-        "female": "",
-        "neutral": "GBN"
+        "name": "Coin Purse"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "RKP",
         "id": 428,
-        "name": "Kirin",
-        "male": "",
-        "female": "",
-        "neutral": "KRN"
+        "name": "Rock Pile"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MES",
         "id": 429,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "LDR"
+        "name": "Murkglider Egg Sack"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CDR",
         "id": 430,
-        "name": "Basilisk",
-        "male": "",
-        "female": "",
-        "neutral": "BAS"
+        "name": "Drake"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DVS",
         "id": 431,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "MDR"
+        "name": "Dervish"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DKE",
         "id": 432,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "SDR"
+        "name": "Drake"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GBN",
         "id": 433,
-        "name": "Puma",
-        "male": "",
-        "female": "",
-        "neutral": "PMA"
+        "name": "Goblin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KRN",
         "id": 434,
-        "name": "Spider",
-        "male": "",
-        "female": "",
-        "neutral": "TAR"
+        "name": "Kirin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LDR",
         "id": 435,
-        "name": "Spider Queen",
-        "male": "",
-        "female": "",
-        "neutral": "SPQ"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "BAS",
         "id": 436,
-        "name": "Animated Statue",
-        "male": "",
-        "female": "",
-        "neutral": "ANS"
+        "name": "Basilisk"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MDR",
         "id": 437,
-        "name": "Dragon Egg",
-        "male": "",
-        "female": "",
-        "neutral": "DRE"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SDR",
         "id": 438,
-        "name": "Dragon Statue",
-        "male": "",
-        "female": "",
-        "neutral": "DRS"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "PMA",
         "id": 439,
-        "name": "Lava Rock",
-        "male": "",
-        "female": "",
-        "neutral": "LVR"
+        "name": "Puma"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "TAR",
         "id": 440,
-        "name": "Animated Statue",
-        "male": "",
-        "female": "",
-        "neutral": "ASM"
+        "name": "Spider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SPQ",
         "id": 441,
-        "name": "Spider Egg Sack",
-        "male": "",
-        "female": "",
-        "neutral": "SEG"
+        "name": "Spider Queen"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ANS",
         "id": 442,
-        "name": "Lava Spider",
-        "male": "",
-        "female": "",
-        "neutral": "LSP"
+        "name": "Animated Statue"
     },
     {
-        "id": 443,
-        "name": "Lava Spider Queen",
-        "male": "",
-        "female": "",
-        "neutral": "LSQ"
-    },
-    {
-        "id": 444,
-        "name": "Dragon",
-        "male": "",
-        "female": "",
-        "neutral": "SHD"
-    },
-    {
+        "0": "",
+        "1": "",
+        "2": "DRE",
         "id": 445,
-        "name": "Giant",
-        "male": "",
-        "female": "",
-        "neutral": "FGT"
+        "name": "Dragon Egg"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRS",
         "id": 446,
-        "name": "Werewolf",
-        "male": "",
-        "female": "",
-        "neutral": "WWF"
+        "name": "Dragon Statue"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LVR",
         "id": 447,
-        "name": "Kobold",
-        "male": "",
-        "female": "",
-        "neutral": "KBD"
+        "name": "Lava Rock"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ASM",
         "id": 448,
-        "name": "Sporali",
-        "male": "",
-        "female": "",
-        "neutral": "FNG"
+        "name": "Animated Statue"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SEG",
         "id": 449,
-        "name": "Gnomework",
-        "male": "",
-        "female": "",
-        "neutral": "CWG"
+        "name": "Spider Egg Sack"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LSP",
         "id": 450,
-        "name": "Orc",
-        "male": "",
-        "female": "",
-        "neutral": "ORK"
+        "name": "Lava Spider"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "LSQ",
         "id": 451,
-        "name": "Corathus",
-        "male": "",
-        "female": "",
-        "neutral": "CRH"
+        "name": "Lava Spider Queen"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SHD",
         "id": 452,
-        "name": "Coral",
-        "male": "",
-        "female": "",
-        "neutral": "CRL"
+        "name": "Dragon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FGT",
         "id": 453,
-        "name": "Drachnid",
-        "male": "DCM",
-        "female": "DCF",
-        "neutral": ""
+        "name": "Giant"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "WWF",
         "id": 454,
-        "name": "Drachnid Cocoon",
-        "male": "",
-        "female": "",
-        "neutral": "DRC"
+        "name": "Werewolf"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KBD",
         "id": 455,
-        "name": "Fungus Patch",
-        "male": "",
-        "female": "",
-        "neutral": "FGP"
+        "name": "Kobold"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FNG",
         "id": 456,
-        "name": "Gargoyle",
-        "male": "",
-        "female": "",
-        "neutral": "GGY"
+        "name": "Sporali"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CWG",
         "id": 457,
-        "name": "Witheran",
-        "male": "",
-        "female": "",
-        "neutral": "KOR"
+        "name": "Gnomework"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "ORK",
         "id": 458,
-        "name": "Dark Lord",
-        "male": "",
-        "female": "",
-        "neutral": "MYG"
+        "name": "Orc"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CRH",
         "id": 459,
-        "name": "Shiliskin",
-        "male": "",
-        "female": "",
-        "neutral": "SHL"
+        "name": "Corathus"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CRL",
         "id": 460,
-        "name": "Snake",
-        "male": "",
-        "female": "",
-        "neutral": "SNK"
+        "name": "Coral"
     },
     {
+        "0": "DCM",
+        "1": "DCF",
+        "2": "",
         "id": 461,
-        "name": "Evil Eye",
-        "male": "",
-        "female": "",
-        "neutral": "EVE"
+        "name": "Drachnid"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "DRC",
         "id": 462,
-        "name": "Minotaur",
-        "male": "",
-        "female": "",
-        "neutral": "MNR"
+        "name": "Drachnid Cocoon"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "FGP",
         "id": 463,
-        "name": "Zombie",
-        "male": "ZMM",
-        "female": "ZMF",
-        "neutral": ""
+        "name": "Fungus Patch"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "GGY",
         "id": 464,
-        "name": "Clockwork Boar",
-        "male": "",
-        "female": "",
-        "neutral": "CWR"
+        "name": "Gargoyle"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "KOR",
         "id": 465,
-        "name": "Fairy",
-        "male": "",
-        "female": "",
-        "neutral": "FRY"
+        "name": "Witheran"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MYG",
         "id": 466,
-        "name": "Witheran",
-        "male": "",
-        "female": "",
-        "neutral": "KRB"
+        "name": "Dark Lord"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SHL",
         "id": 467,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Shiliskin"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "SNK",
         "id": 468,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Snake"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "EVE",
         "id": 469,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Evil Eye"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "MNR",
         "id": 470,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Minotaur"
     },
     {
+        "0": "ZMM",
+        "1": "ZMF",
+        "2": "",
         "id": 471,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Zombie"
     },
     {
+        "0": "",
+        "1": "",
+        "2": "CWR",
         "id": 472,
-        "name": "N/A",
-        "male": "PPOINT",
-        "female": "PPOINT",
-        "neutral": "PPOINT"
+        "name": "Clockwork Boar"
+    },
+    {
+        "0": "",
+        "1": "",
+        "2": "FRY",
+        "id": 473,
+        "name": "Fairy"
+    },
+    {
+        "0": "",
+        "1": "",
+        "2": "KRB",
+        "id": 474,
+        "name": "Witheran"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2253,
+        "name": "N/A"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2254,
+        "name": "N/A"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2255,
+        "name": "N/A"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2256,
+        "name": "N/A"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2257,
+        "name": "N/A"
+    },
+    {
+        "0": "PPOINT",
+        "1": "PPOINT",
+        "2": "PPOINT",
+        "id": 2258,
+        "name": "N/A"
     }
 ]

@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useMemo,
+  Suspense
 } from 'react';
 
 import Paper from '@mui/material/Paper';
@@ -23,22 +24,22 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { Text } from 'troika-three-text';
 import { useThrottledCallback } from 'use-debounce';
+import { RenderedSpawn } from './rendered-spawn';
 
 extend({
   EffectComposer,
   RenderPass,
   UnrealBloomPass,
   Text,
-  PylonBufferGeometry,
+  PylonBufferGeometry
 });
 
 const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
 const images = ['right', 'left', 'top', 'bot', 'front', 'back'];
 
-const getImagePaths = (folder) =>
-  images.map((img) => `/bg/${folder}/${img}.png`);
+const getImagePaths = folder => images.map(img => `/bg/${folder}/${img}.png`);
 
-const useSkybox = (path) => {
+const useSkybox = path => {
   const { scene } = useThree();
 
   useEffect(() => {
@@ -83,9 +84,8 @@ const classes = {
   41: 'Merchant',
   60: 'LDON Recruiter',
   61: 'LDON Merchant',
-  63: 'Tribute Master',
+  63: 'Tribute Master'
 };
-
 export const RenderedZone = forwardRef(
   (
     {
@@ -113,11 +113,11 @@ export const RenderedZone = forwardRef(
       follow,
       selectedProcess
     },
-    forwardRef,
+    forwardRef
   ) => {
     const {
       camera,
-      gl: { domElement },
+      gl: { domElement }
     } = useThree();
 
     // Skybox
@@ -130,29 +130,41 @@ export const RenderedZone = forwardRef(
     const [staticIndex, setStaticIndex] = useState(-1);
     const [{ bannerScale, bannerLoc }, setBanner] = useState({
       bannerScale: 0,
-      bannerLoc  : { x: 0, y: 0, z: 0 },
+      bannerLoc  : { x: 0, y: 0, z: 0 }
     });
     const characterRef = useRef();
 
-    const followPulse = useThrottledCallback((override = false) => {
-      if (!character || !socket || (!override && !follow)) {
-        return;
-      }
-      socket.emit('doAction', { processId: selectedProcess.pid, payload: { x: camera.position.z, z: camera.position.y - 15, y: camera.position.x * -1 }, type: 'tel' });
-    }, 50, { trailing: true });
+    const followPulse = useThrottledCallback(
+      (override = false) => {
+        if (!character || !socket || (!override && !follow)) {
+          return;
+        }
+        socket.emit('doAction', {
+          processId: selectedProcess.pid,
+          payload  : {
+            x: camera.position.z,
+            z: camera.position.y - 15,
+            y: camera.position.x * -1
+          },
+          type: 'tel'
+        });
+      },
+      250,
+      { trailing: true }
+    );
 
     const zoneTexture = useLoader(GLTFLoader, `${storageUrl}/${zoneName}.glb`);
     const bannerTexture = useLoader(
       GLTFLoader,
-      `${storageUrl}/textures/banner.glb`,
+      `${storageUrl}/textures/banner.glb`
     );
     const bamTexture = useLoader(
       GLTFLoader,
-      `${storageUrl}/textures/sword2.glb`,
+      `${storageUrl}/textures/sword2.glb`
     );
 
     useEffect(() => {
-      const listener = (e) => {
+      const listener = e => {
         if (e.key === 'Escape') {
           setStaticIndex(-1);
         }
@@ -161,157 +173,309 @@ export const RenderedZone = forwardRef(
       return () => window.removeEventListener('keydown', listener);
     }, []);
 
-    useFrame(() => {
-      const ctx = canvasRef.current?.getContext?.('2d');
-      if (!ctx) {
-        return;
-      }
-      ctx.clearRect(0, 0, domElement.width, domElement.height);
-      const frustum = new THREE.Frustum();
-      frustum.setFromProjectionMatrix(
-        new THREE.Matrix4().multiplyMatrices(
-          camera.projectionMatrix,
-          camera.matrixWorldInverse,
-        ),
-      );
-      followPulse();
-      for (const spawn of spawns.filter(
-        (s) =>
-          !groupMembers.some((g) => g.displayedName === s.displayedName) &&
-          frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
-          camera.position.distanceTo(
-            new THREE.Vector3(s.y * -1, s.z + 15, s.x),
-          ) < maxTargetDisplay,
-      )) {
-        const screen = worldToScreen(
-          canvasRef.current,
-          new THREE.Vector3(spawn.y * -1, spawn.z + 15, spawn.x),
-          camera,
-        );
-        let side = 1;
-        if (screen.x > canvasRef.current.width / 2) {
-          side = -1;
+    useFrame(
+      useThrottledCallback(() => {
+        const ctx = canvasRef.current?.getContext?.('2d');
+        if (!ctx) {
+          return;
         }
-        const isTarget = spawn.id === target?.id;
-        ctx.strokeStyle = '#FFFFFF';
-
-        ctx.beginPath();
-        ctx.moveTo(screen.x, screen.y);
-        ctx.lineTo(screen.x - side * 12, screen.y);
-        ctx.lineTo(screen.x - side * 60, screen.y - 40);
-        ctx.stroke();
-
-        ctx.textAlign = 'start';
-        if (side === -1) {
-          ctx.textAlign = 'end';
-        }
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = isTarget
-          ? `italic bold ${fontSize + 3}px Arial`
-          : `italic ${fontSize}px Arial`;
-        ctx.textAlign = 'center';
-        const nameWidth = ctx.measureText(spawn.displayedName).width;
-
-        ctx.fillText(
-          spawn.displayedName,
-          screen.x -
-            side * 2 -
-            side * nameWidth -
-            side * 16 +
-            (nameWidth * side) / 2,
-          screen.y - 64 + 6,
+        ctx.clearRect(0, 0, domElement.width, domElement.height);
+        const frustum = new THREE.Frustum();
+        frustum.setFromProjectionMatrix(
+          new THREE.Matrix4().multiplyMatrices(
+            camera.projectionMatrix,
+            camera.matrixWorldInverse
+          )
         );
+        followPulse();
+        for (const spawn of spawns.filter(
+          s =>
+            !groupMembers.some(g => g.displayedName === s.displayedName) &&
+            frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
+            camera.position.distanceTo(
+              new THREE.Vector3(s.y * -1, s.z + 15, s.x)
+            ) < maxTargetDisplay
+        )) {
+          const screen = worldToScreen(
+            canvasRef.current,
+            new THREE.Vector3(spawn.y * -1, spawn.z + 15, spawn.x),
+            camera
+          );
+          let side = 1;
+          if (screen.x > canvasRef.current.width / 2) {
+            side = -1;
+          }
+          const isTarget = spawn.id === target?.id;
+          ctx.strokeStyle = '#FFFFFF';
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = isTarget
-          ? `italic bold ${fontSize + 3}px Arial`
-          : `italic ${fontSize}px Arial`;
-        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}`;
+          ctx.beginPath();
+          ctx.moveTo(screen.x, screen.y);
+          ctx.lineTo(screen.x - side * 12, screen.y);
+          ctx.lineTo(screen.x - side * 60, screen.y - 40);
+          ctx.stroke();
 
-        ctx.fillText(
-          level,
-          screen.x -
-            side * 2 -
-            side * nameWidth -
-            side * 16 +
-            (nameWidth * side) / 2,
-          screen.y - 44 + (fontSize - 13),
-        );
-      }
-      for (const spawnGroup of staticSpawns.filter(
-        (spawnGroup) =>
-          spawnGroup[0] &&
-          frustum.containsPoint(
-            new THREE.Vector3(
-              spawnGroup[0].y * -1,
-              spawnGroup[0].z + 15,
-              spawnGroup[0].x,
-            ),
-          ) &&
-          camera.position.distanceTo(
-            new THREE.Vector3(
-              spawnGroup[0].y * -1,
-              spawnGroup[0].z + 15,
-              spawnGroup[0].x,
-            ),
-          ) < maxPoiDisplay,
-      )) {
-        const screen = worldToScreen(
-          canvasRef.current,
-          new THREE.Vector3(
-            spawnGroup[0].y * -1,
-            spawnGroup[0].z + 5,
-            spawnGroup[0].x,
-          ),
-          camera,
-        );
-        let side = 1;
-        if (screen.x > canvasRef.current.width / 2) {
-          side = -1;
-        }
-        ctx.strokeStyle = '#FFFFFF';
+          ctx.textAlign = 'start';
+          if (side === -1) {
+            ctx.textAlign = 'end';
+          }
 
-        ctx.beginPath();
-        ctx.moveTo(screen.x, screen.y);
-        ctx.lineTo(screen.x - side * 12, screen.y);
-        ctx.lineTo(screen.x - side * 60, screen.y - 40);
-        ctx.stroke();
-
-        ctx.textAlign = 'start';
-        if (side === -1) {
-          ctx.textAlign = 'end';
-        }
-        let yOffset = 0;
-        let idx = 0;
-        for (const staticSpawn of spawnGroup) {
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = `bold ${fontSize + 2}px Arial`;
+          ctx.font = isTarget
+            ? `italic bold ${fontSize + 3}px Arial`
+            : `italic ${fontSize}px Arial`;
           ctx.textAlign = 'center';
-          const name = `${staticSpawn.name.replace(/_/g, ' ')} ${staticSpawn.chance}% Spawn Chance`;
-          const nameWidth = ctx.measureText(name).width;
+          const nameWidth = ctx.measureText(spawn.displayedName).width;
 
-          if (staticIndex !== staticSpawns.indexOf(spawnGroup) && idx > 0) {
+          ctx.fillText(
+            spawn.displayedName,
+            screen.x -
+              side * 2 -
+              side * nameWidth -
+              side * 16 +
+              (nameWidth * side) / 2,
+            screen.y - 64 + 6
+          );
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = isTarget
+            ? `italic bold ${fontSize + 3}px Arial`
+            : `italic ${fontSize}px Arial`;
+          const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}`;
+
+          ctx.fillText(
+            level,
+            screen.x -
+              side * 2 -
+              side * nameWidth -
+              side * 16 +
+              (nameWidth * side) / 2,
+            screen.y - 44 + (fontSize - 13)
+          );
+        }
+        for (const spawnGroup of staticSpawns.filter(
+          spawnGroup =>
+            spawnGroup[0] &&
+            frustum.containsPoint(
+              new THREE.Vector3(
+                spawnGroup[0].y * -1,
+                spawnGroup[0].z + 15,
+                spawnGroup[0].x
+              )
+            ) &&
+            camera.position.distanceTo(
+              new THREE.Vector3(
+                spawnGroup[0].y * -1,
+                spawnGroup[0].z + 15,
+                spawnGroup[0].x
+              )
+            ) < maxPoiDisplay
+        )) {
+          const screen = worldToScreen(
+            canvasRef.current,
+            new THREE.Vector3(
+              spawnGroup[0].y * -1,
+              spawnGroup[0].z + 5,
+              spawnGroup[0].x
+            ),
+            camera
+          );
+          let side = 1;
+          if (screen.x > canvasRef.current.width / 2) {
+            side = -1;
+          }
+          ctx.strokeStyle = '#FFFFFF';
+
+          ctx.beginPath();
+          ctx.moveTo(screen.x, screen.y);
+          ctx.lineTo(screen.x - side * 12, screen.y);
+          ctx.lineTo(screen.x - side * 60, screen.y - 40);
+          ctx.stroke();
+
+          ctx.textAlign = 'start';
+          if (side === -1) {
+            ctx.textAlign = 'end';
+          }
+          let yOffset = 0;
+          let idx = 0;
+          for (const staticSpawn of spawnGroup) {
             ctx.fillStyle = '#FFFFFF';
-            ctx.font = `bold italic ${fontSize + 1}px Arial`;
-            const details = '[Click for additional spawns/locations]';
-            if (!showStaticSpawnDetails) {
-              yOffset -= 20;
+            ctx.font = `bold ${fontSize + 2}px Arial`;
+            ctx.textAlign = 'center';
+            const name = `${staticSpawn.name.replace(/_/g, ' ')} ${
+              staticSpawn.chance
+            }% Spawn Chance`;
+            const nameWidth = ctx.measureText(name).width;
+
+            if (staticIndex !== staticSpawns.indexOf(spawnGroup) && idx > 0) {
+              ctx.fillStyle = '#FFFFFF';
+              ctx.font = `bold italic ${fontSize + 1}px Arial`;
+              const details = '[Click for additional spawns/locations]';
+              if (!showStaticSpawnDetails) {
+                yOffset -= 20;
+              }
+              ctx.fillText(
+                details,
+                screen.x -
+                  side * 2 -
+                  side * nameWidth -
+                  side * 16 +
+                  (nameWidth * side) / 2,
+                screen.y - 64 + 6 + yOffset
+              );
+              break;
             }
+
+            idx++;
+
             ctx.fillText(
-              details,
+              name,
               screen.x -
                 side * 2 -
                 side * nameWidth -
                 side * 16 +
                 (nameWidth * side) / 2,
-              screen.y - 64 + 6 + yOffset,
+              screen.y - 64 + 6 + yOffset
             );
-            break;
+            if (showStaticSpawnDetails) {
+              yOffset += 5;
+              ctx.font = `italic ${fontSize + 2}px Arial`;
+              const level = `Level ${staticSpawn.level} ${
+                classes[staticSpawn.class]
+              } :: Health: ${staticSpawn.hp}`;
+              ctx.fillText(
+                level,
+                screen.x -
+                  side * 2 -
+                  side * nameWidth -
+                  side * 16 +
+                  (nameWidth * side) / 2,
+                screen.y - 44 + (fontSize - 13) + yOffset
+              );
+              yOffset += 20;
+
+              const loc = `(${staticSpawn.y}, ${staticSpawn.x}, ${staticSpawn.z})`;
+              ctx.fillText(
+                loc,
+                screen.x -
+                  side * 2 -
+                  side * nameWidth -
+                  side * 16 +
+                  (nameWidth * side) / 2,
+                screen.y - 44 + (fontSize - 13) + yOffset
+              );
+
+              yOffset += 20;
+
+              const respawn = `Respawn Timer: ${(
+                staticSpawn.respawnTime / 60
+              ).toFixed(2)} minutes`;
+              ctx.fillText(
+                respawn,
+                screen.x -
+                  side * 2 -
+                  side * nameWidth -
+                  side * 16 +
+                  (nameWidth * side) / 2,
+                screen.y - 44 + (fontSize - 13) + yOffset
+              );
+            }
+            yOffset += 35;
+          }
+        }
+
+        for (const zoneDetail of zoneDetails.filter(
+          zd =>
+            frustum.containsPoint(
+              new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x)
+            ) &&
+            camera.position.distanceTo(
+              new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x)
+            ) < maxPoiDisplay
+        )) {
+          const screen = worldToScreen(
+            canvasRef.current,
+            new THREE.Vector3(
+              zoneDetail.y * -1,
+              zoneDetail.z + 15,
+              zoneDetail.x
+            ),
+            camera
+          );
+          let side = 1;
+          if (screen.x > canvasRef.current.width / 2) {
+            side = -1;
+          }
+          ctx.strokeStyle = '#FFFFFF';
+
+          ctx.beginPath();
+          ctx.moveTo(screen.x, screen.y);
+          ctx.lineTo(screen.x - side * 12, screen.y);
+          ctx.lineTo(screen.x - side * 60, screen.y - 40);
+          ctx.stroke();
+
+          ctx.textAlign = 'start';
+          if (side === -1) {
+            ctx.textAlign = 'end';
           }
 
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `bold ${fontSize + 2}px Arial`;
+          ctx.textAlign = 'center';
+          const nameWidth = ctx.measureText(zoneDetail.description).width;
 
-          idx++;
+          ctx.fillText(
+            zoneDetail.description,
+            screen.x -
+              side * 2 -
+              side * nameWidth -
+              side * 16 +
+              (nameWidth * side) / 2,
+            screen.y - 64 + 6
+          );
+          if (showPoiLoc) {
+            ctx.font = `italic ${fontSize + 2}px Arial`;
+            const loc = `(${zoneDetail.y}, ${zoneDetail.x}, ${zoneDetail.z})`;
+            ctx.fillText(
+              loc,
+              screen.x -
+                side * 2 -
+                side * nameWidth -
+                side * 16 +
+                (nameWidth * side) / 2,
+              screen.y - 44 + (fontSize - 13)
+            );
+          }
+        }
+
+        const drawNames = (character, name, color) => {
+          if (!character) {
+            return;
+          }
+          const screen = worldToScreen(
+            canvasRef.current,
+            new THREE.Vector3(character.y * -1, character.z + 15, character.x),
+            camera
+          );
+          let side = 1;
+          if (screen.x > canvasRef.current.width / 2) {
+            side = -1;
+          }
+          ctx.strokeStyle = '#FFFFFF';
+
+          ctx.beginPath();
+          ctx.moveTo(screen.x, screen.y);
+          ctx.lineTo(screen.x - side * 12, screen.y);
+          ctx.lineTo(screen.x - side * 60, screen.y - 40);
+          ctx.stroke();
+
+          ctx.textAlign = 'start';
+          if (side === -1) {
+            ctx.textAlign = 'end';
+          }
+          ctx.fillStyle = color;
+          ctx.font = `bold ${fontSize + 3}px Arial`;
+          ctx.textAlign = 'center';
+          const nameWidth = ctx.measureText(name).width;
 
           ctx.fillText(
             name,
@@ -320,181 +484,38 @@ export const RenderedZone = forwardRef(
               side * nameWidth -
               side * 16 +
               (nameWidth * side) / 2,
-            screen.y - 64 + 6 + yOffset,
+            screen.y - 64 + 6
           );
-          if (showStaticSpawnDetails) {
-            yOffset += 5;
-            ctx.font = `italic ${fontSize + 2}px Arial`;
-            const level = `Level ${staticSpawn.level} ${
-              classes[staticSpawn.class]
-            } :: Health: ${staticSpawn.hp}`;
-            ctx.fillText(
-              level,
-              screen.x -
-                side * 2 -
-                side * nameWidth -
-                side * 16 +
-                (nameWidth * side) / 2,
-              screen.y - 44 + (fontSize - 13) + yOffset,
-            );
-            yOffset += 20;
 
-            const loc = `(${staticSpawn.y}, ${staticSpawn.x}, ${staticSpawn.z})`;
-            ctx.fillText(
-              loc,
-              screen.x -
-                side * 2 -
-                side * nameWidth -
-                side * 16 +
-                (nameWidth * side) / 2,
-              screen.y - 44 + (fontSize - 13) + yOffset,
-            );
-
-            yOffset += 20;
-
-            const respawn = `Respawn Timer: ${(
-              staticSpawn.respawnTime / 60
-            ).toFixed(2)} minutes`;
-            ctx.fillText(
-              respawn,
-              screen.x -
-                side * 2 -
-                side * nameWidth -
-                side * 16 +
-                (nameWidth * side) / 2,
-              screen.y - 44 + (fontSize - 13) + yOffset,
-            );
-          }
-          yOffset += 35;
-        }
-      }
-
-      for (const zoneDetail of zoneDetails.filter(
-        (zd) =>
-          frustum.containsPoint(
-            new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x),
-          ) &&
-          camera.position.distanceTo(
-            new THREE.Vector3(zd.y * -1, zd.z + 15, zd.x),
-          ) < maxPoiDisplay,
-      )) {
-        const screen = worldToScreen(
-          canvasRef.current,
-          new THREE.Vector3(zoneDetail.y * -1, zoneDetail.z + 15, zoneDetail.x),
-          camera,
-        );
-        let side = 1;
-        if (screen.x > canvasRef.current.width / 2) {
-          side = -1;
-        }
-        ctx.strokeStyle = '#FFFFFF';
-
-        ctx.beginPath();
-        ctx.moveTo(screen.x, screen.y);
-        ctx.lineTo(screen.x - side * 12, screen.y);
-        ctx.lineTo(screen.x - side * 60, screen.y - 40);
-        ctx.stroke();
-
-        ctx.textAlign = 'start';
-        if (side === -1) {
-          ctx.textAlign = 'end';
-        }
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = `bold ${fontSize + 2}px Arial`;
-        ctx.textAlign = 'center';
-        const nameWidth = ctx.measureText(zoneDetail.description).width;
-
-        ctx.fillText(
-          zoneDetail.description,
-          screen.x -
-            side * 2 -
-            side * nameWidth -
-            side * 16 +
-            (nameWidth * side) / 2,
-          screen.y - 64 + 6,
-        );
-        if (showPoiLoc) {
-          ctx.font = `italic ${fontSize + 2}px Arial`;
-          const loc = `(${zoneDetail.y}, ${zoneDetail.x}, ${zoneDetail.z})`;
+          ctx.font = `italic bold ${fontSize + 3}px Arial`;
+          const level = `Level ${character.level}  ${
+            classes[character.classId]
+          }`;
           ctx.fillText(
-            loc,
+            level,
             screen.x -
               side * 2 -
               side * nameWidth -
               side * 16 +
               (nameWidth * side) / 2,
-            screen.y - 44 + (fontSize - 13),
+            screen.y - 44
+          );
+        };
+
+        drawNames(
+          character,
+          `${character?.displayedName} (Me)`,
+          charColor?.css?.backgroundColor
+        );
+        for (const groupMember of groupMembers) {
+          drawNames(
+            groupMember,
+            `${groupMember?.displayedName} (Group)`,
+            groupColor?.css?.backgroundColor
           );
         }
-      }
-
-      const drawNames = (character, name, color) => {
-        if (!character) {
-          return;
-        }
-        const screen = worldToScreen(
-          canvasRef.current,
-          new THREE.Vector3(character.y * -1, character.z + 15, character.x),
-          camera,
-        );
-        let side = 1;
-        if (screen.x > canvasRef.current.width / 2) {
-          side = -1;
-        }
-        ctx.strokeStyle = '#FFFFFF';
-
-        ctx.beginPath();
-        ctx.moveTo(screen.x, screen.y);
-        ctx.lineTo(screen.x - side * 12, screen.y);
-        ctx.lineTo(screen.x - side * 60, screen.y - 40);
-        ctx.stroke();
-
-        ctx.textAlign = 'start';
-        if (side === -1) {
-          ctx.textAlign = 'end';
-        }
-        ctx.fillStyle = color;
-        ctx.font = `bold ${fontSize + 3}px Arial`;
-        ctx.textAlign = 'center';
-        const nameWidth = ctx.measureText(name).width;
-
-        ctx.fillText(
-          name,
-          screen.x -
-            side * 2 -
-            side * nameWidth -
-            side * 16 +
-            (nameWidth * side) / 2,
-          screen.y - 64 + 6,
-        );
-
-        ctx.font = `italic bold ${fontSize + 3}px Arial`;
-        const level = `Level ${character.level}  ${classes[character.classId]}`;
-        ctx.fillText(
-          level,
-          screen.x -
-            side * 2 -
-            side * nameWidth -
-            side * 16 +
-            (nameWidth * side) / 2,
-          screen.y - 44,
-        );
-      };
-
-      drawNames(
-        character,
-        `${character?.displayedName} (Me)`,
-        charColor?.css?.backgroundColor,
-      );
-      for (const groupMember of groupMembers) {
-        drawNames(
-          groupMember,
-          `${groupMember?.displayedName} (Group)`,
-          groupColor?.css?.backgroundColor,
-        );
-      }
-    });
+      }, 50)
+    );
 
     useEffect(() => {
       if (myTarget) {
@@ -503,13 +524,13 @@ export const RenderedZone = forwardRef(
           const associatedTargetPosition = new THREE.Vector3(
             myTarget.y * -1,
             myTarget.z + 15,
-            myTarget.x,
+            myTarget.x
           );
 
           const lookPosition = new THREE.Vector3(
             associatedTargetPosition.x + 100,
             associatedTargetPosition.y + 500,
-            associatedTargetPosition.z + 100,
+            associatedTargetPosition.z + 100
           );
           camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
           controls.current.target.copy(associatedTargetPosition);
@@ -527,15 +548,15 @@ export const RenderedZone = forwardRef(
         const charPosition = new THREE.Vector3(
           (character?.y ?? 0) * -1,
           (character?.z ?? 0) + 15,
-          character?.x ?? 0,
+          character?.x ?? 0
         );
         const lookPosition = new THREE.Vector3(
           charPosition.x + 100,
           charPosition.y + 100,
-          charPosition.z + 400,
+          charPosition.z + 400
         );
         camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
-        controls.current.target.copy(charPosition);
+        controls.current.target?.copy?.(charPosition);
         camera.lookAt(charPosition);
       }, 0);
     }, [zoneTexture, character]) //eslint-disable-line
@@ -549,11 +570,11 @@ export const RenderedZone = forwardRef(
 
     // Update banner location when target changes or spawn changes
     useEffect(() => {
-      const spawn = spawns.find((s) => s.id === target?.id);
+      const spawn = spawns.find(s => s.id === target?.id);
       if (spawn) {
         setBanner({
           bannerScale: 6,
-          bannerLoc  : { x: spawn.x, y: spawn.y, z: spawn.z },
+          bannerLoc  : { x: spawn.x, y: spawn.y, z: spawn.z }
         });
       } else {
         setBanner({ bannerScale: 0, bannerLoc: { x: 0, y: 0, z: 0 } });
@@ -572,21 +593,19 @@ export const RenderedZone = forwardRef(
         return;
       }
       if (
-        !['x', 'y', 'z'].every(
-          (key) => character?.[key] === prevCharacter?.[key],
-        )
+        !['x', 'y', 'z'].every(key => character?.[key] === prevCharacter?.[key])
       ) {
         const offset = new THREE.Vector3(
           0,
           camera.position.distanceTo(characterRef.current.position),
-          0,
+          0
         );
         camera.position.addVectors(characterRef.current.position, offset);
         setPrevCharacter(character);
       }
     }, [character, prevCharacter, doFollow]) // eslint-disable-line
 
-    const followMe = (doFollow) => {
+    const followMe = doFollow => {
       if (doFollow) {
         setOriginalTarget(controls.current.target);
         controls.current.target = characterRef.current.position;
@@ -603,14 +622,14 @@ export const RenderedZone = forwardRef(
       doTel: followPulse
     }));
 
-    const renderedStaticSpawns = useMemo(() => staticSpawns.map((s) => s[0]), [
-      staticSpawns,
+    const renderedStaticSpawns = useMemo(() => staticSpawns.map(s => s[0]), [
+      staticSpawns
     ]);
 
     return (
       <>
         {/** Spawns */}
-        {spawns.map((s) => {
+        {spawns.map(s => {
           const color =
             s.level - character.level > 3
               ? 'red'
@@ -641,18 +660,24 @@ export const RenderedZone = forwardRef(
         {/** Static Spawns */}
         {renderedStaticSpawns.map((s, i) => {
           const color = staticSpawnColor?.css?.backgroundColor ?? 'blue';
+          const fallback = (
+            <mesh spawn={s} position={[s.y * -1, s.z + 5, s.x]}>
+              <octahedronBufferGeometry args={[7]} />
+              <meshStandardMaterial color={color} />
+            </mesh>
+          );
+
           return (
             <React.Fragment key={`spawn-${s.id}-${i}`}>
-              <mesh
-                spawn={s}
-                onClick={() => {
-                  setStaticIndex(i);
-                }}
-                position={[s.y * -1, s.z + 5, s.x]}
-              >
-                <octahedronBufferGeometry args={[7]} />
-                <meshStandardMaterial color={color} />
-              </mesh>
+              <Suspense fallback={fallback}>
+                <RenderedSpawn
+                  maxDisplay={maxPoiDisplay}
+                  fallback={fallback}
+                  spawn={s}
+                  i={i}
+                  setStaticIndex={setStaticIndex}
+                />
+              </Suspense>
             </React.Fragment>
           );
         })}
@@ -667,7 +692,7 @@ export const RenderedZone = forwardRef(
               position={[
                 character.y * -1 - 3,
                 character.z + 5,
-                character.x + 4,
+                character.x + 4
               ]}
               object={bamTexture?.scene}
             />
@@ -686,7 +711,7 @@ export const RenderedZone = forwardRef(
               position={[
                 bannerLoc.y * -1 - 85,
                 bannerLoc.z + 120,
-                bannerLoc.x - 143,
+                bannerLoc.x - 143
               ]}
               object={bannerTexture?.scene}
             />
@@ -697,13 +722,13 @@ export const RenderedZone = forwardRef(
         <primitive object={zoneTexture?.scene} />
       </>
     );
-  },
+  }
 );
 
-export function PaperComponent(props) {
+export function PaperComponent (props) {
   return (
     <Draggable
-      handle="#draggable-dialog-title"
+      handle='#draggable-dialog-title'
       cancel={'[class*="MuiDialogContent-root"]'}
     >
       <Paper sx={{ width: '30vw', minWidth: 450 }} {...props} />

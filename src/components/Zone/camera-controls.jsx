@@ -30,6 +30,7 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
     duck       : false
   });
   const lockState = useRef(false);
+  const isLocked = useRef(false);
   useEffect(() => {
     if (type === 'orbit') {
       return;
@@ -74,14 +75,27 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
    
 
     const mouseDown = e => {
+      
       if (e.button === 2) {
         lockState.current = true;
         e.preventDefault();
         e.stopPropagation();
+      } else {
+        lockState.current = false;
+
+        setTimeout(() => {
+          controls.current.unlock();
+        }, 200);
+        
       }
     };
     const mouseUp = () => {
+      controls.current.unlock();
       lockState.current = false;
+      setTimeout(() => {
+        controls.current.unlock();
+        lockState.current = false;
+      }, 200);
     };
     const preventDefault = e => e.preventDefault();
 
@@ -97,7 +111,7 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
       window.removeEventListener('mousedown', mouseDown);
       window.removeEventListener('mouseup', mouseUp);
     };
-  }, [type]);
+  }, [type, controls]);
   
   // Ref to the controls, so that we can update them on every frame using useFrame
   useFrame((state) => {
@@ -134,9 +148,16 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
 
       if (lockState.current) {
         controls.current.connect();
-        controls.current.lock();
+        if (!isLocked.current) {
+          controls.current.lock();
+          isLocked.current = true;
+        } 
       } else {
-        controls.current.unlock();
+        if (isLocked.current) {
+          controls.current.unlock();
+          isLocked.current = false;
+        }
+        
       }
     }
 
