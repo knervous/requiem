@@ -430,8 +430,8 @@ export const Zone = () => {
       if (!canvasRef.current) {
         return;
       }
-      canvasRef.current.height = current.height;
-      canvasRef.current.width = current.width;
+      canvasRef.current.height = current.height / window.devicePixelRatio;
+      canvasRef.current.width = current.width / window.devicePixelRatio;
     });
     resizeObserver.observe(current);
     return () => {

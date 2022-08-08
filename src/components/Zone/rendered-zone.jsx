@@ -622,10 +622,10 @@ export const RenderedZone = forwardRef(
       doTel: followPulse
     }));
 
-    const renderedStaticSpawns = useMemo(() => staticSpawns.map(s => s[0]), [
+    const renderedStaticSpawns = useMemo(() => staticSpawns.flatMap(s => s.every(sp => sp.chance === 100) ? s : s[0]), [
       staticSpawns
     ]);
-
+ 
     return (
       <>
         {/** Spawns */}
