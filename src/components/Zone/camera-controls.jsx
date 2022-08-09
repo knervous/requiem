@@ -31,6 +31,12 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
   });
 
   useEffect(() => {
+    if (type === 'fly' && controls.current) {
+      controls.current.connect();
+    }
+  }, [type]);
+
+  useEffect(() => {
     const listener = (val) => event => {
       const newState = { ...moveState.current };
       switch (event.keyCode) {
@@ -74,17 +80,11 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
 
     const mouseDown = e => {
       if (e.button === 2) {
-        // controls.current.connect();
         controls.current.lock();
-      
-        if (document.activeElement) {
-          document.activeElement.blur();
-        }
       } else {
         setTimeout(() => {
-          
           controls.current.unlock();
-        }, 200);
+        }, 200); 
       }
       e.preventDefault();
       e.stopPropagation();
