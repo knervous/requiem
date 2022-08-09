@@ -1,0 +1,22 @@
+.accordion-container .MuiAccordionDetails-root > label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+
+.accordion-container {
+    .MuiAccordion-region {
+        box-shadow: 0px 0px 4px 2px inset rgba(255,255,255,.2);
+    }   
+     .muicc-colorpicker-button {
+        margin-left: 10px;
+        margin-right: 11px;
+        &, & > div, & > span {
+            width: 21px;
+            min-width: 21px;
+            height: 21px;
+            min-height: 21px;
+        }
+    }
+}

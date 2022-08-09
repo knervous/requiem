@@ -144,6 +144,7 @@ export const supportedZones = [
   'nurga',
   'oasis',
   'oggok',
+  'oot',
   'overthere',
   'paineel',
   'paludal',

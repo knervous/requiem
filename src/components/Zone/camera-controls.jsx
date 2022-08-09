@@ -29,12 +29,8 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
     jump       : false,
     duck       : false
   });
-  const lockState = useRef(false);
-  const isLocked = useRef(false);
+
   useEffect(() => {
-    if (type === 'orbit') {
-      return;
-    }
     const listener = (val) => event => {
       const newState = { ...moveState.current };
       switch (event.keyCode) {
@@ -75,49 +71,48 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
    
 
     const mouseDown = e => {
-
       if (e.button === 2) {
-        lockState.current = true;
+        controls.current.connect();
+        controls.current.lock();
         e.preventDefault();
         e.stopPropagation();
+        if (document.activeElement) {
+          document.activeElement.blur();
+        }
       } else {
-        lockState.current = false;
-
         setTimeout(() => {
-          if (lockState.current && document.activeElement) {
-            document.activeElement.blur();
-          }
+          
           controls.current.unlock();
         }, 200);
-        
       }
     };
     const mouseUp = () => {
-      controls.current.unlock();
-      lockState.current = false;
       setTimeout(() => {
         controls.current.unlock();
-        lockState.current = false;
       }, 200);
     };
     const preventDefault = e => e.preventDefault();
 
-    window.addEventListener('keydown', downListener);
-    window.addEventListener('keyup', upListener);
-    window.addEventListener('contextmenu', preventDefault);
-    window.addEventListener('mousedown', mouseDown);
-    window.addEventListener('mouseup', mouseUp);
+    if (type === 'fly') {
+      window.addEventListener('keydown', downListener);
+      window.addEventListener('keyup', upListener);
+      window.addEventListener('contextmenu', preventDefault);
+      domElement.addEventListener('mousedown', mouseDown);
+      window.addEventListener('mouseup', mouseUp);
+    }
+    
     return () => {
       window.removeEventListener('keydown', downListener);
       window.removeEventListener('keyup', upListener);
       window.removeEventListener('contextmenu', preventDefault);
-      window.removeEventListener('mousedown', mouseDown);
+      domElement.removeEventListener('mousedown', mouseDown);
       window.removeEventListener('mouseup', mouseUp);
     };
-  }, [type, controls]);
+  }, [type, controls, domElement]);
   
   // Ref to the controls, so that we can update them on every frame using useFrame
   useFrame((state) => {
+
     if (type === 'fly') {
       const velocity = new THREE.Vector3();
       if (moveState.current.forward > 0) {
@@ -148,20 +143,6 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
         state.camera.position.add(jumpvel);
       }
       state.camera.position.add(velocity);
-
-      if (lockState.current) {
-        controls.current.connect();
-        if (!isLocked.current) {
-          controls.current.lock();
-          isLocked.current = true;
-        } 
-      } else {
-        if (isLocked.current) {
-          controls.current.unlock();
-          isLocked.current = false;
-        }
-        
-      }
     }
 
     // if (type === 'orbit') {

@@ -8,6 +8,7 @@ import {
 } from 'react-toast-notifications';
 import './component.scss';
 import { useRef } from 'react';
+import { SettingsProvider } from '../Context/settings';
 
 
 // Testing
@@ -59,11 +60,13 @@ const CustomToast = ({ children, ...props }) => {
 export const Main = () => {
   return (
     <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
-      <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
-        <div className="app">
-          <LeftDrawer />
-        </div>
-      </ThemeProvider>
+      <SettingsProvider>
+        <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+          <div className="app">
+            <LeftDrawer />
+          </div>
+        </ThemeProvider>
+      </SettingsProvider>
     </ToastProvider>
   );
 };

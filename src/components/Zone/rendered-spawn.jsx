@@ -9,12 +9,13 @@ import * as THREE from 'three';
 
 import { useEffect } from 'react';
 import { useThrottledCallback } from 'use-debounce';
+import { traverseMaterials } from './rendered-zone';
 
 const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones/models';
 
 const gltfLoader = new GLTFLoader(new THREE.LoadingManager());
 
-export function RenderedSpawn({ spawn, fallback, maxDisplay, setStaticIndex, i }) {
+export function RenderedSpawn({ wireframe, spawn, fallback, maxDisplay, setStaticIndex, i }) {
   const model = useMemo(
     () => raceData.find((r) => r.id === spawn.race)[spawn.gender] || 'HUM',
     [spawn],
@@ -73,6 +74,15 @@ export function RenderedSpawn({ spawn, fallback, maxDisplay, setStaticIndex, i }
 
   const { camera } = useThree();
   const [actions, setActions] = useState({});
+
+  useEffect(() => {
+    if (!scene) {
+      return;
+    }
+    traverseMaterials(scene, (material) => {
+      material.wireframe = wireframe;
+    });
+  }, [scene, wireframe]);
   
   useFrame(
     useThrottledCallback(() => {

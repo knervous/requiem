@@ -5,33 +5,25 @@ import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
-import ListItemText from '@mui/material/ListItemText';
-import HouseIcon from '@mui/icons-material/House';
+
 import { useState } from 'react';
 
-import AccessibilityIcon from '@mui/icons-material/Accessibility';
-import GroupIcon from '@mui/icons-material/Group';
-import { Character } from '../Character/component';
 import { Zone } from '../Zone/component';
-import { Group } from '../Group/component';
+import { NavDrawer } from './nav';
+import { SettingsDrawer } from './settings';
 
 // scss
 import './component.scss';
 
-const processMode = new URLSearchParams(window.location.search).get('mode') === 'process';
-
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -49,7 +41,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       }),
       marginLeft: 0,
     }),
-  })
+  }),
 );
 
 const AppBar = styled(MuiAppBar, {
@@ -83,9 +75,9 @@ export const LeftDrawer = () => {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState('Advanced Map');
   const [content, setContent] = useState(<Zone />);
-  
-  const handleDrawerOpen = () => {
-    setOpen(true);
+
+  const handleDrawerOpen = (type) => () => {
+    setOpen(type);
   };
 
   const handleDrawerClose = () => {
@@ -101,13 +93,21 @@ export const LeftDrawer = () => {
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={handleDrawerOpen}
+              onClick={handleDrawerOpen('nav')}
               edge="start"
               sx={{ mr: 2, ...(open && { display: 'none' }) }}
             >
               <MenuIcon />
             </IconButton>
-         
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen('settings')}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            >
+              <SettingsIcon />
+            </IconButton>
             <Typography variant="h6" noWrap component="div">
               {title}
             </Typography>
@@ -127,7 +127,10 @@ export const LeftDrawer = () => {
           anchor="left"
           open={open}
         >
-          <DrawerHeader>
+          <DrawerHeader sx={{ justifyContent: 'space-between' }}>
+            <h3 style={{ marginLeft: 8 }}>
+              {open === 'nav' ? 'Navigation' : 'Settings'}
+            </h3>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === 'ltr' ? (
                 <ChevronLeftIcon />
@@ -137,31 +140,20 @@ export const LeftDrawer = () => {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          <List>
-            {[
-              ['Character', <AccessibilityIcon />, Character, !processMode],
-              ['Advanced Map', <HouseIcon />, Zone, false],
-              ['Contact', <ContactMailIcon />, () => <div>  
-                <p>Site is a work in progress by temp0. Feel free to email comments and suggestions to eqadvancedmaps@gmail.com</p>
-
-              </div>, false],
-              ['Group', <GroupIcon />, Group, !processMode],
-            ].map(([text, icon, Content, disabled]) => disabled ? null : (
-              <ListItem
-                disabled={disabled}
-                onClick={() => {
-                  setTitle(text);
-                  setOpen(false);
-                  setContent(<Content />);
-                }}
-                button
-                key={text}
-              >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          {open === 'nav' && (
+            <NavDrawer
+              handleDrawerClose={handleDrawerClose}
+              setTitle={setTitle}
+              setContent={setContent}
+            />
+          )}
+          {open === 'settings' && (
+            <SettingsDrawer
+              handleDrawerClose={handleDrawerClose}
+              setTitle={setTitle}
+              setContent={setContent}
+            />
+          )}
         </Drawer>
         <Main className="main-content" open={open}>
           <DrawerHeader />
