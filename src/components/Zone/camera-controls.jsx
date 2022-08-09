@@ -36,12 +36,14 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
       switch (event.keyCode) {
         case 87: /* W*/
           newState.forward = val;
+          newState.back = 0;
           break;
         case 65: /* A*/
           newState.left = val;
           break;
         case 83: /* S*/
           newState.back = val;
+          newState.forward = 0;
           break;
         case 68: /* D*/
           newState.right = val;
@@ -58,7 +60,7 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
         case 32: // Space
           newState.jump = Boolean(val);
           break;
-        case 88: // Space
+        case 88: // X
           newState.duck = Boolean(val);
           break;
         default:
@@ -72,10 +74,9 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
 
     const mouseDown = e => {
       if (e.button === 2) {
-        controls.current.connect();
+        // controls.current.connect();
         controls.current.lock();
-        e.preventDefault();
-        e.stopPropagation();
+      
         if (document.activeElement) {
           document.activeElement.blur();
         }
@@ -85,11 +86,14 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
           controls.current.unlock();
         }, 200);
       }
+      e.preventDefault();
+      e.stopPropagation();
     };
-    const mouseUp = () => {
-      setTimeout(() => {
+    const mouseUp = async () => {
+      for (let i = 0; i < 5; i++) {
         controls.current.unlock();
-      }, 200);
+        await new Promise(res => setTimeout(res, 150));
+      }
     };
     const preventDefault = e => e.preventDefault();
 
