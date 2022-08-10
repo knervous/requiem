@@ -29,12 +29,13 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
     jump       : false,
     duck       : false
   });
+  const lockRef = useRef(null);
 
   useEffect(() => {
     if (type === 'fly' && controls.current) {
       controls.current.connect();
     }
-  }, [type]);
+  }, [type, controls]);
 
   useEffect(() => {
     const listener = (val) => event => {
@@ -80,23 +81,21 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
 
     const mouseDown = e => {
       if (e.button === 2) {
-        controls.current.lock();
         if (document.activeElement) {
           document.activeElement.blur();
         }
+        lockRef.current = true;
       } else {
         setTimeout(() => {
           controls.current.unlock();
+          lockRef.current = false;
         }, 200); 
       }
       e.preventDefault();
       e.stopPropagation();
     };
     const mouseUp = async () => {
-      for (let i = 0; i < 5; i++) {
-        controls.current.unlock();
-        await new Promise(res => setTimeout(res, 150));
-      }
+      lockRef.current = false;
     };
     const preventDefault = e => e.preventDefault();
 
@@ -149,7 +148,14 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
         jumpvel.multiplyScalar(flySpeed * (moveState.current.doubleSpeed ? 2 : 1));
         state.camera.position.add(jumpvel);
       }
+      
       state.camera.position.add(velocity);
+
+      if (lockRef.current) {
+        controls.current.lock();
+      } else {
+        controls.current.unlock();
+      }
     }
 
     // if (type === 'orbit') {
