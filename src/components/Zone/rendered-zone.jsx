@@ -26,12 +26,19 @@ import { Text } from 'troika-three-text';
 import { useThrottledCallback } from 'use-debounce';
 import { RenderedSpawn } from './rendered-spawn';
 
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { Line2 } from 'three/examples/jsm/lines/Line2';
+
 extend({
   EffectComposer,
   RenderPass,
   UnrealBloomPass,
   Text,
   PylonBufferGeometry,
+  LineMaterial,
+  LineGeometry,
+  Line2,
 });
 
 const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
@@ -104,15 +111,14 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
 function onPointerMove(event) {
-
   // calculate pointer position in normalized device coordinates
   // (-1 to +1) for both components
 
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 window.addEventListener('pointermove', onPointerMove);
+
 export const RenderedZone = forwardRef(
   (
     {
@@ -131,6 +137,7 @@ export const RenderedZone = forwardRef(
       selectedProcess,
       staticSpawns,
       options,
+      parseInfo,
     },
     forwardRef,
   ) => {
@@ -150,11 +157,20 @@ export const RenderedZone = forwardRef(
       fontSize = 15,
       charColor,
       groupColor,
+      showStaticSpawnModels,
       wireframe,
-      grid,
       spawnWireframe,
-      gridInterval,
-      locationRaycast
+      locationRaycast,
+      locationTrails,
+      characterRace,
+      locationColor,
+      charSize,
+      charGender,
+      charVariation,
+      charTexture,
+      charAnimation,
+      setAnimationList,
+      cameraType,
     } = options;
     // Skybox
     useSkybox(skybox);
@@ -170,6 +186,8 @@ export const RenderedZone = forwardRef(
       bannerLoc  : { x: 0, y: 0, z: 0 },
     });
     const characterRef = useRef();
+    const parseRef = useRef();
+    const raycastRef = useRef(null);
 
     const followPulse = useThrottledCallback(
       (override = false) => {
@@ -491,7 +509,9 @@ export const RenderedZone = forwardRef(
         raycaster.setFromCamera(pointer, camera);
 
         // calculate objects intersecting the picking ray
-        const intersects = raycaster.intersectObjects(zoneTexture?.scene?.children);
+        const intersects = raycaster.intersectObjects(
+          zoneTexture?.scene?.children,
+        );
         // console.log('Int', intersects);
         if (intersects.length) {
           const pt = intersects[0].point;
@@ -506,7 +526,7 @@ export const RenderedZone = forwardRef(
             side = -1;
           }
           ctx.strokeStyle = '#FFFFFF';
-  
+
           ctx.beginPath();
           screen.x += -30;
           screen.y += -35;
@@ -514,7 +534,7 @@ export const RenderedZone = forwardRef(
           ctx.lineTo(screen.x - side * 56, screen.y);
           ctx.lineTo(screen.x - side * 80, screen.y - 60);
           ctx.stroke();
-  
+
           ctx.textAlign = 'start';
           if (side === -1) {
             ctx.textAlign = 'end';
@@ -524,7 +544,7 @@ export const RenderedZone = forwardRef(
           ctx.textAlign = 'center';
           const detail = 'Location Raycast';
           const detailWidth = ctx.measureText(detail).width;
-  
+
           ctx.fillText(
             detail,
             screen.x -
@@ -534,9 +554,11 @@ export const RenderedZone = forwardRef(
               (detailWidth * side) / 2,
             screen.y - 64 + 6,
           );
-  
+
           ctx.font = `italic bold ${fontSize + 3}px Arial`;
-          const level = `(${(rayTarget.x * -1).toFixed(2)}, ${(rayTarget.z - 15).toFixed(2)}, ${(rayTarget.y).toFixed(2)})`;
+          const level = `(${(rayTarget.x * -1).toFixed(2)}, ${(
+            rayTarget.z - 15
+          ).toFixed(2)}, ${rayTarget.y.toFixed(2)})`;
           ctx.fillText(
             level,
             screen.x -
@@ -547,15 +569,14 @@ export const RenderedZone = forwardRef(
             screen.y - 44,
           );
         }
-
       }
-      const drawNames = (character, name, color) => {
-        if (!character) {
+      const drawNames = (location, name, subheader, color) => {
+        if (!location) {
           return;
         }
         const screen = worldToScreen(
           canvasRef.current,
-          new THREE.Vector3(character.y * -1, character.z + 15, character.x),
+          new THREE.Vector3(location.y * -1, location.z + 10, location.x),
           camera,
         );
         let side = 1;
@@ -563,6 +584,7 @@ export const RenderedZone = forwardRef(
           side = -1;
         }
         ctx.strokeStyle = '#FFFFFF';
+        screen.x -= 60;
 
         ctx.beginPath();
         ctx.moveTo(screen.x, screen.y);
@@ -590,9 +612,8 @@ export const RenderedZone = forwardRef(
         );
 
         ctx.font = `italic bold ${fontSize + 3}px Arial`;
-        const level = `Level ${character.level}  ${classes[character.classId]}`;
         ctx.fillText(
-          level,
+          subheader,
           screen.x -
             side * 2 -
             side * nameWidth -
@@ -602,16 +623,31 @@ export const RenderedZone = forwardRef(
         );
       };
 
-      drawNames(
-        character,
-        `${character?.displayedName} (Me)`,
-        charColor?.css?.backgroundColor,
-      );
+      if (character) {
+        drawNames(
+          character,
+          `${character?.displayedName} (Me)`,
+          `Level ${character.level}  ${classes[character.classId]}`,
+          charColor?.css?.backgroundColor,
+        );
+      }
+
       for (const groupMember of groupMembers) {
         drawNames(
           groupMember,
           `${groupMember?.displayedName} (Group)`,
+          `Level ${groupMember.level}  ${classes[groupMember.classId]}`,
           groupColor?.css?.backgroundColor,
+        );
+      }
+
+      if (parseInfo?.locations?.[0]) {
+        const loc = parseInfo?.locations?.[0];
+        drawNames(
+          loc,
+          `${parseInfo?.displayedName}`,
+          `(${loc.y}, ${loc.x}, ${loc.z})`,
+          charColor?.css?.backgroundColor,
         );
       }
     });
@@ -628,7 +664,7 @@ export const RenderedZone = forwardRef(
 
           const lookPosition = new THREE.Vector3(
             associatedTargetPosition.x + 100,
-            associatedTargetPosition.y + 500,
+            associatedTargetPosition.y + 100,
             associatedTargetPosition.z + 100,
           );
           camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
@@ -644,21 +680,22 @@ export const RenderedZone = forwardRef(
       }
       zoneTexture.scene.position.set(0, 0, 0);
       setTimeout(() => {
+        const firstLoc = parseInfo?.locations?.[0];
         const charPosition = new THREE.Vector3(
-          (character?.y ?? 0) * -1,
-          (character?.z ?? 0) + 15,
-          character?.x ?? 0,
+          (character?.y ?? firstLoc?.y ?? 0) * -1,
+          (character?.z ?? firstLoc?.z ?? 0) + 15,
+          character?.x ?? firstLoc?.x ?? 0,
         );
         const lookPosition = new THREE.Vector3(
           charPosition.x + 100,
           charPosition.y + 100,
-          charPosition.z + 400,
+          charPosition.z + 100,
         );
         camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
         controls.current.target?.copy?.(charPosition);
         camera.lookAt(charPosition);
       }, 0);
-    }, [zoneTexture, character]) //eslint-disable-line
+    }, [zoneTexture, character, parseInfo]) //eslint-disable-line
 
     useEffect(() => {
       targetMe();
@@ -688,10 +725,29 @@ export const RenderedZone = forwardRef(
     }, [zoneName, controls]);
     window.cam = camera;
     useEffect(() => {
-      if (!character || !doFollow) {
+      if (!(character || parseRef.current) || !doFollow) {
         return;
       }
-      if (
+      if (parseRef.current) {
+        const [first, second] = parseInfo.locations;
+        if (first && second && cameraType === 'fly') {
+          const nextLoc = new THREE.Vector3(second.y * -1, second.z, second.x);
+          const myLoc = new THREE.Vector3(first.y * -1, first.z, first.x);
+          const heading =
+            -1 * Math.atan2(myLoc.z - nextLoc.z, myLoc.x - nextLoc.x);
+          const offset = new THREE.Vector3(0, charSize, 0);
+          camera.position.addVectors(parseRef.current.position, offset);
+          camera.rotation.set(0, heading - Math.PI / 2, 0);
+        } else {
+          const offset = new THREE.Vector3(
+            0,
+            camera.position.distanceTo(parseRef.current.position),
+            0,
+          );
+          camera.position.addVectors(parseRef.current.position, offset);
+        }
+      } else if (
+        characterRef.current &&
         !['x', 'y', 'z'].every(
           (key) => character?.[key] === prevCharacter?.[key],
         )
@@ -704,12 +760,15 @@ export const RenderedZone = forwardRef(
         camera.position.addVectors(characterRef.current.position, offset);
         setPrevCharacter(character);
       }
-    }, [character, prevCharacter, doFollow]) // eslint-disable-line
+    }, [character, prevCharacter, doFollow, parseInfo, cameraType, charSize, camera]) // eslint-disable-line
 
     const followMe = (doFollow) => {
-      if (doFollow) {
+      if (
+        doFollow
+      ) {
         setOriginalTarget(controls.current.target);
-        controls.current.target = characterRef.current.position;
+        controls.current.target =
+          parseRef?.current?.position ?? characterRef?.current?.position;
       } else {
         controls.current.target = originalTarget;
       }
@@ -730,37 +789,6 @@ export const RenderedZone = forwardRef(
         ),
       [staticSpawns],
     );
-
-    const raycastRef = useRef(null);
-
-    // const gridSize = useMemo(() => {
-    //   if (!zoneTexture?.scene) {
-    //     return 0;
-    //   }
-    //   const boundingBox = new THREE.Box3().setFromObject(zoneTexture?.scene);
-
-    //   const xSize = boundingBox.max.x - boundingBox.min.x;
-    //   const ySize = boundingBox.max.y - boundingBox.min.y;
-    //   const zSize = boundingBox.max.z - boundingBox.min.z;
-
-    //   return Math.max(xSize, ySize, zSize);
-    // }, [zoneTexture]);
-
-    // const centerPoint = useMemo(() => {
-    //   const middle = new THREE.Vector3();
-    //   if (!zoneTexture?.scene) {
-    //     return middle;
-    //   }
-    //   const boundingBox = new THREE.Box3().setFromObject(zoneTexture?.scene);
-  
-    //   middle.x = (boundingBox.max.x + boundingBox.min.x) / 2;
-    //   middle.y = (boundingBox.max.y + boundingBox.min.y) / 2;
-    //   middle.z = (boundingBox.max.z + boundingBox.min.z) / 2;
-  
-    //   zoneTexture?.scene.localToWorld(middle);
-    //   return middle;
-
-    // }, [zoneTexture]);
 
     return (
       <>
@@ -792,14 +820,13 @@ export const RenderedZone = forwardRef(
             </React.Fragment>
           );
         })}
-
         {/** Static Spawns */}
         {renderedStaticSpawns.map((s, i) => {
           const color = staticSpawnColor?.css?.backgroundColor ?? 'blue';
           const fallback = (
             <mesh
               onClick={() => setStaticIndex(i)}
-              spawn={s}
+              spawn={{ ...s, heading: (-1 * s.heading) / 100 }}
               position={[s.y * -1, s.z + 5, s.x]}
             >
               <octahedronBufferGeometry args={[7]} />
@@ -809,20 +836,23 @@ export const RenderedZone = forwardRef(
 
           return (
             <React.Fragment key={`spawn-${s.id}-${i}`}>
-              <Suspense fallback={fallback}>
-                <RenderedSpawn
-                  wireframe={spawnWireframe}
-                  maxDisplay={maxStaticDisplay}
-                  fallback={fallback}
-                  spawn={s}
-                  i={i}
-                  setStaticIndex={setStaticIndex}
-                />
-              </Suspense>
+              {showStaticSpawnModels ? (
+                <Suspense fallback={fallback}>
+                  <RenderedSpawn
+                    wireframe={spawnWireframe}
+                    maxDisplay={maxStaticDisplay}
+                    fallback={fallback}
+                    spawn={s}
+                    i={i}
+                    setStaticIndex={setStaticIndex}
+                  />
+                </Suspense>
+              ) : (
+                fallback
+              )}
             </React.Fragment>
           );
         })}
-
         {/* Our character - sword model */}
         {character && (
           <>
@@ -858,40 +888,111 @@ export const RenderedZone = forwardRef(
             />
           </>
         )}
-
         {/** Raycast Loc */}
-        {locationRaycast && rayTarget && <>
-          <mesh
-            ref={raycastRef}
-            position={[rayTarget.x, rayTarget.y, rayTarget.z]}
-          >
-            <octahedronBufferGeometry args={[12]} />
-            <meshStandardMaterial color={'gold'} />
-          </mesh>
-          {raycastRef.current && <spotLight
-            intensity={2.5}
-            angle={0.3}
-            penumbra={0.8}
-            color={'pink'}
-            target={raycastRef.current}
-            position={[rayTarget.x, rayTarget.y + 150, rayTarget.z]}
-          />}
-          
-        </>}
+        {locationRaycast && rayTarget && (
+          <>
+            <mesh
+              ref={raycastRef}
+              position={[rayTarget.x, rayTarget.y, rayTarget.z]}
+            >
+              <octahedronBufferGeometry args={[12]} />
+              <meshStandardMaterial color={'gold'} />
+            </mesh>
+            {raycastRef.current && (
+              <spotLight
+                intensity={2.5}
+                angle={0.3}
+                penumbra={0.8}
+                color={'pink'}
+                target={raycastRef.current}
+                position={[rayTarget.x, rayTarget.y + 150, rayTarget.z]}
+              />
+            )}
+          </>
+        )}
+        {/* Parsed Info */}
+        {parseInfo?.locations
+          ?.slice(0, locationTrails)
+          .map((pi, index, arr) => {
+            const color = locationColor?.css?.backgroundColor;
+            const loc = [pi.y * -1 - 3, pi.z + 5, pi.x + 4];
+
+            if (index === 0) {
+              let heading = 0;
+              if (arr[index + 1]) {
+                const next = arr[index + 1];
+                const nextLoc = new THREE.Vector3(next.y * -1, next.z, next.x);
+                const myLoc = new THREE.Vector3(pi.y * -1, pi.z, pi.x);
+                heading =
+                  -1 * Math.atan2(myLoc.z - nextLoc.z, myLoc.x - nextLoc.x);
+              }
+              return (
+                <React.Fragment>
+                  <RenderedSpawn
+                    ref={parseRef}
+                    key={'parsed-info-spawn'}
+                    maxDisplay={Infinity}
+                    fallback={null}
+                    setAnimationList={setAnimationList}
+                    spawn={{
+                      ...pi,
+                      heading,
+                      z        : pi.z + charSize,
+                      gender   : charGender,
+                      texture  : charTexture,
+                      variation: charVariation,
+                      size     : charSize,
+                      id       : 'parsedChar',
+                      race     : characterRace,
+                      animation: charAnimation,
+                    }}
+                  />
+                  <spotLight
+                    intensity={2.5}
+                    angle={0.3}
+                    penumbra={0.8}
+                    color={'pink'}
+                    target={parseRef.current}
+                    position={[loc[0], loc[1] + 150, loc[2]]}
+                  />
+                </React.Fragment>
+              );
+            }
+            const last = arr[index - 1];
+            const to = new THREE.Vector3(
+              last.y * -1 - 3,
+              last.z + 5,
+              last.x + 4,
+            );
+            const from = new THREE.Vector3(...loc);
+            const direction = to.clone().sub(from);
+            const length = direction.length();
+            return (
+              <React.Fragment key={`pi-${index}-trail`}>
+                <arrowHelper
+                  args={[direction, from, length - 2, color, 5, 5]}
+                />
+              </React.Fragment>
+            );
+          })}
         {/* Our zone */}
         <primitive object={zoneTexture?.scene} />
-
-        {/* Grid */}
-        {/* {grid && (
-          <>
-            <gridHelper position={centerPoint} args={[gridSize, gridInterval, 'gold']} />
-            <axesHelper renderOrder={999} />
-          </>
-        )} */}
       </>
     );
   },
 );
+
+export function getNormal(u, v) {
+  return new THREE.Plane().setFromCoplanarPoints(new THREE.Vector3(), u, v)
+    .normal;
+}
+
+export function signedAngleTo(u, v) {
+  // Get the signed angle between u and v, in the range [-pi, pi]
+  const angle = u.angleTo(v);
+  const normal = getNormal(u, v);
+  return normal.z * angle;
+}
 
 export function PaperComponent(props) {
   return (

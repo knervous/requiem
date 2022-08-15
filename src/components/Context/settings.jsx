@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
 
 export const SettingsContext = createContext({});
 
@@ -15,6 +15,7 @@ export const SettingsProvider = ({ children }) => {
             showPcs               : true,
             showPoi               : true,
             showStaticSpawns      : false,
+            showStaticSpawnModels : false,
             showStaticSpawnDetails: false,
             showStaticSpawnFilter : false,
             showPoiLoc            : true,
@@ -24,13 +25,21 @@ export const SettingsProvider = ({ children }) => {
             charColor             : { css: { backgroundColor: '#00FF00' } },
             groupColor            : { css: { backgroundColor: '#0000FF' } },
             staticSpawnColor      : { css: { backgroundColor: '#0000FF' } },
+            locationColor         : { css: { backgroundColor: '#0000FF' } },
             address               : 'https://localhost:4500',
             token                 : '',
             showPoiFilter         : false,
             cameraType            : 'orbit',
             flySpeed              : 1,
             wireframe             : false,
-            grid                  : false
+            grid                  : false,
+            locationTrails        : 5,
+            characterRace         : 1,
+            charSize              : 3,
+            charGender            : 0,
+            charVariation         : undefined,
+            charTexture           : '00',
+            charAnimation         : 'p01',
           }),
   ));
   const setOption = (key, value) => {
@@ -40,6 +49,6 @@ export const SettingsProvider = ({ children }) => {
       return newOptions;
     });
   };
-
-  return <SettingsContext.Provider value={{ ...options, setOption }}>{children}</SettingsContext.Provider>;
+  const [animationList, setAnimationList] = useState([]);
+  return <SettingsContext.Provider value={{ ...options, setOption, animationList, setAnimationList: useCallback(setAnimationList, []) }}>{children}</SettingsContext.Provider>;
 };

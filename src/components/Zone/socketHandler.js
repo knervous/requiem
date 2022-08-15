@@ -11,7 +11,7 @@ export class SocketHandler {
     this.#websocket.close();
   }
   constructor(url) {
-    this.#websocket = new WebSocket(url);
+    this.#websocket = new WebSocket(`${url}/maps`);
     this.connected = new Promise((res, rej) => {
       this.#websocket.onopen = res;
       this.#websocket.onerror = rej;

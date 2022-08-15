@@ -12,6 +12,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import { Character } from '../../Character/component';
 import { Zone } from '../../Zone/component';
 import { Group } from '../../Group/component';
+import { MapParser } from '../../MapParser/component';
 
 // scss
 import './component.scss';
@@ -23,9 +24,9 @@ export const NavDrawer = ({ handleDrawerClose, setTitle, setContent }) => {
     {[
       ['Character', <AccessibilityIcon />, Character, !processMode],
       ['Advanced Map', <HouseIcon />, Zone, false],
+      ['Advanced Map Parser', <AccessibilityIcon />, MapParser, false],
       ['Contact', <ContactMailIcon />, () => <div>  
         <p>Site is a work in progress by temp0. Feel free to email comments and suggestions to eqadvancedmaps@gmail.com</p>
-
       </div>, false],
       ['Group', <GroupIcon />, Group, !processMode],
     ].map(([text, icon, Content, disabled]) => disabled ? null : (

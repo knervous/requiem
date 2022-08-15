@@ -1,0 +1,1322 @@
+[
+  {
+    "shortName": "qeynos",
+    "longName": "South Qeynos"
+  },
+  {
+    "shortName": "qeynos2",
+    "longName": "North Qeynos"
+  },
+  {
+    "shortName": "qrg",
+    "longName": "Surefall Glade"
+  },
+  {
+    "shortName": "qeytoqrg",
+    "longName": "Qeynos Hills"
+  },
+  {
+    "shortName": "highpass",
+    "longName": "Highpass Hold"
+  },
+  {
+    "shortName": "highkeep",
+    "longName": "HighKeep"
+  },
+  {
+    "shortName": "freportn",
+    "longName": "North Freeport"
+  },
+  {
+    "shortName": "freportw",
+    "longName": "West Freeport"
+  },
+  {
+    "shortName": "freporte",
+    "longName": "East Freeport"
+  },
+  {
+    "shortName": "runnyeye",
+    "longName": "Clan RunnyEye"
+  },
+  {
+    "shortName": "qey2hh1",
+    "longName": "West Karana"
+  },
+  {
+    "shortName": "northkarana",
+    "longName": "North Karana"
+  },
+  {
+    "shortName": "southkarana",
+    "longName": "South Karana"
+  },
+  {
+    "shortName": "eastkarana",
+    "longName": "East Karana"
+  },
+  {
+    "shortName": "beholder",
+    "longName": "Gorge of King Xorbb"
+  },
+  {
+    "shortName": "blackburrow",
+    "longName": "BlackBurrow"
+  },
+  {
+    "shortName": "paw",
+    "longName": "Infected Paw"
+  },
+  {
+    "shortName": "rivervale",
+    "longName": "Rivervale"
+  },
+  {
+    "shortName": "kithicor",
+    "longName": "Kithicor Forest"
+  },
+  {
+    "shortName": "commons",
+    "longName": "West Commonlands"
+  },
+  {
+    "shortName": "ecommons",
+    "longName": "East Commonlands"
+  },
+  {
+    "shortName": "erudnint",
+    "longName": "Erudin Palace"
+  },
+  {
+    "shortName": "erudnext",
+    "longName": "Erudin"
+  },
+  {
+    "shortName": "nektulos",
+    "longName": "Nektulos Forest"
+  },
+  {
+    "shortName": "cshome",
+    "longName": "Sunset Home"
+  },
+  {
+    "shortName": "lavastorm",
+    "longName": "Lavastorm Mountains"
+  },
+  {
+    "shortName": "nektropos",
+    "longName": "Nektropos"
+  },
+  {
+    "shortName": "halas",
+    "longName": "Halas"
+  },
+  {
+    "shortName": "everfrost",
+    "longName": "Everfrost Peaks"
+  },
+  {
+    "shortName": "soldunga",
+    "longName":"Solusek\\'s Eye"
+  },
+  {
+    "shortName": "soldungb",
+    "longName":"Nagafen\\'s Lair"
+  },
+  {
+    "shortName": "misty",
+    "longName": "Misty Thicket"
+  },
+  {
+    "shortName": "nro",
+    "longName": "North Ro"
+  },
+  {
+    "shortName": "sro",
+    "longName": "South Ro"
+  },
+  {
+    "shortName": "befallen",
+    "longName": "Befallen"
+  },
+  {
+    "shortName": "oasis",
+    "longName": "Oasis of Marr"
+  },
+  {
+    "shortName": "tox",
+    "longName": "Toxxulia Forest"
+  },
+  {
+    "shortName": "hole",
+    "longName": "The Ruins of Old Paineel"
+  },
+  {
+    "shortName": "neriaka",
+    "longName": "Neriak Foreign Quarter"
+  },
+  {
+    "shortName": "neriakb",
+    "longName": "Neriak Commons"
+  },
+  {
+    "shortName": "neriakc",
+    "longName": "Neriak Third Gate"
+  },
+  {
+    "shortName": "neriakd",
+    "longName": "Neriak Palace"
+  },
+  {
+    "shortName": "najena",
+    "longName": "Najena"
+  },
+  {
+    "shortName": "qcat",
+    "longName": "Qeynos Catacombs"
+  },
+  {
+    "shortName": "innothule",
+    "longName": "Innothule Swamp"
+  },
+  {
+    "shortName": "feerrott",
+    "longName": "The Feerrott"
+  },
+  {
+    "shortName": "cazicthule",
+    "longName": "Cazic-Thule"
+  },
+  {
+    "shortName": "oggok",
+    "longName": "Oggok"
+  },
+  {
+    "shortName": "rathemtn",
+    "longName": "Mountains of Rathe"
+  },
+  {
+    "shortName": "lakerathe",
+    "longName": "Lake Rathetear"
+  },
+  {
+    "shortName": "grobb",
+    "longName": "Grobb"
+  },
+  {
+    "shortName": "aviak",
+    "longName": "Aviak Village"
+  },
+  {
+    "shortName": "gfaydark",
+    "longName": "Greater Faydark"
+  },
+  {
+    "shortName": "akanon",
+    "longName":"Ak\\'Anon"
+  },
+  {
+    "shortName": "steamfont",
+    "longName": "Steamfont Mountains"
+  },
+  {
+    "shortName": "lfaydark",
+    "longName": "Lesser Faydark"
+  },
+  {
+    "shortName": "crushbone",
+    "longName": "Clan Crushbone"
+  },
+  {
+    "shortName": "mistmoore",
+    "longName": "Castle Mistmoore"
+  },
+  {
+    "shortName": "kaladima",
+    "longName": "Kaladim"
+  },
+  {
+    "shortName": "felwithea",
+    "longName": "Felwithe"
+  },
+  {
+    "shortName": "felwitheb",
+    "longName": "Felwithe"
+  },
+  {
+    "shortName": "unrest",
+    "longName": "Estate of Unrest"
+  },
+  {
+    "shortName": "kedge",
+    "longName": "Kedge Keep"
+  },
+  {
+    "shortName": "guktop",
+    "longName": "Upper Guk"
+  },
+  {
+    "shortName": "gukbottom",
+    "longName": "Lower Guk"
+  },
+  {
+    "shortName": "kaladimb",
+    "longName": "Kaladim"
+  },
+  {
+    "shortName": "butcher",
+    "longName": "Butcherblock Mountains"
+  },
+  {
+    "shortName": "oot",
+    "longName": "Ocean of Tears"
+  },
+  {
+    "shortName": "cauldron",
+    "longName":"Dagnor\\'s Cauldron"
+  },
+  {
+    "shortName": "airplane",
+    "longName": "Plane of Sky"
+  },
+  {
+    "shortName": "fearplane",
+    "longName": "Plane of Fear"
+  },
+  {
+    "shortName": "permafrost",
+    "longName": "Permafrost Keep"
+  },
+  {
+    "shortName": "kerraridge",
+    "longName": "Kerra Isle"
+  },
+  {
+    "shortName": "paineel",
+    "longName": "Paineel"
+  },
+  {
+    "shortName": "hateplane",
+    "longName": "The Plane of Hate"
+  },
+  {
+    "shortName": "arena",
+    "longName": "The Arena"
+  },
+  {
+    "shortName": "fieldofbone",
+    "longName": "The Field of Bone"
+  },
+  {
+    "shortName": "warslikswood",
+    "longName": "Warsliks Wood"
+  },
+  {
+    "shortName": "soltemple",
+    "longName": "Temple of Solusek Ro"
+  },
+  {
+    "shortName": "droga",
+    "longName": "Temple of Droga"
+  },
+  {
+    "shortName": "cabwest",
+    "longName": "West Cabilis"
+  },
+  {
+    "shortName": "swampofnohope",
+    "longName": "Swamp of No Hope"
+  },
+  {
+    "shortName": "firiona",
+    "longName": "Firiona Vie"
+  },
+  {
+    "shortName": "lakeofillomen",
+    "longName": "Lake of Ill Omen"
+  },
+  {
+    "shortName": "dreadlands",
+    "longName": "Dreadlands"
+  },
+  {
+    "shortName": "burningwood",
+    "longName": "Burning Woods"
+  },
+  {
+    "shortName": "kaesora",
+    "longName": "Kaesora"
+  },
+  {
+    "shortName": "sebilis",
+    "longName": "Old Sebilis"
+  },
+  {
+    "shortName": "citymist",
+    "longName": "City of Mist"
+  },
+  {
+    "shortName": "skyfire",
+    "longName": "Skyfire Mountains"
+  },
+  {
+    "shortName": "frontiermtns",
+    "longName": "Frontier Mountains"
+  },
+  {
+    "shortName": "overthere",
+    "longName": "The Overthere"
+  },
+  {
+    "shortName": "emeraldjungle",
+    "longName": "The Emerald Jungle"
+  },
+  {
+    "shortName": "trakanon",
+    "longName":"Trakanon\\'s Teeth"
+  },
+  {
+    "shortName": "timorous",
+    "longName": "Timorous Deep"
+  },
+  {
+    "shortName": "kurn",
+    "longName":"Kurn\\'s Tower"
+  },
+  {
+    "shortName": "erudsxing",
+    "longName":"Erud\\'s Crossing"
+  },
+  {
+    "shortName": "stonebrunt",
+    "longName": "Stonebrunt Mountains"
+  },
+  {
+    "shortName": "warrens",
+    "longName": "The Warrens"
+  },
+  {
+    "shortName": "karnor",
+    "longName":"Karnor\\'s Castle"
+  },
+  {
+    "shortName": "chardok",
+    "longName": "Chardok"
+  },
+  {
+    "shortName": "dalnir",
+    "longName": "Dalnir"
+  },
+  {
+    "shortName": "charasis",
+    "longName": "Howling Stones"
+  },
+  {
+    "shortName": "cabeast",
+    "longName": "East Cabilis"
+  },
+  {
+    "shortName": "nurga",
+    "longName": "Mines of Nurga"
+  },
+  {
+    "shortName": "veeshan",
+    "longName":"Veeshan\\'s Peak"
+  },
+  {
+    "shortName": "veksar",
+    "longName": "Veksar"
+  },
+  {
+    "shortName": "iceclad",
+    "longName": "Iceclad Ocean"
+  },
+  {
+    "shortName": "frozenshadow",
+    "longName": "Tower of Frozen Shadow"
+  },
+  {
+    "shortName": "velketor",
+    "longName":"Velketor\\'s Labyrinth"
+  },
+  {
+    "shortName": "kael",
+    "longName": "Kael Drakkal"
+  },
+  {
+    "shortName": "skyshrine",
+    "longName": "Skyshrine"
+  },
+  {
+    "shortName": "thurgadina",
+    "longName": "Thurgadin"
+  },
+  {
+    "shortName": "eastwastes",
+    "longName": "Eastern Wastes"
+  },
+  {
+    "shortName": "cobaltscar",
+    "longName": "Cobalt Scar"
+  },
+  {
+    "shortName": "greatdivide",
+    "longName": "Great Divide"
+  },
+  {
+    "shortName": "wakening",
+    "longName": "The Wakening Land"
+  },
+  {
+    "shortName": "westwastes",
+    "longName": "Western Wastes"
+  },
+  {
+    "shortName": "crystal",
+    "longName": "Crystal Caverns"
+  },
+  {
+    "shortName": "necropolis",
+    "longName": "Dragon Necropolis"
+  },
+  {
+    "shortName": "templeveeshan",
+    "longName": "Temple of Veeshan"
+  },
+  {
+    "shortName": "sirens",
+    "longName":"Siren\\'s Grotto"
+  },
+  {
+    "shortName": "mischiefplane",
+    "longName": "Plane of Mischief"
+  },
+  {
+    "shortName": "growthplane",
+    "longName": "Plane of Growth"
+  },
+  {
+    "shortName": "sleeper",
+    "longName":"Sleeper\\'s Tomb"
+  },
+  {
+    "shortName": "thurgadinb",
+    "longName": "Icewell Keep"
+  },
+  {
+    "shortName": "erudsxing2",
+    "longName":"Marauder\\'s Mire"
+  },
+  {
+    "shortName": "shadowhaven",
+    "longName": "Shadow Haven"
+  },
+  {
+    "shortName": "bazaar",
+    "longName": "The Bazaar"
+  },
+  {
+    "shortName": "nexus",
+    "longName": "The Nexus"
+  },
+  {
+    "shortName": "echo",
+    "longName": "Echo Caverns"
+  },
+  {
+    "shortName": "acrylia",
+    "longName": "Acrylia Caverns"
+  },
+  {
+    "shortName": "sharvahl",
+    "longName": "Shar Vahl"
+  },
+  {
+    "shortName": "paludal",
+    "longName": "Paludal Caverns"
+  },
+  {
+    "shortName": "fungusgrove",
+    "longName": "Fungus Grove"
+  },
+  {
+    "shortName": "vexthal",
+    "longName": "Vex Thal"
+  },
+  {
+    "shortName": "sseru",
+    "longName": "Sanctus Seru"
+  },
+  {
+    "shortName": "katta",
+    "longName": "Katta Castellum"
+  },
+  {
+    "shortName": "netherbian",
+    "longName": "Netherbian Lair"
+  },
+  {
+    "shortName": "ssratemple",
+    "longName": "Ssraeshza Temple"
+  },
+  {
+    "shortName": "griegsend",
+    "longName":"Grieg\\'s End"
+  },
+  {
+    "shortName": "thedeep",
+    "longName": "The Deep"
+  },
+  {
+    "shortName": "shadeweaver",
+    "longName":"Shadeweaver\\'s Thicket"
+  },
+  {
+    "shortName": "hollowshade",
+    "longName": "Hollowshade Moor"
+  },
+  {
+    "shortName": "grimling",
+    "longName": "Grimling Forest"
+  },
+  {
+    "shortName": "mseru",
+    "longName": "Marus Seru"
+  },
+  {
+    "shortName": "letalis",
+    "longName": "Mons Letalis"
+  },
+  {
+    "shortName": "twilight",
+    "longName": "The Twilight Sea"
+  },
+  {
+    "shortName": "thegrey",
+    "longName": "The Grey"
+  },
+  {
+    "shortName": "tenebrous",
+    "longName": "The Tenebrous Mountains"
+  },
+  {
+    "shortName": "maiden",
+    "longName":"The Maiden\\'s Eye"
+  },
+  {
+    "shortName": "dawnshroud",
+    "longName": "Dawnshroud Peaks"
+  },
+  {
+    "shortName": "scarlet",
+    "longName": "The Scarlet Desert"
+  },
+  {
+    "shortName": "umbral",
+    "longName": "The Umbral Plains"
+  },
+  {
+    "shortName": "akheva",
+    "longName": "Akheva Ruins"
+  },
+  {
+    "shortName": "arena2",
+    "longName": "The Arena"
+  },
+  {
+    "shortName": "jaggedpine",
+    "longName": "The Jaggedpine Forest"
+  },
+  {
+    "shortName": "nedaria",
+    "longName":"Nedaria\\'s Landing"
+  },
+  {
+    "shortName": "tutorial",
+    "longName": "Tutorial Zone"
+  },
+  {
+    "shortName": "load",
+    "longName": "Loading"
+  },
+  {
+    "shortName": "load2",
+    "longName": "Loading"
+  },
+  {
+    "shortName": "hateplaneb",
+    "longName": "The Plane of Hate"
+  },
+  {
+    "shortName": "shadowrest",
+    "longName": "Shadowrest"
+  },
+  {
+    "shortName": "tutoriala",
+    "longName": "The Mines of Gloomingdeep"
+  },
+  {
+    "shortName": "tutorialb",
+    "longName": "The Mines of Gloomingdeep"
+  },
+  {
+    "shortName": "clz",
+    "longName": "Loading"
+  },
+  {
+    "shortName": "codecay",
+    "longName": "Ruins of Lxanvom"
+  },
+  {
+    "shortName": "pojustice",
+    "longName": "Plane of Justice"
+  },
+  {
+    "shortName": "poknowledge",
+    "longName": "Plane of Knowledge"
+  },
+  {
+    "shortName": "potranquility",
+    "longName": "Plane of Tranquility"
+  },
+  {
+    "shortName": "ponightmare",
+    "longName": "Plane of Nightmare"
+  },
+  {
+    "shortName": "podisease",
+    "longName": "Plane of Disease"
+  },
+  {
+    "shortName": "poinnovation",
+    "longName": "Plane of Innovation"
+  },
+  {
+    "shortName": "potorment",
+    "longName": "Plane of Torment"
+  },
+  {
+    "shortName": "povalor",
+    "longName": "Plane of Valor"
+  },
+  {
+    "shortName": "bothunder",
+    "longName": "Torden, The Bastion of Thunder"
+  },
+  {
+    "shortName": "postorms",
+    "longName": "Plane of Storms"
+  },
+  {
+    "shortName": "hohonora",
+    "longName": "Halls of Honor"
+  },
+  {
+    "shortName": "solrotower",
+    "longName":"Solusek Ro\\'s Tower"
+  },
+  {
+    "shortName": "powar",
+    "longName": "Plane of War"
+  },
+  {
+    "shortName": "potactics",
+    "longName": "Drunder, Fortress of Zek"
+  },
+  {
+    "shortName": "poair",
+    "longName": "Eryslai, the Kingdom of Wind"
+  },
+  {
+    "shortName": "powater",
+    "longName": "Reef of Coirnav"
+  },
+  {
+    "shortName": "pofire",
+    "longName": "Doomfire, The Burning Lands"
+  },
+  {
+    "shortName": "poeartha",
+    "longName": "Vegarlson, The Earthen Badlands"
+  },
+  {
+    "shortName": "potimea",
+    "longName": "Plane of Time"
+  },
+  {
+    "shortName": "hohonorb",
+    "longName": "Temple of Marr"
+  },
+  {
+    "shortName": "nightmareb",
+    "longName": "Lair of Terris Thule"
+  },
+  {
+    "shortName": "poearthb",
+    "longName": "Stronghold of the Twelve"
+  },
+  {
+    "shortName": "potimeb",
+    "longName": "Plane of Time"
+  },
+  {
+    "shortName": "gunthak",
+    "longName": "Gulf of Gunthak"
+  },
+  {
+    "shortName": "dulak",
+    "longName":"Dulak\\'s Harbor"
+  },
+  {
+    "shortName": "torgiran",
+    "longName": "Torgiran Mines"
+  },
+  {
+    "shortName": "nadox",
+    "longName": "Crypt of Nadox"
+  },
+  {
+    "shortName": "hatesfury",
+    "longName":"Hate\\'s Fury, The Scorned Maiden"
+  },
+  {
+    "shortName": "guka",
+    "longName": "The Cauldron of Lost Souls"
+  },
+  {
+    "shortName": "ruja",
+    "longName": "The Bloodied Quarries"
+  },
+  {
+    "shortName": "taka",
+    "longName": "The Sunken Library"
+  },
+  {
+    "shortName": "mira",
+    "longName": "The Silent Gallery"
+  },
+  {
+    "shortName": "mmca",
+    "longName": "The Forlorn Caverns"
+  },
+  {
+    "shortName": "gukb",
+    "longName": "The Drowning Crypt"
+  },
+  {
+    "shortName": "rujb",
+    "longName": "The Halls of War"
+  },
+  {
+    "shortName": "takb",
+    "longName": "The Shifting Tower"
+  },
+  {
+    "shortName": "mirb",
+    "longName": "The Maw of the Menagerie"
+  },
+  {
+    "shortName": "mmcb",
+    "longName": "The Dreary Grotto"
+  },
+  {
+    "shortName": "gukc",
+    "longName": "The Ancient Aqueducts"
+  },
+  {
+    "shortName": "rujc",
+    "longName": "The Wind Bridges"
+  },
+  {
+    "shortName": "takc",
+    "longName": "The Fading Temple"
+  },
+  {
+    "shortName": "mirc",
+    "longName": "The Spider Den"
+  },
+  {
+    "shortName": "mmcc",
+    "longName": "The Asylum of Invoked Stone"
+  },
+  {
+    "shortName": "gukd",
+    "longName": "The Mushroom Grove"
+  },
+  {
+    "shortName": "rujd",
+    "longName": "The Gladiator Pits"
+  },
+  {
+    "shortName": "takd",
+    "longName": "The Royal Observatory"
+  },
+  {
+    "shortName": "mird",
+    "longName": "The Hushed Banquet"
+  },
+  {
+    "shortName": "mmcd",
+    "longName": "The Chambers of Eternal Affliction"
+  },
+  {
+    "shortName": "guke",
+    "longName": "The Foreboding Prison"
+  },
+  {
+    "shortName": "ruje",
+    "longName": "The Drudge Hollows"
+  },
+  {
+    "shortName": "take",
+    "longName": "The River of Recollection"
+  },
+  {
+    "shortName": "mire",
+    "longName": "The Frosted Halls"
+  },
+  {
+    "shortName": "mmce",
+    "longName": "The Sepulcher of the Damned"
+  },
+  {
+    "shortName": "gukf",
+    "longName": "The Chapel of the Witnesses"
+  },
+  {
+    "shortName": "rujf",
+    "longName": "The Fortified Lair of the Taskmasters"
+  },
+  {
+    "shortName": "takf",
+    "longName": "The Sandfall Corridors"
+  },
+  {
+    "shortName": "mirf",
+    "longName": "The Forgotten Wastes"
+  },
+  {
+    "shortName": "mmcf",
+    "longName": "The Ritualistic Summoning Grounds"
+  },
+  {
+    "shortName": "gukg",
+    "longName": "The Root Garden"
+  },
+  {
+    "shortName": "rujg",
+    "longName": "The Hidden Vale"
+  },
+  {
+    "shortName": "takg",
+    "longName": "The Balancing Chamber"
+  },
+  {
+    "shortName": "mirg",
+    "longName": "The Heart of the Menagerie"
+  },
+  {
+    "shortName": "mmcg",
+    "longName": "The Cesspits of Putrescence"
+  },
+  {
+    "shortName": "gukh",
+    "longName": "The Accursed Sanctuary"
+  },
+  {
+    "shortName": "rujh",
+    "longName": "The Blazing Forge"
+  },
+  {
+    "shortName": "takh",
+    "longName": "The Sweeping Tides"
+  },
+  {
+    "shortName": "mirh",
+    "longName": "The Morbid Laboratory"
+  },
+  {
+    "shortName": "mmch",
+    "longName": "The Aisles of Blood"
+  },
+  {
+    "shortName": "ruji",
+    "longName": "The Arena of Chance"
+  },
+  {
+    "shortName": "taki",
+    "longName": "The Antiquated Palace"
+  },
+  {
+    "shortName": "miri",
+    "longName": "The Theater of Imprisoned Horrors"
+  },
+  {
+    "shortName": "mmci",
+    "longName": "The Halls of Sanguinary Rites"
+  },
+  {
+    "shortName": "rujj",
+    "longName": "The Barracks of War"
+  },
+  {
+    "shortName": "takj",
+    "longName": "The Prismatic Corridors"
+  },
+  {
+    "shortName": "mirj",
+    "longName": "The Grand Library"
+  },
+  {
+    "shortName": "mmcj",
+    "longName": "The Infernal Sanctuary"
+  },
+  {
+    "shortName": "chardokb",
+    "longName": "The Halls of Betrayal"
+  },
+  {
+    "shortName": "soldungc",
+    "longName": "The Caverns of Exile"
+  },
+  {
+    "shortName": "abysmal",
+    "longName": "Abysmal Sea"
+  },
+  {
+    "shortName": "natimbi",
+    "longName": "Natimbi, The Broken Shores"
+  },
+  {
+    "shortName": "qinimi",
+    "longName": "Qinimi, Court of Nihilia"
+  },
+  {
+    "shortName": "riwwi",
+    "longName": "Riwwi, Coliseum of Games"
+  },
+  {
+    "shortName": "barindu",
+    "longName": "Barindu, Hanging Gardens"
+  },
+  {
+    "shortName": "ferubi",
+    "longName": "Ferubi, Forgotten Temple of Taelosia"
+  },
+  {
+    "shortName": "snpool",
+    "longName": "Sewers of Nihilia, Pool of Sludge"
+  },
+  {
+    "shortName": "snlair",
+    "longName": "Sewers of Nihilia, Lair of Trapped Ones"
+  },
+  {
+    "shortName": "snplant",
+    "longName": "Sewers of Nihilia, Purifying Plant"
+  },
+  {
+    "shortName": "sncrematory",
+    "longName": "Sewers of Nihilia, the Crematory"
+  },
+  {
+    "shortName": "tipt",
+    "longName": "Tipt, Treacherous Crags"
+  },
+  {
+    "shortName": "vxed",
+    "longName": "Vxed, The Crumbling Caverns"
+  },
+  {
+    "shortName": "yxtta",
+    "longName": "Yxtta, Pulpit of Exiles"
+  },
+  {
+    "shortName": "uqua",
+    "longName": "Uqua, The Ocean God Chantry"
+  },
+  {
+    "shortName": "kodtaz",
+    "longName":"Kod\\'Taz, Broken Trial Grounds"
+  },
+  {
+    "shortName": "ikkinz",
+    "longName": "Ikkinz, Chambers of Destruction"
+  },
+  {
+    "shortName": "qvic",
+    "longName": "Qvic, Prayer Grounds of Calling"
+  },
+  {
+    "shortName": "inktuta",
+    "longName": "Inktu`Ta, The Unmasked Chapel"
+  },
+  {
+    "shortName": "txevu",
+    "longName": "Txevu, Lair of the Elite"
+  },
+  {
+    "shortName": "tacvi",
+    "longName": "Tacvi, Seat of the Slaver"
+  },
+  {
+    "shortName": "qvicb",
+    "longName": "Qvic, the Hidden Vault"
+  },
+  {
+    "shortName": "wallofslaughter",
+    "longName": "Wall of Slaughter"
+  },
+  {
+    "shortName": "bloodfields",
+    "longName": "The Bloodfields"
+  },
+  {
+    "shortName": "draniksscar",
+    "longName":"Dranik\\'s Scar"
+  },
+  {
+    "shortName": "causeway",
+    "longName":"Nobles\\' Causeway"
+  },
+  {
+    "shortName": "chambersa",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "chambersb",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "chambersc",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "chambersd",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "chamberse",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "chambersf",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "provinggrounds",
+    "longName": "Muramite Proving Grounds"
+  },
+  {
+    "shortName": "anguish",
+    "longName": "Asylum of Anguish"
+  },
+  {
+    "shortName": "dranikhollowsa",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsb",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsc",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsd",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowse",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsf",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsg",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsh",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsi",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikhollowsj",
+    "longName":"Dranik\\'s Hollows"
+  },
+  {
+    "shortName": "dranikcatacombsa",
+    "longName": "Catacombs of Dranik"
+  },
+  {
+    "shortName": "dranikcatacombsb",
+    "longName": "Catacombs of Dranik"
+  },
+  {
+    "shortName": "dranikcatacombsc",
+    "longName": "Catacombs of Dranik"
+  },
+  {
+    "shortName": "draniksewersa",
+    "longName": "Sewers of Dranik"
+  },
+  {
+    "shortName": "draniksewersb",
+    "longName": "Sewers of Dranik"
+  },
+  {
+    "shortName": "draniksewersc",
+    "longName": "Sewers of Dranik"
+  },
+  {
+    "shortName": "riftseekers",
+    "longName":"Riftseekers\\' Sanctum"
+  },
+  {
+    "shortName": "harbingers",
+    "longName":"Harbingers\\' Spire"
+  },
+  {
+    "shortName": "dranik",
+    "longName": "The Ruined City of Dranik"
+  },
+  {
+    "shortName": "broodlands",
+    "longName": "The Broodlands"
+  },
+  {
+    "shortName": "stillmoona",
+    "longName": "Stillmoon Temple"
+  },
+  {
+    "shortName": "stillmoonb",
+    "longName": "The Ascent"
+  },
+  {
+    "shortName": "thundercrest",
+    "longName": "Thundercrest Isles"
+  },
+  {
+    "shortName": "delvea",
+    "longName":"Lavaspinner\\'s Lair"
+  },
+  {
+    "shortName": "delveb",
+    "longName":"Tirranun\\'s Delve"
+  },
+  {
+    "shortName": "thenest",
+    "longName": "The Accursed Nest"
+  },
+  {
+    "shortName": "guildlobby",
+    "longName": "The Guild Lobby"
+  },
+  {
+    "shortName": "guildhall",
+    "longName": "Guild Hall"
+  },
+  {
+    "shortName": "barter",
+    "longName": "The Barter Hall"
+  },
+  {
+    "shortName": "illsalin",
+    "longName": "Ruins of Illsalin"
+  },
+  {
+    "shortName": "illsalina",
+    "longName": "Imperial Bazaar"
+  },
+  {
+    "shortName": "illsalinb",
+    "longName": "Temple of the Korlach"
+  },
+  {
+    "shortName": "illsalinc",
+    "longName": "The Nargilor Pits"
+  },
+  {
+    "shortName": "dreadspire",
+    "longName": "Dreadspire Keep"
+  },
+  {
+    "shortName": "drachnidhive",
+    "longName": "The Hive"
+  },
+  {
+    "shortName": "drachnidhivea",
+    "longName": "Living Larder"
+  },
+  {
+    "shortName": "drachnidhiveb",
+    "longName": "Coven of the Skinwalkers"
+  },
+  {
+    "shortName": "drachnidhivec",
+    "longName":"Queen Sendaii\\'s Lair"
+  },
+  {
+    "shortName": "westkorlach",
+    "longName": "Stoneroot Falls"
+  },
+  {
+    "shortName": "westkorlacha",
+    "longName": "Chambers of Xill"
+  },
+  {
+    "shortName": "westkorlachb",
+    "longName": "Caverns of the Lost"
+  },
+  {
+    "shortName": "westkorlachc",
+    "longName": "Lair of the Korlach"
+  },
+  {
+    "shortName": "eastkorlach",
+    "longName": "Undershore"
+  },
+  {
+    "shortName": "eastkorlacha",
+    "longName": "Snarlstone Dens"
+  },
+  {
+    "shortName": "shadowspine",
+    "longName": "Shadowspine"
+  },
+  {
+    "shortName": "corathus",
+    "longName": "Corathus Creep"
+  },
+  {
+    "shortName": "corathusa",
+    "longName": "Sporali Caverns"
+  },
+  {
+    "shortName": "corathusb",
+    "longName": "Corathus Lair"
+  },
+  {
+    "shortName": "nektulosa",
+    "longName": "Shadowed Grove"
+  },
+  {
+    "shortName": "arttest",
+    "longName": "Art Testing Domain"
+  },
+  {
+    "shortName": "fhalls",
+    "longName": "The Forgotten Halls"
+  },
+  {
+    "shortName": "apprentice",
+    "longName": "Designer Apprentice"
+  }
+]

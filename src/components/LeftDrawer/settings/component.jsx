@@ -1,27 +1,17 @@
 import * as React from 'react';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
-import ListItemText from '@mui/material/ListItemText';
-import HouseIcon from '@mui/icons-material/House';
+
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import AccessibilityIcon from '@mui/icons-material/Accessibility';
-import GroupIcon from '@mui/icons-material/Group';
-import { Character } from '../../Character/component';
-import { Zone } from '../../Zone/component';
-import { Group } from '../../Group/component';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import Paper from '@mui/material/Paper';
 
 // scss
 import './component.scss';
 import { SettingsContext } from '../../Context/settings';
 import {
+  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -29,9 +19,19 @@ import {
   MenuItem,
   Select,
   Slider,
+  TextField,
   Typography,
 } from '@mui/material';
 import { ColorPicker } from 'mui-color';
+
+import raceData from '../../../common/raceData.json';
+import modelDetails from '../../../common/modelDetails.json';
+import { useState } from 'react';
+
+const raceOptions = raceData.map(({ name, id }) => ({
+  label: `${name} - ${id}`,
+  id,
+}));
 
 const skyboxOptions = [
   'forest',
@@ -47,6 +47,20 @@ const skyboxOptions = [
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
 
+const textureMap = {
+  '00': 'None',
+  '01': 'Leather',
+  '02': 'Chain',
+  '03': 'Plate',
+};
+
+const variationMap = {
+  '00': 'Leather',
+  '01': 'Chain',
+  '02': 'Plate',
+};
+
+
 export const SettingsDrawer = () => {
   const options = React.useContext(SettingsContext);
   const {
@@ -61,6 +75,7 @@ export const SettingsDrawer = () => {
     showPoiFilter,
     maxPoiDisplay,
     showStaticSpawns = true,
+    showStaticSpawnModels = false,
     showStaticSpawnDetails = false,
     showStaticSpawnFilter = true,
     staticSpawnColor,
@@ -68,19 +83,57 @@ export const SettingsDrawer = () => {
     charColor,
     groupColor,
     cameraType = 'orbit',
-    gridInterval = 500,
+    locationColor,
     flySpeed = 1.5,
     wireframe = false,
-    grid = false,
     spawnWireframe = false,
     locationRaycast = false,
     setOption,
+    locationTrails = 5,
+    characterRace = 1,
+    charGender = 0,
+    charSize = 3,
+    charVariation = undefined,
+    charTexture = '00',
+    charAnimation = 'p01',
+    animationList
   } = options;
+
+  const [genders, setGenders] = useState([]);
+  const [variations, setVariations] = useState([]);
+  const [textures, setTextures] = useState([]);
+
+  React.useEffect(() => {
+    console.log('my useefff');
+    const race = raceData.find((r) => r.id === characterRace);
+    const genders = [0, 1, 2].filter((g) => race[g]?.length);
+    setGenders(genders);
+    const selectedRaceGender = race[genders[0]];
+    const { variations, textures } = Object.entries(modelDetails).find(
+      ([key, _value]) => key.toLowerCase() === selectedRaceGender.toLowerCase(),
+    )[1];
+    setVariations(variations);
+    setTextures(textures);
+  }, [characterRace]) // eslint-disable-line
+
+   
+  const selectRace = charRace => {
+    const race = raceData.find((r) => r.id === charRace);
+    const genders = [0, 1, 2].filter((g) => race[g]?.length);
+    setOption('charGender', genders[0]);
+    const selectedRaceGender = race[genders[0]];
+    const { variations, textures } = Object.entries(modelDetails).find(
+      ([key, _value]) => key.toLowerCase() === selectedRaceGender.toLowerCase(),
+    )[1];
+    setOption('charVariation', variations[0]);
+    setOption('charTexture', textures[0]);
+  };
+
 
   return (
     <div
       className="accordion-container"
-      onMouseDown={(e) => (e.stopPropagation(), e.preventDefault())}
+      onMouseDown={(e) => (e.stopPropagation(), e.preventDefault())} // eslint-disable-line
     >
       {/* World */}
       <Accordion disableGutters>
@@ -260,6 +313,17 @@ export const SettingsDrawer = () => {
           <FormControlLabel
             control={
               <Checkbox
+                checked={showStaticSpawnModels}
+                onChange={({ target: { checked } }) =>
+                  setOption('showStaticSpawnModels', checked)
+                }
+              />
+            }
+            label="Show models"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
                 checked={showStaticSpawnDetails}
                 onChange={({ target: { checked } }) =>
                   setOption('showStaticSpawnDetails', checked)
@@ -390,6 +454,143 @@ export const SettingsDrawer = () => {
             }
             label="Character Text Color"
           />
+          <FormControlLabel
+            control={
+              <ColorPicker
+                hideTextfield={true}
+                value={locationColor ?? '#FFFFFF'}
+                onChange={(color) => setOption('locationColor', color)}
+              />
+            }
+            label="Location Trail Color"
+          />
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Location Trails {locationTrails}
+            </Typography>
+            <Slider
+              value={locationTrails}
+              onChange={(e) => setOption('locationTrails', +e.target.value)}
+              step={1}
+              min={1}
+              max={20}
+            />
+          </FormControl>
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Size {charSize}
+            </Typography>
+            <Slider
+              value={charSize}
+              onChange={(e) => setOption('charSize', +e.target.value)}
+              step={1}
+              min={1}
+              max={100}
+            />
+          </FormControl>
+          
+          <Autocomplete
+            blurOnSelect
+            disablePortal
+            onChange={(e_, { id } = {}) => {
+              setOption('characterRace', id);
+              selectRace(id);
+            }}
+            id="combo-box-demo"
+            options={raceOptions}
+            size="small"
+            renderInput={(params) => (
+              <TextField
+                sx={{ height: 38 }}
+                {...params}
+                label="Character Race"
+                value={params.label}
+              />
+            )}
+          />
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+              value={charGender}
+              label="Gender"
+              size="small"
+              displayEmpty
+              onChange={({ target: { value } }) =>
+                setOption('charGender', +value)
+              }
+            >
+              {genders.map((g) => (
+                <MenuItem key={`gender-${g}`} value={g}>
+                  {g === 0 ? 'Male' : g === 1 ? 'Female' : 'Neutral'}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <InputLabel id="demo-simple-select-label">Texture</InputLabel>
+            <Select
+              value={charTexture}
+              label="Texture"
+              size="small"
+              displayEmpty
+              onChange={({ target: { value } }) =>
+                setOption('charTexture', value)
+              }
+            >
+              {textures.map((t) => (
+                <MenuItem key={`tex-${t}`} value={t}>
+                  {textureMap[t] || t}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <InputLabel id="demo-simple-select-label">Variation</InputLabel>
+            <Select
+              value={charVariation}
+              label="Variation"
+              size="small"
+              displayEmpty
+              onChange={({ target: { value } }) =>
+                setOption('charVariation', value)
+              }
+            >
+              <MenuItem key={'charVariation-none'} value={''}>
+                  None
+              </MenuItem>
+              {variations.map((v) => (
+                <MenuItem key={`charVariation-${v}`} value={v}>
+                  {variationMap[v] || v}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <InputLabel id="demo-simple-select-label">Animation</InputLabel>
+            <Select
+              value={charAnimation}
+              label="Animation"
+              size="small"
+              displayEmpty
+              onChange={({ target: { value } }) =>
+                setOption('charAnimation', value)
+              }
+            >
+              {animationList.map((anim) => (
+                <MenuItem key={`animationList-${anim}`} value={anim}>
+                  {anim}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </AccordionDetails>
       </Accordion>
 

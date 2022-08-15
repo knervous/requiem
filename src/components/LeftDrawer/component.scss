@@ -16,6 +16,7 @@
 .connection-content {
   display: block;
   min-height: 350px;
+  min-width: 500px;
   margin: 5px;
   & > * {
     margin: 5px 0 !important;

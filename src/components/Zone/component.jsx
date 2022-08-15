@@ -37,21 +37,25 @@ import { Loader } from './loader';
 import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { supportedZones } from './data';
 import { SocketHandler } from './socketHandler';
 import { SettingsContext } from '../Context/settings';
+import supportedZones from './supportedZones';
+import { ConnectionDialog } from './connection';
 
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
 
 let initialZone = new URLSearchParams(window.location.search).get('zone');
-if (!supportedZones.includes(initialZone)) {
+if (!supportedZones.some(({ shortName }) => shortName === initialZone)) {
   initialZone = 'airplane';
 }
-const supportedZoneOptions = supportedZones.map((zone, id) => ({
-  label: zone,
-  id,
-}));
+const supportedZoneOptions = supportedZones.map(
+  ({ shortName, longName }, id) => ({
+    label: `${longName} (${shortName})`,
+    shortName,
+    id,
+  }),
+);
 // https://192.168.2.102:4500
 
 const spawnColumns = [
@@ -63,7 +67,11 @@ const spawnColumns = [
     width      : 150,
     sortable   : false,
     valueGetter: (params) =>
-      params.row.spawnType === 0 ? 'PC' : params.row.spawnType === 1 ? 'NPC' : 'Corpse',
+      params.row.spawnType === 0
+        ? 'PC'
+        : params.row.spawnType === 1
+          ? 'NPC'
+          : 'Corpse',
   },
   {
     field      : 'location',
@@ -126,7 +134,8 @@ export const Zone = () => {
   const [spawns, setSpawns] = useState([]);
   const [staticSpawns, setStaticSpawns] = useState([]);
   const [selectedZone, setSelectedZone] = useState(initialZone);
-  const [character, setCharacter] = useState({});
+  const [character, setCharacter] = useState(null);
+  const [parseInfo, setParseInfo] = useState({});
   const [groupMembers, setGroupMembers] = useState([]);
   const [myTarget, setMyTarget] = useState('');
   const cameraControls = useRef();
@@ -143,7 +152,6 @@ export const Zone = () => {
     try {
       newSocket = new SocketHandler(address);
       await newSocket.connected;
- 
     } catch (e) {
       console.warn('Socket connection failed', e);
       addToast(`Could not connect to ${address}`, {
@@ -156,7 +164,6 @@ export const Zone = () => {
     addToast(`Successfully Connected to ${address}`, {
       appearance: 'info',
     });
-
 
     // const validationInfo = await new Promise((res) =>
     //   newSocket.emit('validate', token, res),
@@ -172,6 +179,15 @@ export const Zone = () => {
     //   newSocket.disconnect();
     //   return;
     // }
+
+    newSocket.emit('startParse');
+
+    newSocket.on('parseInfo', (parseInfo) => {
+      setSelectedZone(
+        supportedZones.find((z) => z.longName === parseInfo.zoneName).shortName,
+      );
+      setParseInfo(parseInfo);
+    });
 
     newSocket.on('activeProcesses', setProcesses);
     newSocket.on('setSpawns', (spawns) => {
@@ -235,9 +251,7 @@ export const Zone = () => {
         if (newProcess) {
           setSelectedProcess(newProcess);
           setProcesses((processes) =>
-            processes.map((p) =>
-              p.pid === newProcess.pid ? newProcess : p,
-            ),
+            processes.map((p) => (p.pid === newProcess.pid ? newProcess : p)),
           );
           break;
         }
@@ -270,10 +284,14 @@ export const Zone = () => {
             ?.includes?.(spawnFilter.toLowerCase());
         }
         if (showNpcs) {
-          ret = ret && (showPcs ? [1, 0].includes(s.spawnType) : s.spawnType === 1);
+          ret =
+              ret &&
+              (showPcs ? [1, 0].includes(s.spawnType) : s.spawnType === 1);
         }
         if (showPcs) {
-          ret = ret && (showNpcs ? [1, 0].includes(s.spawnType) : s.spawnType === 0);
+          ret =
+              ret &&
+              (showNpcs ? [1, 0].includes(s.spawnType) : s.spawnType === 0);
         }
         return ret;
       });
@@ -305,7 +323,10 @@ export const Zone = () => {
   }, [showStaticSpawns, staticSpawns, staticSpawnFilter]);
 
   const zoneName = useMemo(
-    () => (selectedProcess?.zoneViewer ? selectedZone : zone?.shortName ?? selectedProcess?.shortName),
+    () =>
+      selectedProcess?.zoneViewer
+        ? selectedZone
+        : zone?.shortName ?? selectedProcess?.shortName,
     [selectedProcess, selectedZone, zone],
   );
   const isHooked = useMemo(() => !!selectedProcess?.shortName, [
@@ -313,7 +334,7 @@ export const Zone = () => {
   ]);
   useEffect(() => {
     setOption('follow', false);
-  }, [zoneName]);
+  }, [zoneName, setOption]);
   useEffect(() => {
     if (!selectedProcess) {
       return;
@@ -336,9 +357,7 @@ export const Zone = () => {
       const zoneDetails = await import('../../common/zoneDetails.json');
       setZoneDetails(
         zoneDetails[
-          selectedProcess.zoneViewer
-            ? selectedZone
-            : selectedProcess.shortName
+          selectedProcess.zoneViewer ? selectedZone : selectedProcess.shortName
         ] ?? [],
       );
 
@@ -352,7 +371,11 @@ export const Zone = () => {
     if (!selectedProcess.zoneViewer) {
       socket?.emit?.('selectProcess', selectedProcess.pid);
       window.socketAction = (type, payload) => {
-        socket.emit('doAction', { processId: selectedProcess.pid, payload, type });
+        socket.emit('doAction', {
+          processId: selectedProcess.pid,
+          payload,
+          type,
+        });
       };
     }
   }, [selectedProcess, socket, selectedZone, zoneName]);
@@ -376,7 +399,7 @@ export const Zone = () => {
   }, []) // eslint-disable-line
 
   useEffect(() => {
-    if (socket || !processMode) {
+    if (socket) {
       return;
     }
     if (token) {
@@ -384,19 +407,26 @@ export const Zone = () => {
     }
   }, [token]) // eslint-disable-line
 
-  const doTarget = useCallback(id => {
-    if (!socket || !selectedProcess?.pid) {
-      return;
-    }
-    socket.emit('doAction', { processId: selectedProcess.pid, payload: { id }, type: 'target' });
-  }, [socket, selectedProcess]);
+  const doTarget = useCallback(
+    (id) => {
+      if (!socket || !selectedProcess?.pid) {
+        return;
+      }
+      socket.emit('doAction', {
+        processId: selectedProcess.pid,
+        payload  : { id },
+        type     : 'target',
+      });
+    },
+    [socket, selectedProcess],
+  );
   return (
     <Paper className="zone-container" elevation={1}>
       <Card className="zone-header" variant="outlined">
         <CardContent className="zone-header">
           <div className="zone-header">
             <div className="btn-row">
-              {processMode && (
+              {
                 <Button
                   sx={{ color: socket ? 'green' : 'white' }}
                   variant="outlined"
@@ -404,34 +434,33 @@ export const Zone = () => {
                 >
                   {socket ? 'Connected' : 'Not Connected'}
                 </Button>
-              )}
-              {isHooked && (
-                <div className="overlay-buttons">
-                  <Button
-                    sx={{ color: 'white', background: 'skyblue' }}
-                    variant="outlined"
-                
-                    onClick={() => {
-                      if (zoneRef.current) {
-                        zoneRef.current.targetMe();
-                      }
-                    }}
-                  >
+              }
+
+              <div className="overlay-buttons">
+                <Button
+                  sx={{ color: 'white', background: 'skyblue' }}
+                  variant="outlined"
+                  onClick={() => {
+                    if (zoneRef.current) {
+                      zoneRef.current.targetMe();
+                    }
+                  }}
+                >
                   Jump to Me
-                  </Button>
-                  <Button
-                    sx={{ color: 'white', background: 'skyblue' }}
-                    variant="outlined"
-                    onClick={() => {
-                      if (zoneRef.current) {
-                        zoneRef.current.followMe(!cameraFollowMe);
-                        setOption('cameraFollowMe', !cameraFollowMe);
-                      }
-                    }}
-                  >
-                    {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
-                  </Button>
-                  {/* <Button
+                </Button>
+                <Button
+                  sx={{ color: 'white', background: 'skyblue' }}
+                  variant="outlined"
+                  onClick={() => {
+                    if (zoneRef.current) {
+                      zoneRef.current.followMe(!cameraFollowMe);
+                      setOption('cameraFollowMe', !cameraFollowMe);
+                    }
+                  }}
+                >
+                  {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
+                </Button>
+                {/* <Button
                   sx={{ color: 'white', background: 'skyblue' }}
                   variant="outlined"
                   onClick={() => {
@@ -446,12 +475,20 @@ export const Zone = () => {
                   }}
                 >
                   {'Cam Tel'} */}
-                  {/* </Button> */}
+                {/* </Button> */}
+                {isHooked && (
                   <Button
-                    sx={{ color: 'white', background: follow ? 'lightgreen' : 'skyblue' }}
+                    sx={{
+                      color     : 'white',
+                      background: follow ? 'lightgreen' : 'skyblue',
+                    }}
                     variant="outlined"
                     onClick={() => {
-                      socket.emit('doAction', { processId: selectedProcess.pid, payload: { gravity: !follow ? 0.0 : 0.4 }, type: 'grav' });
+                      socket.emit('doAction', {
+                        processId: selectedProcess.pid,
+                        payload  : { gravity: !follow ? 0.0 : 0.4 },
+                        type     : 'grav',
+                      });
                       setOption('follow', !follow);
                       setTimeout(() => {
                         if (document.activeElement) {
@@ -462,8 +499,8 @@ export const Zone = () => {
                   >
                     {follow ? 'Unfollow Tel' : 'Follow Tel'}
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
               {processMode && (
                 <div style={{ maxWidth: 300, minWidth: 300 }}>
                   <FormControl fullWidth>
@@ -492,7 +529,9 @@ export const Zone = () => {
                     >
                       {processes.concat(zoneViewer).map((p, i) =>
                         p.zoneViewer ? (
-                          <MenuItem key="zv" value={p}>Zone Viewer</MenuItem>
+                          <MenuItem key="zv" value={p}>
+                            Zone Viewer
+                          </MenuItem>
                         ) : (
                           <MenuItem key={`process${i}`} value={p}>
                             {p.characterName} - {p.longName}
@@ -506,13 +545,19 @@ export const Zone = () => {
 
               {selectedProcess?.zoneViewer && (
                 <Autocomplete
+                  value={
+                    supportedZoneOptions.find(
+                      (o) => o.shortName === selectedZone,
+                    )?.label
+                  }
+                  isOptionEqualToValue={(a) => a}
                   blurOnSelect
                   disablePortal
-                  onChange={(e_, { label = null } = {}) => {
-                    if (label) {
+                  onChange={(e_, { shortName } = {}) => {
+                    if (shortName) {
                       setSelectedZone(null);
                       setTimeout(() => {
-                        setSelectedZone(label);
+                        setSelectedZone(shortName);
                       }, 1);
                     }
                   }}
@@ -521,12 +566,7 @@ export const Zone = () => {
                   sx={{ width: 300 }}
                   size="small"
                   renderInput={(params) => (
-                    <TextField
-                      sx={{ height: 38 }}
-                      {...params}
-                      label="Zone"
-                      value={selectedZone}
-                    />
+                    <TextField sx={{ height: 38 }} {...params} label="Zone" />
                   )}
                 />
               )}
@@ -542,10 +582,10 @@ export const Zone = () => {
                     style={{ marginLeft: 8 }}
                     id="demo-simple-select-label"
                   >
-                  Showing {filteredSpawns.length} of {spawns.length} Spawns
+                    Showing {filteredSpawns.length} of {spawns.length} Spawns
                   </InputLabel>
                   <Button variant="outlined" onClick={handleSearchOpen}>
-                  Spawn Search
+                    Spawn Search
                   </Button>
                 </>
               ) : null}
@@ -561,7 +601,9 @@ export const Zone = () => {
                 <>
                   <TextField
                     size="small"
-                    onChange={({ target: { value } }) => setStaticSpawnFilter(value)}
+                    onChange={({ target: { value } }) =>
+                      setStaticSpawnFilter(value)
+                    }
                     label="Spawn Filter"
                     value={staticSpawnFilter}
                   />
@@ -569,7 +611,8 @@ export const Zone = () => {
                     style={{ marginLeft: 8 }}
                     id="demo-simple-select-label"
                   >
-                  Showing {filteredStaticSpawns.length} of {staticSpawns.length} Static Spawns
+                    Showing {filteredStaticSpawns.length} of{' '}
+                    {staticSpawns.length} Static Spawns
                   </InputLabel>
                 </>
               ) : null}
@@ -582,8 +625,11 @@ export const Zone = () => {
               PaperComponent={PaperComponent}
               aria-labelledby="draggable-dialog-title"
             >
-              <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-              Spawn Search and Filter
+              <DialogTitle
+                style={{ cursor: 'move' }}
+                id="draggable-dialog-title"
+              >
+                Spawn Search and Filter
               </DialogTitle>
               <DialogContent>
                 <div style={{ height: 600, width: '100%' }}>
@@ -598,53 +644,19 @@ export const Zone = () => {
               </DialogContent>
               <DialogActions>
                 <Button autoFocus onClick={handleSearchClose}>
-                Done
+                  Done
                 </Button>
               </DialogActions>
             </Dialog>
 
             {/* Connection Dialog */}
-            <Dialog
-              open={connectionOptionsOpen}
-              onClose={() => setConnectionOptionsOpen(false)}
+            <ConnectionDialog
+              connectionOptionsOpen={connectionOptionsOpen}
+              setConnectionOptionsOpen={setConnectionOptionsOpen}
               PaperComponent={PaperComponent}
-              aria-labelledby="draggable-dialog-title"
-            >
-              <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-              Connection
-              </DialogTitle>
-              <DialogContent>
-                <div className="connection-content">
-                  <TextField
-                    fullWidth
-                    onChange={({ target: { value } }) =>
-                      setOption('address', value)
-                    }
-                    label="Server Address"
-                    placeholder="https://localhost:4500"
-                    value={address}
-                  />
-                  <TextField
-                    fullWidth
-                    onChange={({ target: { value } }) =>
-                      setOption('token', value)
-                    }
-                    label="Token"
-                    placeholder=""
-                    multiline
-                    value={token}
-                  />
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button autoFocus onClick={() => setConnectionOptionsOpen(false)}>
-                Cancel
-                </Button>
-                <Button autoFocus onClick={doConnect}>
-                Connect
-                </Button>
-              </DialogActions>
-            </Dialog>
+              doConnect={doConnect}
+              connected={!!socket}
+            />
             <Canvas ref={threeRef}>
               {/* <SkyBox /> */}
               <CameraControls
@@ -659,6 +671,7 @@ export const Zone = () => {
                 <Suspense fallback={<Loader />}>
                   <RenderedZone
                     socket={socket}
+                    parseInfo={parseInfo}
                     zoneDetails={filteredZoneDetails}
                     character={selectedProcess?.zoneViewer ? null : character}
                     ref={zoneRef}
@@ -678,20 +691,20 @@ export const Zone = () => {
               )}
             </Canvas>
             {threeRef.current &&
-            ReactDOM.createPortal(
-              <canvas
-                style={{
-                  position     : 'absolute',
-                  top          : 0,
-                  left         : 0,
-                  pointerEvents: 'none',
-                }}
-                width={threeRef.current.width}
-                height={threeRef.current.height}
-                ref={canvasRef}
-              ></canvas>,
-              threeRef.current.parentNode,
-            )}
+              ReactDOM.createPortal(
+                <canvas
+                  style={{
+                    position     : 'absolute',
+                    top          : 0,
+                    left         : 0,
+                    pointerEvents: 'none',
+                  }}
+                  width={threeRef.current.width}
+                  height={threeRef.current.height}
+                  ref={canvasRef}
+                ></canvas>,
+                threeRef.current.parentNode,
+              )}
           </div>
         </CardContent>
         <CardActions></CardActions>
