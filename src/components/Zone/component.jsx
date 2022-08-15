@@ -545,15 +545,10 @@ export const Zone = () => {
 
               {selectedProcess?.zoneViewer && (
                 <Autocomplete
-                  value={
-                    supportedZoneOptions.find(
-                      (o) => o.shortName === selectedZone,
-                    )?.label
-                  }
-                  isOptionEqualToValue={(a) => a}
                   blurOnSelect
                   disablePortal
                   onChange={(e_, { shortName } = {}) => {
+                    console.log('my on change');
                     if (shortName) {
                       setSelectedZone(null);
                       setTimeout(() => {
@@ -561,13 +556,17 @@ export const Zone = () => {
                       }, 1);
                     }
                   }}
-                  id="combo-box-demo"
+                  id="combo-box-demo123"
                   options={supportedZoneOptions}
                   sx={{ width: 300 }}
-                  size="small"
-                  renderInput={(params) => (
-                    <TextField sx={{ height: 38 }} {...params} label="Zone" />
-                  )}
+                  size="small" 
+                  renderInput={(params) => {
+                    console.log('my render', params);
+                    return <TextField sx={{ height: 38 }}
+                      {...params}
+                      label="Character Race"
+                      value={params.label} />;
+                  }}
                 />
               )}
               {spawns.length ? (

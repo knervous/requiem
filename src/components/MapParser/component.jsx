@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 
 import './component.scss';
 
-const releases = ['0.1.0'];
+const releases = ['0.1.1'];
 export const MapParser = () => {
   return (
     <Box className="map-parser-content">
