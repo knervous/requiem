@@ -334,7 +334,7 @@ export const Zone = () => {
   ]);
   useEffect(() => {
     setOption('follow', false);
-  }, [zoneName, setOption]);
+  }, [zoneName]);
   useEffect(() => {
     if (!selectedProcess) {
       return;
@@ -432,7 +432,7 @@ export const Zone = () => {
                   variant="outlined"
                   onClick={handleConnectionOptionsOpen}
                 >
-                  {socket ? 'Connected' : 'Not Connected'}
+                  {socket ? 'Log Parser Connected' : 'Connect Log Parser'}
                 </Button>
               }
 

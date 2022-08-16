@@ -65,7 +65,7 @@ export const SettingsDrawer = () => {
   const options = React.useContext(SettingsContext);
   const {
     maxTargetDisplay,
-    maxStaticDisplay = 500,
+    maxStaticDisplay,
     fontSize,
     showNpcs,
     showGroup,
@@ -74,37 +74,36 @@ export const SettingsDrawer = () => {
     showPoiLoc,
     showPoiFilter,
     maxPoiDisplay,
-    showStaticSpawns = true,
-    showStaticSpawnModels = false,
-    showStaticSpawnDetails = false,
-    showStaticSpawnFilter = true,
+    showStaticSpawns,
+    showStaticSpawnModels,
+    showStaticSpawnDetails,
+    showStaticSpawnFilter,
     staticSpawnColor,
-    skybox = 'interstellar',
+    skybox,
     charColor,
     groupColor,
-    cameraType = 'orbit',
+    cameraType,
     locationColor,
-    flySpeed = 1.5,
-    wireframe = false,
-    spawnWireframe = false,
-    locationRaycast = false,
+    flySpeed,
+    wireframe,
+    spawnWireframe,
+    locationRaycast,
     setOption,
-    locationTrails = 5,
-    characterRace = 1,
-    charGender = 0,
-    charSize = 3,
-    charVariation = undefined,
-    charTexture = '00',
-    charAnimation = 'p01',
+    locationTrails,
+    characterRace,
+    charGender,
+    charSize,
+    charVariation,
+    charTexture,
+    charAnimation,
     animationList
   } = options;
 
-  const [genders, setGenders] = useState([]);
-  const [variations, setVariations] = useState([]);
-  const [textures, setTextures] = useState([]);
+  const [genders, setGenders] = useState([0, 1, 2]);
+  const [variations, setVariations] = useState(['']);
+  const [textures, setTextures] = useState(['00']);
 
   React.useEffect(() => {
-    console.log('my useefff');
     const race = raceData.find((r) => r.id === characterRace);
     const genders = [0, 1, 2].filter((g) => race[g]?.length);
     setGenders(genders);
@@ -499,6 +498,7 @@ export const SettingsDrawer = () => {
           
           <Autocomplete
             blurOnSelect
+            value={raceOptions.find(({ id }) => id === characterRace)}
             disablePortal
             onChange={(e_, { id } = {}) => {
               setOption('characterRace', id);
@@ -512,7 +512,6 @@ export const SettingsDrawer = () => {
                 sx={{ height: 38 }}
                 {...params}
                 label="Character Race"
-                value={params.label}
               />
             )}
           />

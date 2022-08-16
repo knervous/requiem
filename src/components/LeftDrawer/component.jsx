@@ -95,18 +95,30 @@ export const LeftDrawer = () => {
               aria-label="open drawer"
               onClick={handleDrawerOpen('nav')}
               edge="start"
-              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+              sx={{ borderRadius: 2, mr: 2, ...(open && { display: 'none' }) }}
             >
               <MenuIcon />
+              <Typography
+                sx={{ marginLeft: 1, fontSize: 16 }}
+              >
+              Navigation
+              </Typography>
+             
             </IconButton>
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen('settings')}
               edge="start"
-              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+              sx={{ borderRadius: 2, mr: 2, ...(open && { display: 'none' }) }}
             >
+
               <SettingsIcon />
+              <Typography
+                sx={{ marginLeft: 1, fontSize: 16 }}
+              >
+              Settings
+              </Typography>
             </IconButton>
             <Typography variant="h6" noWrap component="div">
               {title}
@@ -131,13 +143,20 @@ export const LeftDrawer = () => {
             <h3 style={{ marginLeft: 8 }}>
               {open === 'nav' ? 'Navigation' : 'Settings'}
             </h3>
-            <IconButton onClick={handleDrawerClose}>
+          
+            <IconButton sx={{ borderRadius: 2 }} onClick={handleDrawerClose}>
               {theme.direction === 'ltr' ? (
                 <ChevronLeftIcon />
               ) : (
                 <ChevronRightIcon />
               )}
+              <Typography
+                sx={{ marginLeft: 1, fontSize: 16 }}
+              >
+              Back
+              </Typography>
             </IconButton>
+         
           </DrawerHeader>
           <Divider />
           {open === 'nav' && (
