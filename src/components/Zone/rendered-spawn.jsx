@@ -20,6 +20,7 @@ export const RenderedSpawn = forwardRef(
     { wireframe, spawn, fallback, maxDisplay, setStaticIndex = () => {}, i, setAnimationList = () => {} },
     spawnRef,
   ) => {
+    const defaultRef = useRef();
     const model = useMemo(() => {
       const model = raceData.find((r) => r.id === spawn.race);
       return model[spawn.gender] || model['2'] || 'HUM';
@@ -89,13 +90,14 @@ export const RenderedSpawn = forwardRef(
         gender.current = spawn.gender;
         variation.current = spawn.variation;
         setTimeout(() => {
-          if (!spawnRef.current) {
+          const ref = spawnRef?.current ?? defaultRef?.current;
+          if (!ref) {
             return;
           }
-          const animationMixer = new THREE.AnimationMixer(spawnRef.current);
+          const animationMixer = new THREE.AnimationMixer(ref);
           const newActions = {};
           for (const a of animations) {
-            newActions[a.name] = animationMixer.clipAction(a, spawnRef.current);
+            newActions[a.name] = animationMixer.clipAction(a, ref);
           }
           setAnimationList(animations.map(a => a.name));
           setActions(newActions);
@@ -152,10 +154,10 @@ export const RenderedSpawn = forwardRef(
       <React.Fragment key={`spawn-${spawn.id}`}>
         <primitive
           onClick={() => setStaticIndex(i)}
-          ref={spawnRef}
+          ref={spawnRef ? spawnRef : defaultRef}
           scale={[spawn.size / 3, spawn.size / 3, spawn.size / 3]}
           rotation={[0, spawn.heading, 0]}
-          position={[spawn.y * -1 - 3, spawn.z + 3, spawn.x + 4]}
+          position={[spawn.y * -1, spawn.z, spawn.x]}
           object={scene}
         />
       </React.Fragment>

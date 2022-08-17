@@ -96,7 +96,9 @@ export const SettingsDrawer = () => {
     charVariation,
     charTexture,
     charAnimation,
-    animationList
+    animationList,
+    locationTrailOpacity,
+    locationTrailDashed,
   } = options;
 
   const [genders, setGenders] = useState([0, 1, 2]);
@@ -135,7 +137,7 @@ export const SettingsDrawer = () => {
       onMouseDown={(e) => (e.stopPropagation(), e.preventDefault())} // eslint-disable-line
     >
       {/* World */}
-      <Accordion disableGutters>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -229,7 +231,7 @@ export const SettingsDrawer = () => {
       </Accordion>
 
       {/* Camera */}
-      <Accordion disableGutters>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -278,7 +280,7 @@ export const SettingsDrawer = () => {
       </Accordion>
 
       {/* Static Spawns */}
-      <Accordion disableGutters>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -372,7 +374,7 @@ export const SettingsDrawer = () => {
       </Accordion>
 
       {/* Map Markers */}
-      <Accordion disableGutters>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -434,7 +436,7 @@ export const SettingsDrawer = () => {
       </Accordion>
 
       {/* Character */}
-      <Accordion disableGutters>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -453,33 +455,7 @@ export const SettingsDrawer = () => {
             }
             label="Character Text Color"
           />
-          <FormControlLabel
-            control={
-              <ColorPicker
-                hideTextfield={true}
-                value={locationColor ?? '#FFFFFF'}
-                onChange={(color) => setOption('locationColor', color)}
-              />
-            }
-            label="Location Trail Color"
-          />
-          <FormControl sx={{ marginTop: 1 }} fullWidth>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              Location Trails {locationTrails}
-            </Typography>
-            <Slider
-              value={locationTrails}
-              onChange={(e) => setOption('locationTrails', +e.target.value)}
-              step={1}
-              min={1}
-              max={20}
-            />
-          </FormControl>
-          <FormControl sx={{ marginTop: 1 }} fullWidth>
+          <FormControl sx={{ marginTop: 1, marginBottom: 3 }} fullWidth>
             <Typography
               sx={{ fontSize: 14 }}
               color="text.secondary"
@@ -495,7 +471,6 @@ export const SettingsDrawer = () => {
               max={100}
             />
           </FormControl>
-          
           <Autocomplete
             blurOnSelect
             value={raceOptions.find(({ id }) => id === characterRace)}
@@ -593,9 +568,76 @@ export const SettingsDrawer = () => {
         </AccordionDetails>
       </Accordion>
 
+      {/* Location Trails */}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Location Trail</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormControlLabel
+            control={
+              <ColorPicker
+                hideTextfield={true}
+                value={locationColor ?? '#FFFFFF'}
+                onChange={(color) => setOption('locationColor', color)}
+              />
+            }
+            label="Location Trail Color"
+          />
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Location Trails {locationTrails}
+            </Typography>
+            <Slider
+              value={locationTrails}
+              onChange={(e) => setOption('locationTrails', +e.target.value)}
+              step={1}
+              min={1}
+              max={20}
+            />
+          </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={locationTrailDashed}
+                onChange={({ target: { checked } }) =>
+                  setOption('locationTrailDashed', checked)
+                }
+              />
+            }
+            label="Dashed"
+          />
+          <FormControl sx={{ marginTop: 1 }} fullWidth>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Opacity {locationTrailOpacity * 100}%
+            </Typography>
+            <Slider
+              value={locationTrailOpacity}
+              onChange={(e) => setOption('locationTrailOpacity', +e.target.value)}
+              step={0.01}
+              min={0.01}
+              max={1}
+            />
+          </FormControl>
+    
+        </AccordionDetails>
+      </Accordion>
+
       {/* Live Spawns */}
       {processMode && (
-        <Accordion disableGutters>
+        <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -649,7 +691,7 @@ export const SettingsDrawer = () => {
 
       {/* Group */}
       {processMode && (
-        <Accordion disableGutters>
+        <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"

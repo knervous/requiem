@@ -26,7 +26,7 @@ import { Text } from 'troika-three-text';
 import { useThrottledCallback } from 'use-debounce';
 import { RenderedSpawn } from './rendered-spawn';
 
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { LineMaterial } from '../Common/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 
@@ -110,14 +110,35 @@ export function traverseMaterials(object, callback) {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
-function onPointerMove(event) {
-  // calculate pointer position in normalized device coordinates
-  // (-1 to +1) for both components
-
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-window.addEventListener('pointermove', onPointerMove);
+// mock
+const mockParseInfo = {
+  locations: [
+    { x: -447.37, y: -304.92, z: 117.53 },
+    { x: -455.15, y: -295.9, z: 117.96 },
+    { x: -460.19, y: -290.06, z: 121.71 },
+    { x: -467.65, y: -281.4, z: 126.49 },
+    { x: -480.02, y: -267.06, z: 135.97 },
+    { x: -482.51, y: -264.18, z: 137.89 },
+    { x: -487.25, y: -256.44, z: 142.24 },
+    { x: -489.57, y: -251.02, z: 144.81 },
+    { x: -493.88, y: -245.85, z: 148.33 },
+    { x: -502.09, y: -240.82, z: 152.57 },
+    { x: -508.88, y: -238.02, z: 156.06 },
+    { x: -512.82, y: -236.39, z: 157.68 },
+    { x: -516.68, y: -234.79, z: 159.47 },
+    { x: -523.82, y: -231.09, z: 161.1 },
+    { x: -529.36, y: -227.77, z: 161.1 },
+    { x: -532.42, y: -225.94, z: 161.1 },
+    { x: -536.15, y: -223.7, z: 161.1 },
+    { x: -536.39, y: -223.02, z: 161.1 },
+    { x: -536.87, y: -216.77, z: 161.1 },
+    { x: -536.79, y: -209.31, z: 161.1 },
+  ],
+  displayedName: 'Celeryman',
+  zoneName     : 'Greater Faydark',
+  filePath     : null,
+  fileName     : null,
+};
 
 export const RenderedZone = forwardRef(
   (
@@ -146,6 +167,23 @@ export const RenderedZone = forwardRef(
       gl: { domElement },
     } = useThree();
 
+    useEffect(() => {
+      function onPointerMove(event) {
+        // calculate pointer position in normalized device coordinates
+        // (-1 to +1) for both components
+      
+        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      }
+      
+      domElement.addEventListener('pointermove', onPointerMove);
+      return () => {
+        if (domElement) {
+          domElement.removeEventListener('pointermove', onPointerMove);
+        }
+      };
+    }, [domElement]);
+   
     const {
       showPoiLoc,
       staticSpawnColor,
@@ -162,6 +200,8 @@ export const RenderedZone = forwardRef(
       spawnWireframe,
       locationRaycast,
       locationTrails,
+      locationTrailOpacity,
+      locationTrailDashed,
       characterRace,
       locationColor,
       charSize,
@@ -238,10 +278,15 @@ export const RenderedZone = forwardRef(
     }, [zoneTexture, wireframe]);
 
     useFrame(() => {
-      const ctx = canvasRef.current?.getContext?.('2d');
-      if (!ctx) {
+      if (!canvasRef.current) {
         return;
       }
+      if (domElement.width !== canvasRef.current.width || domElement.height !== canvasRef.current.height) {
+        canvasRef.current.width = domElement.width;
+        canvasRef.current.height = domElement.height;
+      }
+      const ctx = canvasRef.current?.getContext?.('2d');
+   
       ctx.clearRect(0, 0, domElement.width, domElement.height);
       const frustum = new THREE.Frustum();
       frustum.setFromProjectionMatrix(
@@ -457,7 +502,7 @@ export const RenderedZone = forwardRef(
       )) {
         const screen = worldToScreen(
           canvasRef.current,
-          new THREE.Vector3(zoneDetail.y * -1, zoneDetail.z + 15, zoneDetail.x),
+          new THREE.Vector3(zoneDetail.y * -1, zoneDetail.z + 5, zoneDetail.x),
           camera,
         );
         let side = 1;
@@ -515,10 +560,11 @@ export const RenderedZone = forwardRef(
         // console.log('Int', intersects);
         if (intersects.length) {
           const pt = intersects[0].point;
+          // pt.set(pt.x - 30, pt.y, pt.z - 30);
           setRayTarget(pt);
           const screen = worldToScreen(
             canvasRef.current,
-            new THREE.Vector3(pt.x - 15, pt.y - 15, pt.z),
+            new THREE.Vector3(pt.x, pt.y, pt.z),
             camera,
           );
           let side = 1;
@@ -528,8 +574,6 @@ export const RenderedZone = forwardRef(
           ctx.strokeStyle = '#FFFFFF';
 
           ctx.beginPath();
-          screen.x += -30;
-          screen.y += -35;
           ctx.moveTo(screen.x, screen.y);
           ctx.lineTo(screen.x - side * 56, screen.y);
           ctx.lineTo(screen.x - side * 80, screen.y - 60);
@@ -552,7 +596,7 @@ export const RenderedZone = forwardRef(
               side * detailWidth -
               side * 16 +
               (detailWidth * side) / 2,
-            screen.y - 64 + 6,
+            screen.y - 64 + 3,
           );
 
           ctx.font = `italic bold ${fontSize + 3}px Arial`;
@@ -570,21 +614,24 @@ export const RenderedZone = forwardRef(
           );
         }
       }
-      const drawNames = (location, name, subheader, color) => {
+      const drawNames = (location, name, subheader, color, zOffset = 0) => {
         if (!location) {
           return;
         }
         const screen = worldToScreen(
           canvasRef.current,
-          new THREE.Vector3(location.y * -1, location.z + 10, location.x),
+          new THREE.Vector3(location.y * -1, location.z + 7 + zOffset, location.x),
           camera,
         );
+        if (name === 'Celeryman') {
+          window.ss = screen;
+        }
         let side = 1;
         if (screen.x > canvasRef.current.width / 2) {
           side = -1;
         }
         ctx.strokeStyle = '#FFFFFF';
-        screen.x -= 60;
+        
 
         ctx.beginPath();
         ctx.moveTo(screen.x, screen.y);
@@ -648,6 +695,7 @@ export const RenderedZone = forwardRef(
           `${parseInfo?.displayedName}`,
           `(${loc.y}, ${loc.x}, ${loc.z})`,
           charColor?.css?.backgroundColor,
+          charSize
         );
       }
     });
@@ -760,12 +808,18 @@ export const RenderedZone = forwardRef(
         camera.position.addVectors(characterRef.current.position, offset);
         setPrevCharacter(character);
       }
-    }, [character, prevCharacter, doFollow, parseInfo, cameraType, charSize, camera]) // eslint-disable-line
+    }, [
+      character,
+      prevCharacter,
+      doFollow,
+      parseInfo,
+      cameraType,
+      charSize,
+      camera,
+    ]) // eslint-disable-line
 
     const followMe = (doFollow) => {
-      if (
-        doFollow
-      ) {
+      if (doFollow) {
         setOriginalTarget(controls.current.target);
         controls.current.target =
           parseRef?.current?.position ?? characterRef?.current?.position;
@@ -789,6 +843,44 @@ export const RenderedZone = forwardRef(
         ),
       [staticSpawns],
     );
+
+    const locLine = useMemo(() => {
+      const locations = parseInfo?.locations?.slice?.(0, locationTrails);
+      const color = locationColor?.css?.backgroundColor;
+      if (locations?.length) {
+        const positions = [];
+        const colors = [];
+        const color2 = new THREE.Color();
+        for (const { x, y, z } of locations) {
+          positions.push(y * -1, z + 5, x);
+          colors.push(color2.r, color2.g, color2.b);
+        }
+        const geometry = new LineGeometry();
+        geometry.setPositions(positions);
+        geometry.setColors(colors);
+        const matLine = new LineMaterial({
+          color,
+          linewidth      : 0.01, // in world units with size attenuation, pixels otherwise
+          vertexColors   : true,
+          opacity        : locationTrailOpacity,
+          gapSize        : 2,
+          dashSize       : 3,
+          // resolution:  // to be set by renderer, eventually
+          dashed         : locationTrailDashed,
+          alphaToCoverage: true,
+        });
+        const line = new Line2(geometry, matLine);
+        line.computeLineDistances();
+        line.scale.set(1, 1, 1);
+        return line;
+      }
+    }, [
+      parseInfo,
+      locationTrails,
+      locationColor,
+      locationTrailOpacity,
+      locationTrailDashed,
+    ]);
 
     return (
       <>
@@ -911,72 +1003,57 @@ export const RenderedZone = forwardRef(
           </>
         )}
         {/* Parsed Info */}
-        {parseInfo?.locations
-          ?.slice(0, locationTrails)
-          .map((pi, index, arr) => {
-            const color = locationColor?.css?.backgroundColor;
-            const loc = [pi.y * -1 - 3, pi.z + 5, pi.x + 4];
+        {parseInfo?.locations?.slice(0, 2).map((pi, index, arr) => {
+          const color = locationColor?.css?.backgroundColor;
+          const loc = [pi.y * -1 - 3, pi.z + 5, pi.x + 4];
 
-            if (index === 0) {
-              let heading = 0;
-              if (arr[index + 1]) {
-                const next = arr[index + 1];
-                const nextLoc = new THREE.Vector3(next.y * -1, next.z, next.x);
-                const myLoc = new THREE.Vector3(pi.y * -1, pi.z, pi.x);
-                heading =
-                  -1 * Math.atan2(myLoc.z - nextLoc.z, myLoc.x - nextLoc.x);
-              }
-              return (
-                <React.Fragment>
-                  <RenderedSpawn
-                    ref={parseRef}
-                    key={'parsed-info-spawn'}
-                    maxDisplay={Infinity}
-                    fallback={null}
-                    setAnimationList={setAnimationList}
-                    spawn={{
-                      ...pi,
-                      heading,
-                      z        : pi.z + charSize,
-                      gender   : charGender,
-                      texture  : charTexture,
-                      variation: charVariation,
-                      size     : charSize,
-                      id       : 'parsedChar',
-                      race     : characterRace,
-                      animation: charAnimation,
-                    }}
-                  />
-                  <spotLight
-                    intensity={2.5}
-                    angle={0.3}
-                    penumbra={0.8}
-                    color={'pink'}
-                    target={parseRef.current}
-                    position={[loc[0], loc[1] + 150, loc[2]]}
-                  />
-                </React.Fragment>
-              );
+          if (index === 0) {
+            let heading = 0;
+            if (arr[index + 1]) {
+              const next = arr[index + 1];
+              const nextLoc = new THREE.Vector3(next.y * -1, next.z, next.x);
+              const myLoc = new THREE.Vector3(pi.y * -1, pi.z, pi.x);
+              heading =
+                -1 * Math.atan2(myLoc.z - nextLoc.z, myLoc.x - nextLoc.x);
             }
-            const last = arr[index - 1];
-            const to = new THREE.Vector3(
-              last.y * -1 - 3,
-              last.z + 5,
-              last.x + 4,
-            );
-            const from = new THREE.Vector3(...loc);
-            const direction = to.clone().sub(from);
-            const length = direction.length();
             return (
-              <React.Fragment key={`pi-${index}-trail`}>
-                <arrowHelper
-                  args={[direction, from, length - 2, color, 5, 5]}
+              <React.Fragment>
+                <RenderedSpawn
+                  ref={parseRef}
+                  key={'parsed-info-spawn'}
+                  maxDisplay={Infinity}
+                  fallback={null}
+                  setAnimationList={setAnimationList}
+                  spawn={{
+                    ...pi,
+                    heading,
+                    z        : pi.z + charSize,
+                    gender   : charGender,
+                    texture  : charTexture,
+                    variation: charVariation,
+                    size     : charSize,
+                    id       : 'parsedChar',
+                    race     : characterRace,
+                    animation: charAnimation,
+                  }}
                 />
+                
+                <spotLight
+                  intensity={2.5}
+                  angle={0.3}
+                  penumbra={0.8}
+                  color={'pink'}
+                  target={parseRef.current}
+                  position={[loc[0], loc[1] + 150, loc[2]]}
+                />
+                
               </React.Fragment>
             );
-          })}
+          }
+        })}
         {/* Our zone */}
         <primitive object={zoneTexture?.scene} />
+        {locLine && <primitive object={locLine} />}
       </>
     );
   },

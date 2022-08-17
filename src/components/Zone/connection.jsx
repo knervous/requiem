@@ -23,13 +23,14 @@ export const ConnectionDialog = ({
   useEffect(() => {
     if (connected) {
       setConnectStatus('Connected');
+      return;
     }
     (async () => {
       try {
-        const res = await fetch(address.replace('wss', 'https')).then((r) => {
-          console.log('Response', r);
+        await fetch(address.replace('wss', 'https')).then((r) => {
         });
         setConnectStatus('Server is running. Ready to connect.');
+        return;
       } catch (e) {
         setConnectStatus(
           'No response. Make sure the server is running and try troubleshooting tips below.',

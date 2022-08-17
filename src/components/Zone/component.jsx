@@ -118,7 +118,6 @@ export const Zone = () => {
     showStaticSpawnFilter = true,
     follow = false,
     address,
-    token,
     showPoiFilter,
     cameraType,
     flySpeed,
@@ -334,7 +333,7 @@ export const Zone = () => {
   ]);
   useEffect(() => {
     setOption('follow', false);
-  }, [zoneName]);
+  }, [zoneName]) // eslint-disable-line
   useEffect(() => {
     if (!selectedProcess) {
       return;
@@ -381,31 +380,11 @@ export const Zone = () => {
   }, [selectedProcess, socket, selectedZone, zoneName]);
 
   useEffect(() => {
-    if (!threeRef.current) {
-      return;
-    }
-    const current = threeRef.current;
-    const resizeObserver = new ResizeObserver(() => {
-      if (!canvasRef.current) {
-        return;
-      }
-      canvasRef.current.height = current.height / window.devicePixelRatio;
-      canvasRef.current.width = current.width / window.devicePixelRatio;
-    });
-    resizeObserver.observe(current);
-    return () => {
-      resizeObserver.unobserve(current);
-    };
-  }, []) // eslint-disable-line
-
-  useEffect(() => {
     if (socket) {
       return;
     }
-    if (token) {
-      doConnect();
-    }
-  }, [token]) // eslint-disable-line
+    doConnect();
+  }, []) // eslint-disable-line
 
   const doTarget = useCallback(
     (id) => {
@@ -428,7 +407,10 @@ export const Zone = () => {
             <div className="btn-row">
               {
                 <Button
-                  sx={{ color: socket ? 'green' : 'white' }}
+                  sx={{
+                    color          : 'black',
+                    backgroundColor: socket ? 'lightgreen' : 'white',
+                  }}
                   variant="outlined"
                   onClick={handleConnectionOptionsOpen}
                 >
@@ -437,29 +419,33 @@ export const Zone = () => {
               }
 
               <div className="overlay-buttons">
-                <Button
-                  sx={{ color: 'white', background: 'skyblue' }}
-                  variant="outlined"
-                  onClick={() => {
-                    if (zoneRef.current) {
-                      zoneRef.current.targetMe();
-                    }
-                  }}
-                >
-                  Jump to Me
-                </Button>
-                <Button
-                  sx={{ color: 'white', background: 'skyblue' }}
-                  variant="outlined"
-                  onClick={() => {
-                    if (zoneRef.current) {
-                      zoneRef.current.followMe(!cameraFollowMe);
-                      setOption('cameraFollowMe', !cameraFollowMe);
-                    }
-                  }}
-                >
-                  {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
-                </Button>
+                {socket && (
+                  <>
+                    <Button
+                      sx={{ color: 'black', background: 'skyblue' }}
+                      variant="outlined"
+                      onClick={() => {
+                        if (zoneRef.current) {
+                          zoneRef.current.targetMe();
+                        }
+                      }}
+                    >
+                      Jump to Me
+                    </Button>
+                    <Button
+                      sx={{ color: 'black', background: 'skyblue' }}
+                      variant="outlined"
+                      onClick={() => {
+                        if (zoneRef.current) {
+                          zoneRef.current.followMe(!cameraFollowMe);
+                          setOption('cameraFollowMe', !cameraFollowMe);
+                        }
+                      }}
+                    >
+                      {cameraFollowMe ? 'Unfollow me' : 'Follow me'}
+                    </Button>
+                  </>
+                )}
                 {/* <Button
                   sx={{ color: 'white', background: 'skyblue' }}
                   variant="outlined"
