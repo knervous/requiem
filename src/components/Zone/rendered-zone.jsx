@@ -281,9 +281,9 @@ export const RenderedZone = forwardRef(
       if (!canvasRef.current) {
         return;
       }
-      if (domElement.width !== canvasRef.current.width || domElement.height !== canvasRef.current.height) {
-        canvasRef.current.width = domElement.width;
-        canvasRef.current.height = domElement.height;
+      if (domElement.clientWidth !== canvasRef.current.width || domElement.clientHeight !== canvasRef.current.height) {
+        canvasRef.current.width = domElement.clientWidth;
+        canvasRef.current.height = domElement.clientHeight;
       }
       const ctx = canvasRef.current?.getContext?.('2d');
    
