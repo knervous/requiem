@@ -211,6 +211,7 @@ export const RenderedZone = forwardRef(
       charAnimation,
       setAnimationList,
       cameraType,
+      cameraFollowMe
     } = options;
     // Skybox
     useSkybox(skybox);
@@ -828,6 +829,12 @@ export const RenderedZone = forwardRef(
       }
       setDoFollow(doFollow);
     };
+
+    useEffect(() => {
+      if (zoneTexture?.scene && parseRef.current?.position) {
+        followMe(cameraFollowMe);
+      }
+    }, [zoneTexture?.scene, cameraFollowMe, parseInfo]); // eslint-disable-line
 
     // Expose functions to parent
     useImperativeHandle(forwardRef, () => ({
