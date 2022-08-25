@@ -341,7 +341,14 @@ export const Zone = () => {
     selectedProcess,
   ]);
   useEffect(() => {
+    const prevOption = cameraFollowMe;
     setOption('follow', false);
+    if (prevOption) {
+      setTimeout(() => {
+        setOption('follow', true);
+      }, 500);
+    }
+    
   }, [zoneName]) // eslint-disable-line
   useEffect(() => {
     if (!selectedProcess) {
@@ -387,6 +394,7 @@ export const Zone = () => {
       };
     }
   }, [selectedProcess, socket, selectedZone, zoneName]);
+  
 
   useEffect(() => {
     if (socket || !hasConnected) {
