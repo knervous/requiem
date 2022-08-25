@@ -265,6 +265,13 @@ export const Zone = () => {
     setConnectionOptionsOpen(false);
   };
 
+  const doDisconnect = () => {
+    if (socket) {
+      socket.close();
+    }
+    setParseInfo(null);
+    setSocket(null);
+  };
   const handleRefreshProcess = useCallback(() => {
     if (!socket) {
       return;
@@ -416,7 +423,7 @@ export const Zone = () => {
                   variant="outlined"
                   onClick={handleConnectionOptionsOpen}
                 >
-                  {socket ? 'Log Parser Connected' : 'Connect Log Parser'}
+                  {socket ? 'Connected' : 'Connect Log Parser'}
                 </Button>
               }
 
@@ -643,6 +650,7 @@ export const Zone = () => {
               setConnectionOptionsOpen={setConnectionOptionsOpen}
               PaperComponent={PaperComponent}
               doConnect={doConnect}
+              doDisconnect={doDisconnect}
               connected={!!socket}
             />
             <Canvas ref={threeRef}>

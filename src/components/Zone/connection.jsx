@@ -17,6 +17,7 @@ export const ConnectionDialog = ({
   PaperComponent,
   doConnect,
   connected,
+  doDisconnect
 }) => {
   const { setOption, address } = React.useContext(SettingsContext);
   const [connectStatus, setConnectStatus] = useState('None');
@@ -27,7 +28,7 @@ export const ConnectionDialog = ({
     }
     (async () => {
       try {
-        await fetch(address.replace('wss', 'https')).then((r) => {
+        await fetch(address.replace('wss', 'https')).then((_r) => {
         });
         setConnectStatus('Server is running. Ready to connect.');
         return;
@@ -35,7 +36,7 @@ export const ConnectionDialog = ({
         setConnectStatus(
           'No response. Make sure the server is running and try troubleshooting tips below.',
         );
-        console.log('Error', e.message);
+        console.warn('Error', e.message);
       }
     })();
   }, [address, connected, connectionOptionsOpen]);
@@ -69,6 +70,16 @@ export const ConnectionDialog = ({
           >
             Connection Status: {connectStatus}
           </Typography>
+          <Button
+            sx={{ color: 'black', margin: '10 0', background: 'lightgreen' }}
+            variant="outlined"
+            onClick={() =>
+              window.open(address.replace('wss', 'https'), '_blank').focus()
+            }
+          >
+              Launch Tab to Override
+          </Button>
+          <br />
           <details>
             <summary style={{ padding: 5 }}>Troubleshooting</summary>
             
@@ -82,17 +93,6 @@ export const ConnectionDialog = ({
               types of certificates are disallowed by modern browsers. You can
               bypass this setting with the following workarounds.
             </Typography>
-            <br />
-            <Button
-              sx={{ color: 'black', margin: '10 0', background: 'lightgreen' }}
-              variant="outlined"
-              onClick={() =>
-                window.open(address.replace('wss', 'https'), '_blank').focus()
-              }
-            >
-              Launch Tab to Override
-            </Button>
-            <br />
             <br />
             <Typography
               sx={{ fontSize: 14 }}
@@ -129,6 +129,9 @@ export const ConnectionDialog = ({
       <DialogActions>
         <Button autoFocus onClick={() => setConnectionOptionsOpen(false)}>
           Cancel
+        </Button>
+        <Button autoFocus onClick={doDisconnect}>
+          Disconnect
         </Button>
         <Button autoFocus onClick={doConnect}>
           Connect
