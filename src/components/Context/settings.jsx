@@ -38,7 +38,8 @@ const defaultOptions = {
   charTexture           : '',
   charAnimation         : 'p01',
   locationTrailOpacity  : 0.9,
-  locationTrailDashed   : true
+  locationTrailDashed   : true,
+  hasConnected          : false
 };
 export const SettingsProvider = ({ children }) => {
   const [options, setOptions] = useState(

@@ -122,6 +122,7 @@ export const Zone = () => {
     cameraType,
     flySpeed,
     setOption,
+    hasConnected
   } = options;
 
   const [processes, setProcesses] = useState([]);
@@ -151,6 +152,7 @@ export const Zone = () => {
     try {
       newSocket = new SocketHandler(address);
       await newSocket.connected;
+      setOption('hasConnected', true);
     } catch (e) {
       console.warn('Socket connection failed', e);
       addToast(`Could not connect to ${address}`, {
@@ -380,7 +382,7 @@ export const Zone = () => {
   }, [selectedProcess, socket, selectedZone, zoneName]);
 
   useEffect(() => {
-    if (socket) {
+    if (socket || !hasConnected) {
       return;
     }
     doConnect();
