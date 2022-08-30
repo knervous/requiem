@@ -22,3 +22,9 @@
     margin: 5px 0 !important;
   }
 }
+
+@media (max-width: 600px) {
+ .paypal-donate {
+    display: none !important;
+ } 
+}

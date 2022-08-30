@@ -127,7 +127,7 @@ export const LeftDrawer = () => {
             </Typography>
            
           </Toolbar>
-          <div style={{ float: 'right', display: 'inline', position: 'absolute', right: 15, top: 12 }}
+          <div className="paypal-donate" style={{ float: 'right', display: 'inline', position: 'absolute', right: 15, top: 12 }}
           >
             <Button 
               sx={{ textTransform: 'none' }}
