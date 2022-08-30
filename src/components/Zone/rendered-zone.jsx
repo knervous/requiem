@@ -110,36 +110,6 @@ export function traverseMaterials(object, callback) {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
-// mock
-const mockParseInfo = {
-  locations: [
-    { x: -447.37, y: -304.92, z: 117.53 },
-    { x: -455.15, y: -295.9, z: 117.96 },
-    { x: -460.19, y: -290.06, z: 121.71 },
-    { x: -467.65, y: -281.4, z: 126.49 },
-    { x: -480.02, y: -267.06, z: 135.97 },
-    { x: -482.51, y: -264.18, z: 137.89 },
-    { x: -487.25, y: -256.44, z: 142.24 },
-    { x: -489.57, y: -251.02, z: 144.81 },
-    { x: -493.88, y: -245.85, z: 148.33 },
-    { x: -502.09, y: -240.82, z: 152.57 },
-    { x: -508.88, y: -238.02, z: 156.06 },
-    { x: -512.82, y: -236.39, z: 157.68 },
-    { x: -516.68, y: -234.79, z: 159.47 },
-    { x: -523.82, y: -231.09, z: 161.1 },
-    { x: -529.36, y: -227.77, z: 161.1 },
-    { x: -532.42, y: -225.94, z: 161.1 },
-    { x: -536.15, y: -223.7, z: 161.1 },
-    { x: -536.39, y: -223.02, z: 161.1 },
-    { x: -536.87, y: -216.77, z: 161.1 },
-    { x: -536.79, y: -209.31, z: 161.1 },
-  ],
-  displayedName: 'Celeryman',
-  zoneName     : 'Greater Faydark',
-  filePath     : null,
-  fileName     : null,
-};
-
 export const RenderedZone = forwardRef(
   (
     {
@@ -154,7 +124,6 @@ export const RenderedZone = forwardRef(
       groupMembers,
       doTarget = () => {},
       socket,
-      follow,
       selectedProcess,
       staticSpawns,
       options,
@@ -211,14 +180,14 @@ export const RenderedZone = forwardRef(
       charAnimation,
       setAnimationList,
       cameraType,
-      cameraFollowMe
+      cameraFollowMe,
+      followTel
     } = options;
     // Skybox
     useSkybox(skybox);
 
     const [originalTarget, setOriginalTarget] = useState(null);
     const [doFollow, setDoFollow] = useState(false);
-    const [prevCharacter, setPrevCharacter] = useState(character);
     const [target, setTarget] = useState(myTarget);
     const [staticIndex, setStaticIndex] = useState(-1);
     const [rayTarget, setRayTarget] = useState(null);
@@ -232,7 +201,7 @@ export const RenderedZone = forwardRef(
 
     const followPulse = useThrottledCallback(
       (override = false) => {
-        if (!character || !socket || (!override && !follow)) {
+        if (!character || !socket || (!override && !followTel)) {
           return;
         }
         socket.emit('doAction', {
@@ -253,10 +222,6 @@ export const RenderedZone = forwardRef(
     const bannerTexture = useLoader(
       GLTFLoader,
       `${storageUrl}/textures/banner.glb`,
-    );
-    const characterTexture = useLoader(
-      GLTFLoader,
-      `${storageUrl}/textures/sword2.glb`,
     );
 
     useEffect(() => {
@@ -558,7 +523,6 @@ export const RenderedZone = forwardRef(
         const intersects = raycaster.intersectObjects(
           zoneTexture?.scene?.children,
         );
-        // console.log('Int', intersects);
         if (intersects.length) {
           const pt = intersects[0].point;
           // pt.set(pt.x - 30, pt.y, pt.z - 30);
@@ -624,9 +588,6 @@ export const RenderedZone = forwardRef(
           new THREE.Vector3(location.y * -1, location.z + 7 + zOffset, location.x),
           camera,
         );
-        if (name === 'Celeryman') {
-          window.ss = screen;
-        }
         let side = 1;
         if (screen.x > canvasRef.current.width / 2) {
           side = -1;
@@ -675,16 +636,16 @@ export const RenderedZone = forwardRef(
         drawNames(
           character,
           `${character?.displayedName} (Me)`,
-          `Level ${character.level}  ${classes[character.classId]}`,
+          `Level ${character.level}  ${classes[character.classId] ?? ''}`,
           charColor?.css?.backgroundColor,
+          charSize
         );
       }
-
       for (const groupMember of groupMembers) {
         drawNames(
           groupMember,
           `${groupMember?.displayedName} (Group)`,
-          `Level ${groupMember.level}  ${classes[groupMember.classId]}`,
+          `Level ${groupMember.level}  ${classes[groupMember.classId] ?? ''}`,
           groupColor?.css?.backgroundColor,
         );
       }
@@ -795,23 +756,24 @@ export const RenderedZone = forwardRef(
           );
           camera.position.addVectors(parseRef.current.position, offset);
         }
-      } else if (
-        characterRef.current &&
-        !['x', 'y', 'z'].every(
-          (key) => character?.[key] === prevCharacter?.[key],
-        )
-      ) {
-        const offset = new THREE.Vector3(
-          0,
-          camera.position.distanceTo(characterRef.current.position),
-          0,
-        );
-        camera.position.addVectors(characterRef.current.position, offset);
-        setPrevCharacter(character);
+      } else {
+        if (cameraType === 'fly') { 
+          const offset = new THREE.Vector3(0, charSize, 0);
+          camera.position.addVectors(characterRef.current.position, offset);
+          camera.rotation.set(0, characterRef.current.rotation.y - (Math.PI / 2), 0);
+
+        } else {
+          const offset = new THREE.Vector3(
+            0,
+            camera.position.distanceTo(characterRef.current.position),
+            0,
+          );
+          camera.position.addVectors(characterRef.current.position, offset);
+        }
+        
       }
     }, [
       character,
-      prevCharacter,
       doFollow,
       parseInfo,
       cameraType,
@@ -911,9 +873,9 @@ export const RenderedZone = forwardRef(
                 onDoubleClick={() => {
                   doTarget(s.id);
                 }}
-                position={[s.y * -1, s.z + 15, s.x]}
+                position={[s.y * -1, s.z + 5, s.x]}
               >
-                <octahedronBufferGeometry args={[10]} />
+                <octahedronBufferGeometry args={[7]} />
                 <meshStandardMaterial color={color} />
               </mesh>
             </React.Fragment>
@@ -955,16 +917,24 @@ export const RenderedZone = forwardRef(
         {/* Our character - sword model */}
         {character && (
           <>
-            <primitive
+            <RenderedSpawn
               ref={characterRef}
-              scale={[4, 4, 4]}
-              rotation={[1.6, 0, -1.65 + (character.heading * -1) / 100]}
-              position={[
-                character.y * -1 - 3,
-                character.z + 5,
-                character.x + 4,
-              ]}
-              object={characterTexture?.scene}
+              key={'parsed-info-spawn'}
+              maxDisplay={Infinity}
+              fallback={null}
+              setAnimationList={setAnimationList}
+              spawn={{
+                ...character,
+                heading  : ((character.heading / 100) + 0.5) - Math.PI,
+                z        : character.z + charSize,
+                gender   : charGender,
+                texture  : charTexture,
+                variation: charVariation,
+                size     : charSize,
+                id       : 'parsedChar',
+                race     : characterRace,
+                animation: charAnimation,
+              }}
             />
             {/* Spotlight over our head */}
             <spotLight
@@ -1011,7 +981,6 @@ export const RenderedZone = forwardRef(
         )}
         {/* Parsed Info */}
         {parseInfo?.locations?.slice(0, 2).map((pi, index, arr) => {
-          const color = locationColor?.css?.backgroundColor;
           const loc = [pi.y * -1 - 3, pi.z + 5, pi.x + 4];
 
           if (index === 0) {
@@ -1057,6 +1026,7 @@ export const RenderedZone = forwardRef(
               </React.Fragment>
             );
           }
+          return null;
         })}
         {/* Our zone */}
         <primitive object={zoneTexture?.scene} />
@@ -1084,7 +1054,7 @@ export function PaperComponent(props) {
       handle="#draggable-dialog-title"
       cancel={'[class*="MuiDialogContent-root"]'}
     >
-      <Paper sx={{ width: '30vw', minWidth: 450 }} {...props} />
+      <Paper sx={{ width: '100%', minWidth: 450 }} {...props} />
     </Draggable>
   );
 }

@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 
 export class SocketHandler {
   #websocket;
+  #addToast;
   callbacks = {};
   get socket() {
     return this.#websocket;
@@ -10,7 +11,8 @@ export class SocketHandler {
   close() {
     this.#websocket.close();
   }
-  constructor(url) {
+  constructor(url, addToast) {
+    this.#addToast = addToast;
     this.#websocket = new WebSocket(`${url}/maps`);
     this.connected = new Promise((res, rej) => {
       this.#websocket.onopen = res;
@@ -19,6 +21,9 @@ export class SocketHandler {
     });
       
     this.#websocket.onclose = () => {
+      addToast(`Disconnected from ${url}`, {
+        appearance: 'warning',
+      });
       console.log('Disconnected'); // eslint-disable-line
     };
   

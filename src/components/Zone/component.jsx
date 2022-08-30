@@ -117,12 +117,15 @@ export const Zone = () => {
     showStaticSpawns = true,
     showStaticSpawnFilter = true,
     follow = false,
+    followTel = false,
     address,
     showPoiFilter,
     cameraType,
     flySpeed,
     setOption,
-    hasConnected
+    autoConnect,
+    version,
+    token
   } = options;
 
   const [processes, setProcesses] = useState([]);
@@ -143,6 +146,27 @@ export const Zone = () => {
   const zoneViewerRef = useRef(true);
   const { addToast } = useToasts();
 
+  const getOffsets = useCallback(async () => {
+    let offsets;
+    switch (version) {
+      default:
+      case 'live':
+      {
+        const [eqgame, playerclient, pcClient, everquest, globals] = await Promise.all([
+          'eqgame', 'PlayerClient', 'PcClient', 'EverQuest', 'Globals'].map(header => fetch(`https://raw.githubusercontent.com/macroquest/eqlib/live/${header}.h`).then(t => t.text())));
+        offsets = (await import('./offsets/live')).extractLive(eqgame, playerclient, pcClient, everquest, globals);
+        break;
+      }
+         
+      case 'titanium':
+      {
+        const { p99Offsets } = await import('./offsets/p99');
+        offsets = p99Offsets;
+        break;
+      }
+    }
+    return offsets;
+  }, [version]);
   const doConnect = async () => {
     if (socket) {
       socket.close();
@@ -150,9 +174,9 @@ export const Zone = () => {
     setSocket(null);
     let newSocket;
     try {
-      newSocket = new SocketHandler(address);
+      newSocket = new SocketHandler(address, addToast);
       await newSocket.connected;
-      setOption('hasConnected', true);
+      setOption('autoConnect', true);
     } catch (e) {
       console.warn('Socket connection failed', e);
       addToast(`Could not connect to ${address}`, {
@@ -162,105 +186,117 @@ export const Zone = () => {
       return;
     }
 
-    addToast(`Successfully Connected to ${address}`, {
-      appearance: 'info',
-    });
 
-    // const validationInfo = await new Promise((res) =>
-    //   newSocket.emit('validate', token, res),
-    // );
-    // if (validationInfo.validated) {
-    //   addToast(`Successfully Connected to ${address}`, {
-    //     appearance: 'info',
-    //   });
-    // } else {
-    //   addToast('Invalid or expired token supplied', {
-    //     appearance: 'error',
-    //   });
-    //   newSocket.disconnect();
-    //   return;
-    // }
 
-    newSocket.emit('startParse');
-
-    newSocket.on('parseInfo', (parseInfo) => {
-      setSelectedZone(
-        supportedZones.find((z) => z.longName === parseInfo.zoneName).shortName,
+    if (processMode) {
+      const validationInfo = await new Promise((res) =>
+        newSocket.emit('validate', token, res),
       );
-      setParseInfo(parseInfo);
-    });
-
-    newSocket.on('activeProcesses', setProcesses);
-    newSocket.on('setSpawns', (spawns) => {
-      if (zoneViewerRef.current) {
+      if (validationInfo.IsValidated) {
+        addToast(<div>Successfully Connected to {address}<br/>
+        Features enabled: {validationInfo.Features.join(', ')}<br/>
+        Days Remaining: {validationInfo.DaysRemaining}</div>, {
+          appearance: 'info'
+        });
+      } else {
+        addToast('Invalid or expired token supplied', {
+          appearance: 'error',
+        });
+        newSocket.disconnect();
         return;
       }
-      setSpawns(spawns);
-    });
+      
 
-    newSocket.on('spawn', (spawns) => {
-      if (zoneViewerRef.current) {
-        return;
-      }
-      spawns.forEach((spawn) => {
-        addToast(
-          <>
-            <span>Mob spawned: {spawn.displayedName}</span>
-            <Button
-              onClick={() => {
-                setMyTarget(spawn);
-              }}
-            >
-              Jump to Target
-            </Button>
-          </>,
-          { appearance: 'info' },
-        );
+      newSocket.emit('refreshProcesses', await getOffsets());
+   
+
+      newSocket.on('activeProcesses', setProcesses);
+      newSocket.on('setSpawns', (spawns) => {
+        if (zoneViewerRef.current) {
+          return;
+        }
+        setSpawns(spawns);
       });
-    });
-    newSocket.on('despawn', (despawns) => {
-      if (zoneViewerRef.current) {
-        return;
-      }
-      despawns.forEach((spawn) => {
-        addToast(`Mob Despawned: ${spawn.displayedName}`, {
-          appearance: 'info',
+
+      newSocket.on('spawn', (spawns) => {
+        if (zoneViewerRef.current) {
+          return;
+        }
+        spawns.forEach((spawn) => {
+          addToast(
+            <>
+              <span>Mob spawned: {spawn.displayedName}</span>
+              <Button
+                onClick={() => {
+                  setMyTarget(spawn);
+                }}
+              >
+              Jump to Target
+              </Button>
+            </>,
+            { appearance: 'info' },
+          );
         });
       });
-    });
-    newSocket.on('charInfo', ({ character, zoneInfo, groupMembers }) => {
-      if (zoneViewerRef.current) {
-        return;
-      }
-      setCharacter(character);
-      setGroupMembers(groupMembers);
-      setZone(zoneInfo);
-    });
-    newSocket.on('lostProcess', async (processId) => {
-      if (zoneViewerRef.current) {
-        return;
-      }
-      setSelectedProcess(null);
-      setPendingRetry(true);
-      let retries = 0;
-      while (retries < 10 && retryRef.current === false) {
-        await new Promise((res) => setTimeout(res, 3000));
-        const newProcess = await new Promise((res) =>
-          newSocket.emit('checkProcess', processId, res),
-        );
-
-        if (newProcess) {
-          setSelectedProcess(newProcess);
-          setProcesses((processes) =>
-            processes.map((p) => (p.pid === newProcess.pid ? newProcess : p)),
-          );
-          break;
+      newSocket.on('despawn', (despawns) => {
+        if (zoneViewerRef.current) {
+          return;
         }
-        retries++;
-      }
-      retryRef.current = false;
-      setPendingRetry(false);
-    });
+        despawns.forEach((spawn) => {
+          addToast(`Mob Despawned: ${spawn.displayedName}`, {
+            appearance: 'info',
+          });
+        });
+      });
+      newSocket.on('charInfo', ({ character, zoneInfo, groupMembers }) => {
+        if (zoneViewerRef.current) {
+          return;
+        }
+        setCharacter(character);
+        setGroupMembers(groupMembers);
+        setZone(zoneInfo);
+      });
+      newSocket.on('lostProcess', async (processId) => {
+        if (zoneViewerRef.current) {
+          return;
+        }
+        setSelectedProcess(null);
+        setPendingRetry(true);
+        let retries = 0;
+        while (retries < 10 && retryRef.current === false) {
+          await new Promise((res) => setTimeout(res, 3000));
+          const newProcess = await new Promise((res) =>
+            newSocket.emit('checkProcess', processId, res),
+          );
+
+          if (newProcess) {
+            setSelectedProcess(newProcess);
+            setProcesses((processes) =>
+              processes.map((p) => (p.pid === newProcess.pid ? newProcess : p)),
+            );
+            break;
+          }
+          retries++;
+        }
+        retryRef.current = false;
+        setPendingRetry(false);
+      });
+    } else {
+      addToast(`Successfully Connected to ${address}`, {
+        appearance: 'info',
+      });
+      
+      newSocket.emit('startParse');
+
+      newSocket.on('parseInfo', (parseInfo) => {
+        setSelectedZone(
+          supportedZones.find((z) => z.longName === parseInfo.zoneName).shortName,
+        );
+        setParseInfo(parseInfo);
+      });
+    }
+
+
     setSocket(newSocket);
     setConnectionOptionsOpen(false);
   };
@@ -272,20 +308,20 @@ export const Zone = () => {
     setParseInfo(null);
     setSocket(null);
   };
-  const handleRefreshProcess = useCallback(() => {
+  const handleRefreshProcess = useCallback(async () => {
     if (!socket) {
       return;
     }
-    socket?.emit?.('refreshProcesses');
+    socket?.emit?.('refreshProcesses', await getOffsets());
     setPendingRetry(false);
     retryRef.current = true;
-  }, [socket]);
+  }, [socket, getOffsets]);
 
   const filteredSpawns = useMemo(() => {
     return selectedProcess?.zoneViewer
       ? []
       : spawns.filter((s) => {
-        let ret = Boolean(s);
+        let ret = Boolean(s) && character?.name !== s?.name;
         if (spawnFilter.length) {
           ret = s?.displayedName
             ?.toLowerCase()
@@ -303,7 +339,7 @@ export const Zone = () => {
         }
         return ret;
       });
-  }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs]);
+  }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs, character]);
 
   const filteredZoneDetails = useMemo(() => {
     if (!showPoi) {
@@ -343,6 +379,7 @@ export const Zone = () => {
   useEffect(() => {
     const prevOption = cameraFollowMe;
     setOption('follow', false);
+    setOption('followTel', false);
     if (prevOption) {
       setTimeout(() => {
         setOption('follow', true);
@@ -397,7 +434,7 @@ export const Zone = () => {
   
 
   useEffect(() => {
-    if (socket || !hasConnected) {
+    if (socket || !autoConnect) {
       return;
     }
     doConnect();
@@ -431,7 +468,7 @@ export const Zone = () => {
                   variant="outlined"
                   onClick={handleConnectionOptionsOpen}
                 >
-                  {socket ? 'Connected' : 'Connect Log Parser'}
+                  {socket ? 'Connected' : 'Connect EQ'}
                 </Button>
               }
 
@@ -482,17 +519,17 @@ export const Zone = () => {
                 {isHooked && (
                   <Button
                     sx={{
-                      color     : 'white',
+                      color     : 'black',
                       background: follow ? 'lightgreen' : 'skyblue',
                     }}
                     variant="outlined"
                     onClick={() => {
                       socket.emit('doAction', {
                         processId: selectedProcess.pid,
-                        payload  : { gravity: !follow ? 0.0 : 0.4 },
+                        payload  : { gravity: !followTel ? 0.0 : 0.4 },
                         type     : 'grav',
                       });
-                      setOption('follow', !follow);
+                      setOption('followTel', !followTel);
                       setTimeout(() => {
                         if (document.activeElement) {
                           document.activeElement.blur();
@@ -500,7 +537,7 @@ export const Zone = () => {
                       }, 100);
                     }}
                   >
-                    {follow ? 'Unfollow Tel' : 'Follow Tel'}
+                    {followTel ? 'Unfollow Tel' : 'Follow Tel'}
                   </Button>
                 )}
               </div>
@@ -623,6 +660,7 @@ export const Zone = () => {
 
             {/* Search Dialog */}
             <Dialog
+              maxWidth='lg'
               open={searchOpen}
               onClose={handleSearchClose}
               PaperComponent={PaperComponent}
@@ -635,10 +673,11 @@ export const Zone = () => {
                 Spawn Search and Filter
               </DialogTitle>
               <DialogContent>
-                <div style={{ height: 600, width: '100%' }}>
+                <div style={{ height: 600 }}>
                   <DataGrid
                     onRowClick={({ row }) => {
                       setMyTarget(row);
+                      doTarget(row.id);
                     }}
                     columns={spawnColumns}
                     rows={spawns}

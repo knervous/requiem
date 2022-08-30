@@ -1,7 +1,8 @@
 import React, { createContext, useState } from 'react';
 
 export const SettingsContext = createContext({});
-
+const processMode =
+  new URLSearchParams(window.location.search).get('mode') === 'process';
 const defaultOptions = {
   maxTargetDisplay      : 1000,
   maxPoiDisplay         : 3000,
@@ -15,6 +16,7 @@ const defaultOptions = {
   showStaticSpawnModels : false,
   showStaticSpawnDetails: false,
   showStaticSpawnFilter : false,
+  followTel             : false,
   showPoiLoc            : true,
   showGroup             : true,
   follow                : false,
@@ -39,7 +41,8 @@ const defaultOptions = {
   charAnimation         : 'p01',
   locationTrailOpacity  : 0.9,
   locationTrailDashed   : true,
-  hasConnected          : false
+  autoConnect           : false,
+  version               : 'live'
 };
 export const SettingsProvider = ({ children }) => {
   const [options, setOptions] = useState(
@@ -61,6 +64,7 @@ export const SettingsProvider = ({ children }) => {
         setOption,
         animationList,
         setAnimationList,
+        processMode
       }}
     >
       {children}

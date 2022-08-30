@@ -55,7 +55,7 @@ export const MapParser = () => {
                3. Copy the address in the command console for the local server, default of wss://127.0.0.1:9004. You can also connect via LAN by the network address. <br/> 
                4. While in game, type the /log command to start logging. If there are no log files try this link to troubleshoot <a href="https://wiki.project1999.com/Logfiles" target="_blank" rel="noreferrer">https://wiki.project1999.com/Logfiles</a><br/> 
                5. Create a hotkey that runs the /loc command. People generally double bind this to a frequently used key like A or D to automatically execute /loc. <br/> 
-               6. Open the Advanced Map Parser on this site and press "Connect Log Parser". Paste in the address from the AdvancedMapParser console. <br/>
+               6. Open the Advanced Map Parser on this site and press "Connect EQ". Paste in the address from the AdvancedMapParser console. <br/>
                7. Click the "Launch Tab to Override" button and follow instructions in the troubleshooting section<br/>
                8. Once you've seen the message "Successfully connected!" you can return to the EQ Advanced Map website and click "Connect" in the connection dialog.
                9. You're connected! Now any /loc command in game should update your character's zone and location.

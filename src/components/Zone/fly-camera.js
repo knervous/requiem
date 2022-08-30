@@ -42,17 +42,14 @@ export class FlyControls extends THREE.EventDispatcher {
   }
 
   updateCameraRotation() {
-    console.log('update cam rotation', this.camera);
     const quat = new THREE.Quaternion();
     quat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
     quat.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.cameraRotation));
     quat.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), this.cameraPitch));
-    console.log('COpy new quat', quat);
     this.object.quaternion.copy(quat);
   }
 
   updateCamera(delta) {
-    console.log('update', delta);
     const velocity = new THREE.Vector3();
     if (this.cameraMovementInput.forward > 0) {
       velocity.z -= 1;

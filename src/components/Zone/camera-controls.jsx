@@ -91,8 +91,8 @@ export const CameraControls = forwardRef(({ controls, type = 'orbit', flySpeed =
           lockRef.current = false;
         }, 200); 
       }
-      e.preventDefault();
-      e.stopPropagation();
+      // e.preventDefault();
+      // e.stopPropagation();
     };
     const mouseUp = async () => {
       lockRef.current = false;
