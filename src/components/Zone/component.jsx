@@ -138,7 +138,7 @@ export const Zone = () => {
   const [staticSpawns, setStaticSpawns] = useState([]);
   const [selectedZone, setSelectedZone] = useState(initialZone);
   const [character, setCharacter] = useState(null);
-  const [parseInfo, setParseInfo] = useState({});
+  const [parseInfo, setParseInfo] = useState(null);
   const [groupMembers, setGroupMembers] = useState([]);
   const [myTarget, setMyTarget] = useState('');
   const cameraControls = useRef();
@@ -473,7 +473,7 @@ export const Zone = () => {
               }
 
               <div className="overlay-buttons">
-                {socket && (
+                {socket && (character || parseInfo) && (
                   <>
                     <Button
                       sx={{ color: 'black', background: 'skyblue' }}
