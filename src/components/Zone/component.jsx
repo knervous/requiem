@@ -27,6 +27,10 @@ import {
   Autocomplete,
   TextField,
   InputAdornment,
+  Typography,
+  Slider,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 
 import { Canvas } from '@react-three/fiber';
@@ -540,6 +544,52 @@ export const Zone = () => {
                     {followTel ? 'Unfollow Tel' : 'Follow Tel'}
                   </Button>
                 )}
+                {/* </Button> */}
+                
+              </div>
+              <div className="overlay-buttons" style={{ marginTop: 40 }}>
+                {isHooked && character && (
+                  <FormControl sx={{ marginTop: 1, width: 120 }}>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                    Run Speed: {character?.runSpeed}
+                    </Typography>
+                    <Slider
+                      value={character?.runSpeed}
+                      onChange={({ target: { value } }) => {
+                        socket.emit('doAction', {
+                          processId: selectedProcess.pid,
+                          payload  : { speed: value },
+                          type     : 'speed',
+                        });
+                      }}
+                      step={0.1}
+                      min={0}
+                      max={1.3}
+                    />
+                  </FormControl>
+                )}
+
+              </div>
+              <div className="overlay-buttons" style={{ marginTop: 100 }}>
+                {isHooked && character && (<FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={character?.levitating}
+                      onChange={({ target: { checked } }) => {
+                        socket.emit('doAction', {
+                          processId: selectedProcess.pid,
+                          payload  : { lev: checked },
+                          type     : 'lev',
+                        });
+                      }}
+                    />
+                  }
+                  label="Levitate"
+                />)}
               </div>
               {processMode && (
                 <div style={{ maxWidth: 300, minWidth: 300 }}>

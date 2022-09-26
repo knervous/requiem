@@ -23,6 +23,9 @@ export const MapParser = () => {
           <Typography variant="h4" noWrap component="div">
               Latest Version: {version}
           </Typography>
+          <Typography variant="h4" noWrap component="div">
+            <a target="_blank" href="https://github.com/knervous/AdvancedMapParser" rel="noreferrer">Source code</a>
+          </Typography>
           <br />
           {/* <Card className="map-parser-req-software" variant="outlined"> */}
           <img width={'90%'} src="/img/amp-cover2.png" alt="cover" />

@@ -47,6 +47,8 @@ export const p99Offsets = {
     spawnType    : { offset: 0x0244, size: 1 },
     gender       : { offset: 0x024e, size: 1 },
     holding      : { offset: 0x024b, size: 1 },
+    speed        : { offset: 0x0230, size: 4 },
+    levitate     : { offset: 0x028c, size: 1 },
   },
 };
 

@@ -267,12 +267,12 @@ export const RenderedZone = forwardRef(
           !groupMembers.some((g) => g.displayedName === s.displayedName) &&
           frustum.containsPoint(new THREE.Vector3(s.y * -1, s.z + 15, s.x)) &&
           camera.position.distanceTo(
-            new THREE.Vector3(s.y * -1, s.z + 15, s.x),
+            new THREE.Vector3(s.y * -1, s.z + 5, s.x),
           ) < maxTargetDisplay,
       )) {
         const screen = worldToScreen(
           canvasRef.current,
-          new THREE.Vector3(spawn.y * -1, spawn.z + 15, spawn.x),
+          new THREE.Vector3(spawn.y * -1, spawn.z + 10, spawn.x),
           camera,
         );
         let side = 1;
