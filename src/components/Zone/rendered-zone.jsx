@@ -246,16 +246,17 @@ export const RenderedZone = forwardRef(
     }, [zoneTexture, wireframe]);
 
     useFrame(() => {
-      if (!canvasRef.current) {
+      const ctx = canvasRef.current?.getContext?.('2d');
+      ctx && ctx.clearRect(0, 0, domElement.width, domElement.height);
+
+      if (!canvasRef.current || !zoneTexture.scene) {
         return;
       }
       if (domElement.clientWidth !== canvasRef.current.width || domElement.clientHeight !== canvasRef.current.height) {
         canvasRef.current.width = domElement.clientWidth;
         canvasRef.current.height = domElement.clientHeight;
       }
-      const ctx = canvasRef.current?.getContext?.('2d');
-   
-      ctx.clearRect(0, 0, domElement.width, domElement.height);
+      
       const frustum = new THREE.Frustum();
       frustum.setFromProjectionMatrix(
         new THREE.Matrix4().multiplyMatrices(
@@ -316,7 +317,7 @@ export const RenderedZone = forwardRef(
         ctx.font = isTarget
           ? `italic bold ${fontSize + 3}px Arial`
           : `italic ${fontSize}px Arial`;
-        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}`;
+        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}${spawn.spawnType === 3 ? '\'s Corpse' : ''}`;
 
         ctx.fillText(
           level,
@@ -567,18 +568,21 @@ export const RenderedZone = forwardRef(
           );
 
           ctx.font = `italic bold ${fontSize + 3}px Arial`;
-          const level = `(${(rayTarget.x * -1).toFixed(2)}, ${(
-            rayTarget.z - 15
-          ).toFixed(2)}, ${rayTarget.y.toFixed(2)})`;
-          ctx.fillText(
-            level,
-            screen.x -
-              side * 2 -
-              side * detailWidth -
-              side * 16 +
-              (detailWidth * side) / 2,
-            screen.y - 44,
-          );
+          if (rayTarget) {
+            const level = `(${(rayTarget.x * -1).toFixed(2)}, ${(
+              rayTarget.z - 15
+            ).toFixed(2)}, ${rayTarget.y.toFixed(2)})`;
+            ctx.fillText(
+              level,
+              screen.x -
+                side * 2 -
+                side * detailWidth -
+                side * 16 +
+                (detailWidth * side) / 2,
+              screen.y - 44,
+            );
+          }
+          
         }
       }
       const drawNames = (location, name, subheader, color, zOffset = 0) => {

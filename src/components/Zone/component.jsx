@@ -29,7 +29,6 @@ import {
   InputAdornment,
   Typography,
   Slider,
-  Checkbox,
 } from '@mui/material';
 
 import { Canvas } from '@react-three/fiber';
@@ -61,34 +60,7 @@ const supportedZoneOptions = supportedZones.map(
 );
 // https://192.168.2.102:4500
 
-const spawnColumns = [
-  { field: 'displayedName', headerName: 'Name', width: 200 },
-  { field: 'level', headerName: 'Level', type: 'number', width: 100 },
-  {
-    field      : 'type',
-    headerName : 'Player Type',
-    width      : 150,
-    sortable   : false,
-    valueGetter: (params) =>
-      params.row.spawnType === 0
-        ? 'PC'
-        : params.row.spawnType === 1
-          ? 'NPC'
-          : 'Corpse',
-  },
-  {
-    field      : 'location',
-    headerName : 'Location (Y,X,Z)',
-    width      : 150,
-    sortable   : false,
-    valueGetter: (params) =>
-      `${params.row.y.toFixed(1)}, ${params.row.x.toFixed(
-        1,
-      )}, ${params.row.z.toFixed(1)}`,
-  },
-  { field: 'hp', headerName: 'Current HP%', width: 150, sortable: false },
-  { field: 'maxHp', headerName: 'Max HP%', width: 100, sortable: false },
-];
+
 
 const zoneViewer = { zoneViewer: true };
 
@@ -150,6 +122,7 @@ export const Zone = () => {
   const [socket, setSocket] = useState(null);
   const [pendingRetry, setPendingRetry] = useState(false);
   const [selectedProcess, setSelectedProcess] = useState(zoneViewer);
+  const selectedProcessRef = useRef(null);
   const [zone, setZone] = useState(null);
   const [zoneDetails, setZoneDetails] = useState([]);
   const [spawns, setSpawns] = useState([]);
@@ -163,6 +136,10 @@ export const Zone = () => {
   const retryRef = useRef(false);
   const zoneViewerRef = useRef(true);
   const { addToast } = useToasts();
+
+  useEffect(() => {
+    selectedProcessRef.current = selectedProcess;
+  }, [selectedProcess]);
 
   const getOffsets = useCallback(async () => {
     let offsets;
@@ -287,11 +264,28 @@ export const Zone = () => {
             <>
               <span>Mob spawned: {spawn.displayedName}</span>
               <Button
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   setMyTarget(spawn);
                 }}
               >
-              Jump to Target
+              Jump Camera to Target
+              </Button>
+              <Button
+                onClick={e => {
+                  e.stopPropagation();
+                  newSocket.emit('doAction', {
+                    processId: selectedProcessRef.current.pid,
+                    payload  : {
+                      y: spawn.x + 0.01,
+                      z: spawn.z + 0.01,
+                      x: spawn.y + 0.01,
+                    },
+                    type: 'warp',
+                  });
+                }}
+              >
+              Warp to Target
               </Button>
             </>,
             { appearance: 'info' },
@@ -317,14 +311,36 @@ export const Zone = () => {
         setZone(zoneInfo);
       });
       newSocket.on('lostProcess', async (processId) => {
+        retryRef.current = false;
+        
+        function drawCenteredText(text) {
+          const canvas = canvasRef.current;
+          const ctx = canvas?.getContext?.('2d');
+          if (!ctx || !canvas) {
+            return;
+          }
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          ctx.clearRect(0, 0, canvasRef.current.clientWidth, canvasRef.current.clientHeight);
+          ctx.font = '25px arial';
+          ctx.fillStyle = '#FFFFFF';
+          ctx.textAlign = 'center';
+  
+  
+          ctx.fillText(text, centerX, centerY + 4);
+
+    
+        }
+
         if (zoneViewerRef.current) {
           return;
         }
         setSelectedProcess(null);
         setPendingRetry(true);
         let retries = 0;
-        while (retries < 10 && retryRef.current === false) {
-          await new Promise((res) => setTimeout(res, 3000));
+        while (retries < 20 && retryRef.current === false) {
+          drawCenteredText('LOADING, PLEASE WAIT...');
+          await new Promise((res) => setTimeout(res, 1500));
           const newProcess = await new Promise((res) =>
             newSocket.emit('checkProcess', processId, res),
           );
@@ -338,6 +354,7 @@ export const Zone = () => {
           }
           retries++;
         }
+        drawCenteredText('');
         retryRef.current = false;
         setPendingRetry(false);
       });
@@ -390,12 +407,12 @@ export const Zone = () => {
         if (showNpcs) {
           ret =
               ret &&
-              (showPcs ? [1, 0].includes(s.spawnType) : s.spawnType === 1);
+              (showPcs ? [1, 0, 3].includes(s.spawnType) : s.spawnType === 1);
         }
         if (showPcs) {
           ret =
               ret &&
-              (showNpcs ? [1, 0].includes(s.spawnType) : s.spawnType === 0);
+              (showNpcs ? [1, 0, 3].includes(s.spawnType) : s.spawnType === 0);
         }
         return ret;
       });
@@ -517,6 +534,53 @@ export const Zone = () => {
   useEffect(() => {
     sendConfig();
   }, [sendConfig]);
+
+  const spawnColumns = useMemo(() => [
+    { field: 'displayedName', headerName: 'Name', width: 200 },
+    { field: 'level', headerName: 'Level', type: 'number', width: 100 },
+    {
+      field      : 'type',
+      headerName : 'Player Type',
+      width      : 150,
+      sortable   : false,
+      valueGetter: (params) =>
+        params.row.spawnType === 0
+          ? 'PC'
+          : params.row.spawnType === 1
+            ? 'NPC'
+            : 'Corpse',
+    },
+    {
+      field      : 'location',
+      headerName : 'Location (Y,X,Z)',
+      width      : 150,
+      sortable   : false,
+      valueGetter: (params) =>
+        `${params.row.y.toFixed(1)}, ${params.row.x.toFixed(
+          1,
+        )}, ${params.row.z.toFixed(1)}`,
+    },
+    { field: 'hp', headerName: 'Current HP%', width: 150, sortable: false },
+    { field: 'maxHp', headerName: 'Max HP%', width: 100, sortable: false },
+    ...(processMode && selectedProcess?.pid && socket ? [{ field     : 'Teleport', headerName: 'Teleport', width     : 100, sortable  : false, renderCell: ({ row: { x, y, z } }) => {
+      return <Button
+        onClick={e => {
+          e.stopPropagation();
+          socket.emit('doAction', {
+            processId: selectedProcess.pid,
+            payload  : {
+              y: x + 0.01,
+              z: z + 0.01,
+              x: y + 0.01,
+            },
+            type: 'warp',
+          });
+        }}
+      >
+    Warp
+      </Button>;
+    } }] : [])
+  ], [socket, selectedProcess?.pid]);
   
   return (
     <Paper className="zone-container" elevation={1}>
@@ -589,36 +653,6 @@ export const Zone = () => {
                     {followTel ? 'Unfollow Tel' : 'Follow Tel'}
                   </Button>
                 )}
-
-                {/* {isHooked && (
-                  <Button
-                    sx={{
-                      color     : 'black',
-                      background: follow ? 'lightgreen' : 'skyblue',
-                    }}
-                    variant="outlined"
-                    onClick={() => {
-                      console.log({
-                        x: cameraControls.current.camera.position.z,
-                        z: cameraControls.current.camera.position.y - 15,
-                        y: cameraControls.current.camera.position.x * -1,
-                      });
-                      // return;
-                      // socket.emit('doAction', {
-                      //   processId: selectedProcess.pid,
-                      //   payload  : {
-                      //     x: cameraControls.current.camera.position.z,
-                      //     z: cameraControls.current.camera.position.y - 15,
-                      //     y: cameraControls.current.camera.position.x * -1,
-                      //   },
-                      //   type: 'warp',
-                      // });
-                    }}
-                  >
-                    {'Warp to me'}
-                  </Button>
-                )} */}
-                {/* </Button> */}
                 
               </div>
               <div className="overlay-buttons" style={{ marginTop: 40 }}>
@@ -646,115 +680,7 @@ export const Zone = () => {
                     />
                   </FormControl>
                 )}
-
               </div>
-              {/* <div className="overlay-buttons" style={{ marginTop: 100 }}>
-                {isHooked && character && (
-                  <FormControl sx={{ marginTop: 1, width: 120 }}>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                    Lev value: {character?.levitating}
-                    </Typography>
-                    <Slider
-                      value={character?.levitating}
-                      onChange={({ target: { value } }) => {
-                        socket.emit('doAction', {
-                          processId: selectedProcess.pid,
-                          payload  : { lev: value },
-                          type     : 'lev',
-                        });
-                      }}
-                      step={1}
-                      min={0}
-                      max={5}
-                    />
-                  </FormControl>
-                )}
- 
-              </div>
-              <div className="overlay-buttons" style={{ marginTop: 160 }}>
-                {isHooked && character && (
-                  <FormControl sx={{ marginTop: 1, width: 120 }}>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                    Bobbing: {character?.actor?.bobbing}
-                    </Typography>
-                    <Slider
-                      value={character?.actor?.bobbing}
-                      onChange={({ target: { value } }) => {
-                        socket.emit('doAction', {
-                          processId: selectedProcess.pid,
-                          payload  : { bobbing: value },
-                          type     : 'bobbing',
-                        });
-                      }}
-                      step={0.1}
-                      min={0}
-                      max={10}
-                    />
-                  </FormControl>
-                )}
- 
-              </div>
-              <div className="overlay-buttons" style={{ marginTop: 220 }}>
-                {isHooked && character && (
-                  <FormControl sx={{ marginTop: 1, width: 120 }}>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                    Gravity: {zone?.gravity}
-                    </Typography>
-                    <Slider
-                      value={zone?.gravity}
-                      onChange={({ target: { value } }) => {
-                        socket.emit('doAction', {
-                          processId: selectedProcess.pid,
-                          payload  : { gravity: value },
-                          type     : 'grav',
-                        });
-                      }}
-                      step={0.01}
-                      min={0}
-                      max={0.4}
-                    />
-                  </FormControl>
-                )}
- 
-              </div> */}
-              <div className="overlay-buttons" style={{ marginTop: 280 }}>
-                {isHooked && character && (
-                  <FormControl sx={{ marginTop: 1, width: 120 }}>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                    Underwater: {character?.actor?.underwater}
-                    </Typography>
-                    <Checkbox
-                      checked={character?.actor?.underwater}
-                      onChange={({ target: { checked } }) => {
-                        socket.emit('doAction', {
-                          processId: selectedProcess.pid,
-                          payload  : { underwater: checked },
-                          type     : 'underwater',
-                        });
-                      }}
-                    />
-          
-                  </FormControl>
-                )}
- 
-              </div>
-              
               {processMode && (
                 <div style={{ maxWidth: 300, minWidth: 300 }}>
                   <FormControl fullWidth>
@@ -947,8 +873,8 @@ export const Zone = () => {
                 </Suspense>
               )}
             </Canvas>
-            {threeRef.current &&
-              ReactDOM.createPortal(
+            {
+              threeRef.current && ReactDOM.createPortal(
                 <canvas
                   style={{
                     position     : 'absolute',
@@ -956,8 +882,8 @@ export const Zone = () => {
                     left         : 0,
                     pointerEvents: 'none',
                   }}
-                  width={threeRef.current.width}
-                  height={threeRef.current.height}
+                  width={threeRef.current?.width ?? 1}
+                  height={threeRef.current?.height ?? 1}
                   ref={canvasRef}
                 ></canvas>,
                 threeRef.current.parentNode,
