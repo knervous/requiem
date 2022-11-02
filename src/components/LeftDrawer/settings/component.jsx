@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { useMemo } from 'react';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -99,6 +99,21 @@ export const SettingsDrawer = () => {
     animationList,
     locationTrailOpacity,
     locationTrailDashed,
+    alwaysDaylight,
+    enduringBreath,
+    farFallow,
+    jumpAlways,
+    notEncumbered,
+    noAnonymous,
+    noBlind,
+    noDelayedJump,
+    noFallDmg,
+    noRoot,
+    noSilence,
+    noSnare,
+    noStun,
+    seeInvisible,
+    ultravision,
   } = options;
 
   const [genders, setGenders] = useState([0, 1, 2]);
@@ -129,6 +144,40 @@ export const SettingsDrawer = () => {
     setOption('charVariation', variations[0]);
     setOption('charTexture', textures[0]);
   };
+
+  const activeConfigs = useMemo(() => {
+    return [
+      { key: 'alwaysDaylight', description: 'Always Daylight', value: alwaysDaylight, },
+      { key: 'enduringBreath', description: 'Enduring Breath', value: enduringBreath, },
+      { key: 'farFallow', description: 'Far Follow', value: farFallow, },
+      { key: 'jumpAlways', description: 'Jump Always', value: jumpAlways, },
+      { key: 'notEncumbered', description: 'Never Encumbered', value: notEncumbered, },
+      { key: 'noAnonymous', description: 'No Anonymous', value: noAnonymous, },
+      { key: 'noBlind', description: 'No Blind', value: noBlind, },
+      { key: 'noDelayedJump', description: 'No Delayed Jump', value: noDelayedJump, },
+      { key: 'noFallDmg', description: 'No Fall Dmg', value: noFallDmg, },
+      { key: 'noRoot', description: 'No Root', value: noRoot, },
+      { key: 'noSilence', description: 'No Silence', value: noSilence, },
+      { key: 'noSnare', description: 'No Snare', value: noSnare, },
+      { key: 'noStun', description: 'No Stun', value: noStun, },
+      { key: 'seeInvisible', description: 'See Invisible', value: seeInvisible, },
+      { key: 'ultravision', description: 'Ultravision', value: ultravision, }
+    ];
+  }, [alwaysDaylight,
+    enduringBreath,
+    farFallow,
+    jumpAlways,
+    notEncumbered,
+    noAnonymous,
+    noBlind,
+    noDelayedJump,
+    noFallDmg,
+    noRoot,
+    noSilence,
+    noSnare,
+    noStun,
+    seeInvisible,
+    ultravision,]);
 
 
   return (
@@ -721,6 +770,32 @@ export const SettingsDrawer = () => {
               }
               label="Group Text Color"
             />
+          </AccordionDetails>
+        </Accordion>
+      )}
+
+      {/* Group */}
+      {processMode && (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Active Config</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {activeConfigs.map(({ key, description, value }) => <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value}
+                  onChange={({ target: { checked } }) =>
+                    setOption(key, checked)
+                  }
+                />
+              }
+              label={description}
+            />)}
           </AccordionDetails>
         </Accordion>
       )}

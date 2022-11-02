@@ -29,7 +29,6 @@ import {
   InputAdornment,
   Typography,
   Slider,
-  FormControlLabel,
   Checkbox,
 } from '@mui/material';
 
@@ -129,7 +128,22 @@ export const Zone = () => {
     setOption,
     autoConnect,
     version,
-    token
+    token,
+    alwaysDaylight,
+    enduringBreath,
+    farFallow,
+    jumpAlways,
+    notEncumbered,
+    noAnonymous,
+    noBlind,
+    noDelayedJump,
+    noFallDmg,
+    noRoot,
+    noSilence,
+    noSnare,
+    noStun,
+    seeInvisible,
+    ultravision
   } = options;
 
   const [processes, setProcesses] = useState([]);
@@ -171,6 +185,48 @@ export const Zone = () => {
     }
     return offsets;
   }, [version]);
+
+  const sendConfig = useCallback(() => {
+    if (!socket) {
+      return;
+    }
+    socket.emit('doAction', {
+      processId: -1,
+      payload  : { 
+        alwaysDaylight,
+        enduringBreath,
+        farFallow,
+        jumpAlways,
+        notEncumbered,
+        noAnonymous,
+        noBlind,
+        noDelayedJump,
+        noFallDmg,
+        noRoot,
+        noSilence,
+        noSnare,
+        noStun,
+        seeInvisible,
+        ultravision },
+      type: 'activeConfig',
+    });
+
+  }, [socket, alwaysDaylight,
+    enduringBreath,
+    farFallow,
+    jumpAlways,
+    notEncumbered,
+    noAnonymous,
+    noBlind,
+    noDelayedJump,
+    noFallDmg,
+    noRoot,
+    noSilence,
+    noSnare,
+    noStun,
+    seeInvisible,
+    ultravision]);
+
   const doConnect = async () => {
     if (socket) {
       socket.close();
@@ -209,7 +265,7 @@ export const Zone = () => {
         newSocket.disconnect();
         return;
       }
-      
+      sendConfig();
 
       newSocket.emit('refreshProcesses', await getOffsets());
    
@@ -457,6 +513,11 @@ export const Zone = () => {
     },
     [socket, selectedProcess],
   );
+
+  useEffect(() => {
+    sendConfig();
+  }, [sendConfig]);
+  
   return (
     <Paper className="zone-container" elevation={1}>
       <Card className="zone-header" variant="outlined">
@@ -504,22 +565,6 @@ export const Zone = () => {
                     </Button>
                   </>
                 )}
-                {/* <Button
-                  sx={{ color: 'white', background: 'skyblue' }}
-                  variant="outlined"
-                  onClick={() => {
-                    if (zoneRef.current) {
-                      zoneRef.current.doTel(true);
-                    }
-                    setTimeout(() => {
-                      if (document.activeElement) {
-                        document.activeElement.blur();
-                      }
-                    }, 100);
-                  }}
-                >
-                  {'Cam Tel'} */}
-                {/* </Button> */}
                 {isHooked && (
                   <Button
                     sx={{
@@ -544,6 +589,35 @@ export const Zone = () => {
                     {followTel ? 'Unfollow Tel' : 'Follow Tel'}
                   </Button>
                 )}
+
+                {/* {isHooked && (
+                  <Button
+                    sx={{
+                      color     : 'black',
+                      background: follow ? 'lightgreen' : 'skyblue',
+                    }}
+                    variant="outlined"
+                    onClick={() => {
+                      console.log({
+                        x: cameraControls.current.camera.position.z,
+                        z: cameraControls.current.camera.position.y - 15,
+                        y: cameraControls.current.camera.position.x * -1,
+                      });
+                      // return;
+                      // socket.emit('doAction', {
+                      //   processId: selectedProcess.pid,
+                      //   payload  : {
+                      //     x: cameraControls.current.camera.position.z,
+                      //     z: cameraControls.current.camera.position.y - 15,
+                      //     y: cameraControls.current.camera.position.x * -1,
+                      //   },
+                      //   type: 'warp',
+                      // });
+                    }}
+                  >
+                    {'Warp to me'}
+                  </Button>
+                )} */}
                 {/* </Button> */}
                 
               </div>
@@ -574,23 +648,113 @@ export const Zone = () => {
                 )}
 
               </div>
-              <div className="overlay-buttons" style={{ marginTop: 100 }}>
-                {isHooked && character && (<FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={character?.levitating}
-                      onChange={({ target: { checked } }) => {
+              {/* <div className="overlay-buttons" style={{ marginTop: 100 }}>
+                {isHooked && character && (
+                  <FormControl sx={{ marginTop: 1, width: 120 }}>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                    Lev value: {character?.levitating}
+                    </Typography>
+                    <Slider
+                      value={character?.levitating}
+                      onChange={({ target: { value } }) => {
                         socket.emit('doAction', {
                           processId: selectedProcess.pid,
-                          payload  : { lev: checked },
+                          payload  : { lev: value },
                           type     : 'lev',
                         });
                       }}
+                      step={1}
+                      min={0}
+                      max={5}
                     />
-                  }
-                  label="Levitate"
-                />)}
+                  </FormControl>
+                )}
+ 
               </div>
+              <div className="overlay-buttons" style={{ marginTop: 160 }}>
+                {isHooked && character && (
+                  <FormControl sx={{ marginTop: 1, width: 120 }}>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                    Bobbing: {character?.actor?.bobbing}
+                    </Typography>
+                    <Slider
+                      value={character?.actor?.bobbing}
+                      onChange={({ target: { value } }) => {
+                        socket.emit('doAction', {
+                          processId: selectedProcess.pid,
+                          payload  : { bobbing: value },
+                          type     : 'bobbing',
+                        });
+                      }}
+                      step={0.1}
+                      min={0}
+                      max={10}
+                    />
+                  </FormControl>
+                )}
+ 
+              </div>
+              <div className="overlay-buttons" style={{ marginTop: 220 }}>
+                {isHooked && character && (
+                  <FormControl sx={{ marginTop: 1, width: 120 }}>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                    Gravity: {zone?.gravity}
+                    </Typography>
+                    <Slider
+                      value={zone?.gravity}
+                      onChange={({ target: { value } }) => {
+                        socket.emit('doAction', {
+                          processId: selectedProcess.pid,
+                          payload  : { gravity: value },
+                          type     : 'grav',
+                        });
+                      }}
+                      step={0.01}
+                      min={0}
+                      max={0.4}
+                    />
+                  </FormControl>
+                )}
+ 
+              </div> */}
+              <div className="overlay-buttons" style={{ marginTop: 280 }}>
+                {isHooked && character && (
+                  <FormControl sx={{ marginTop: 1, width: 120 }}>
+                    <Typography
+                      sx={{ fontSize: 14 }}
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                    Underwater: {character?.actor?.underwater}
+                    </Typography>
+                    <Checkbox
+                      checked={character?.actor?.underwater}
+                      onChange={({ target: { checked } }) => {
+                        socket.emit('doAction', {
+                          processId: selectedProcess.pid,
+                          payload  : { underwater: checked },
+                          type     : 'underwater',
+                        });
+                      }}
+                    />
+          
+                  </FormControl>
+                )}
+ 
+              </div>
+              
               {processMode && (
                 <div style={{ maxWidth: 300, minWidth: 300 }}>
                   <FormControl fullWidth>

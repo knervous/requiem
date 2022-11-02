@@ -140,15 +140,17 @@ export const RenderedZone = forwardRef(
       function onPointerMove(event) {
         // calculate pointer position in normalized device coordinates
         // (-1 to +1) for both components
-      
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        const { top, left } = domElement.getBoundingClientRect();
+        const modifiedY = event.clientY - top;
+        const modifiedX = event.clientX - left;
+        pointer.x = (modifiedX / domElement.scrollWidth) * 2 - 1;
+        pointer.y = -(modifiedY / domElement.scrollHeight) * 2 + 1; 
       }
       
-      domElement.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointermove', onPointerMove);
       return () => {
-        if (domElement) {
-          domElement.removeEventListener('pointermove', onPointerMove);
+        if (window) {
+          window.removeEventListener('pointermove', onPointerMove);
         }
       };
     }, [domElement]);
@@ -797,6 +799,25 @@ export const RenderedZone = forwardRef(
         followMe(cameraFollowMe);
       }
     }, [zoneTexture?.scene, cameraFollowMe, parseInfo]); // eslint-disable-line
+
+    useEffect(() => {
+      const keyHandler = event => {
+        if (event.key === 't' && raycastRef?.current && rayTarget?.x) {
+          socket.emit('doAction', {
+            processId: selectedProcess.pid,
+            payload  : {
+              y: (rayTarget.z - 15) + 0.01,
+              z: (rayTarget.y) + 0.01,
+              x: (rayTarget.x * -1) + 0.01,
+            },
+            type: 'warp',
+          });
+        }
+      };
+      window.addEventListener('keydown', keyHandler);
+
+      return () => window.removeEventListener('keydown', keyHandler);
+    }, [rayTarget, socket, selectedProcess.pid]);
 
     // Expose functions to parent
     useImperativeHandle(forwardRef, () => ({

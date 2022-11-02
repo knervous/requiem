@@ -42,7 +42,22 @@ const defaultOptions = {
   locationTrailOpacity  : 0.9,
   locationTrailDashed   : true,
   autoConnect           : false,
-  version               : 'live'
+  version               : 'live',
+  alwaysDaylight        : false,
+  enduringBreath        : false,
+  farFallow             : false,
+  jumpAlways            : false,
+  notEncumbered         : false,
+  noAnonymous           : false,
+  noBlind               : false,
+  noDelayedJump         : false,
+  noFallDmg             : false,
+  noRoot                : false,
+  noSilence             : false,
+  noSnare               : false,
+  noStun                : false,
+  seeInvisible          : false,
+  ultravision           : false,
 };
 export const SettingsProvider = ({ children }) => {
   const [options, setOptions] = useState(
