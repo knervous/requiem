@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const SettingsContext = createContext({});
 const processMode =
@@ -63,14 +63,25 @@ export const SettingsProvider = ({ children }) => {
   const [options, setOptions] = useState(
     JSON.parse(localStorage.getItem('options') ?? '{}'),
   );
-  const setOption = (key, value) => {
+  const setOption = useCallback((key, value) => {
     setOptions((options) => {
       const newOptions = { ...options, [key]: value };
       localStorage.setItem('options', JSON.stringify(newOptions));
       return newOptions;
     });
-  };
+  }, []);
   const [animationList, setAnimationList] = useState(['p01']);
+
+  useEffect(() => {
+    const listener = e => {
+      if (e.key === 'T') {
+        setOption('locationRaycast', !options.locationRaycast);
+      }
+    }; 
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, [options.locationRaycast, setOption]);
+
   return (
     <SettingsContext.Provider
       value={{

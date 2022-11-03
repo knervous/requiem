@@ -145,16 +145,6 @@ export const SettingsDrawer = () => {
     setOption('charTexture', textures[0]);
   };
 
-  React.useEffect(() => {
-    const listener = e => {
-      if (e.key === 'T') {
-        setOption('locationRaycast', !locationRaycast);
-      }
-    }; 
-    window.addEventListener('keydown', listener);
-    return () => window.removeEventListener('keydown', listener);
-  }, [locationRaycast, setOption]);
-
   const activeConfigs = useMemo(() => {
     return [
       { key: 'alwaysDaylight', description: 'Always Daylight', value: alwaysDaylight, },
