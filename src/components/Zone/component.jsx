@@ -675,7 +675,10 @@ export const Zone = () => {
                   variant='outlined'
                   onClick={handleConnectionOptionsOpen}
                 >
-                  {socket ? 'Connected' : 'Connect EQ'}
+                  <Typography variant="subheading" color="inherit" noWrap>
+                    {socket ? 'Connected' : 'Connect EQ'}
+                  </Typography>
+                  
                 </Button>
               }
 
@@ -841,7 +844,10 @@ export const Zone = () => {
                     Showing {filteredSpawns.length} of {spawns.length} Spawns
                   </InputLabel>
                   <Button variant='outlined' onClick={handleSearchOpen}>
-                    Spawn Search
+                    <Typography variant="subheading" color="inherit" noWrap>
+                      Spawn Search
+                    </Typography>
+                   
                   </Button>
                 </>
               ) : null}
