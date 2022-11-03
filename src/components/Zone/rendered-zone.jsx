@@ -254,13 +254,14 @@ export const RenderedZone = forwardRef(
       }
 
       function onClick() {
-        raycaster.setFromCamera(pointer, camera);
-        const firstIntersectingSpawn = raycaster.intersectObjects(
-          zoneTexture?.scene?.parent?.children?.filter(a => a.spawn)
-        )?.[0]?.object?.spawn;
-        if (firstIntersectingSpawn) {
-          setTarget(firstIntersectingSpawn);
-        }
+        
+        // raycaster.setFromCamera(pointer, camera);
+        // const firstIntersectingSpawn = raycaster.intersectObjects(
+        //   zoneTexture?.scene?.parent?.children?.filter(a => a.spawn)
+        // )?.[0]?.object?.spawn;
+        // if (firstIntersectingSpawn) {
+        //   setTarget(firstIntersectingSpawn);
+        // }
       }
 
       function onContextMenu(e) {
@@ -344,8 +345,8 @@ export const RenderedZone = forwardRef(
 
         ctx.fillStyle = '#FFFFFF';
         ctx.font = isTarget
-          ? `italic bold ${fontSize + 3}px Arial`
-          : `italic ${fontSize}px Arial`;
+          ? `bold ${fontSize + 3}px Arial`
+          : `bold ${fontSize}px Arial`;
         ctx.textAlign = 'center';
         const nameWidth = ctx.measureText(spawn.displayedName).width;
 
@@ -361,8 +362,8 @@ export const RenderedZone = forwardRef(
 
         ctx.fillStyle = '#FFFFFF';
         ctx.font = isTarget
-          ? `italic bold ${fontSize + 3}px Arial`
-          : `italic ${fontSize}px Arial`;
+          ? `bold ${fontSize + 3}px Arial`
+          : `bold ${fontSize}px Arial`;
         const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}${spawn.spawnType === 3 ? '\'s Corpse' : ''}`;
 
         ctx.fillText(

@@ -77,7 +77,7 @@ export const SettingsProvider = ({ children }) => {
       if (e.key === 'T') {
         setOption('locationRaycast', !options.locationRaycast);
       }
-    }; 
+    };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
   }, [options.locationRaycast, setOption]);
