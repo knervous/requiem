@@ -145,6 +145,16 @@ export const SettingsDrawer = () => {
     setOption('charTexture', textures[0]);
   };
 
+  React.useEffect(() => {
+    const listener = e => {
+      if (e.key === 'T') {
+        setOption('locationRaycast', !locationRaycast);
+      }
+    }; 
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, [locationRaycast, setOption]);
+
   const activeConfigs = useMemo(() => {
     return [
       { key: 'alwaysDaylight', description: 'Always Daylight', value: alwaysDaylight, },
@@ -233,33 +243,6 @@ export const SettingsDrawer = () => {
             }
             label={processMode ? 'Warp Raycast' : 'Location raycast'}
           />
-          {/* <FormControlLabel
-            control={
-              <Checkbox
-                checked={grid}
-                onChange={({ target: { checked } }) =>
-                  setOption('grid', checked)
-                }
-              />
-            }
-            label="Show grid"
-          />
-          <FormControl sx={{ marginTop: 1 }} fullWidth>
-            <Typography
-              sx={{ fontSize: 14, marginTop: 2, width: '80%' }}
-              color="text.secondary"
-              gutterBottom
-            >
-            Grid Interval: {gridInterval}
-            </Typography> 
-            <Slider
-              value={gridInterval}
-              onChange={(e) => setOption('gridInterval', +e.target.value)}
-              step={1}
-              min={4}
-              max={50}
-            />
-          </FormControl> */}
           <FormControl sx={{ marginTop: 1 }} fullWidth>
             <InputLabel id="demo-simple-select-label">Skybox</InputLabel>
             <Select
