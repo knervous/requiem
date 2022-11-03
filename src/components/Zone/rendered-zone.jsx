@@ -29,6 +29,7 @@ import { RenderedSpawn } from './rendered-spawn';
 import { LineMaterial } from '../Common/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
+import { Item } from './item';
 
 extend({
   EffectComposer,
@@ -40,6 +41,9 @@ extend({
   LineGeometry,
   Line2,
 });
+
+const processMode =
+  new URLSearchParams(window.location.search).get('mode') === 'process';
 
 const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones';
 const images = ['right', 'left', 'top', 'bot', 'front', 'back'];
@@ -60,7 +64,7 @@ const useSkybox = (path) => {
   return null;
 };
 
-const classes = {
+export const classes = {
   1 : 'Warrior',
   2 : 'Cleric',
   3 : 'Paladin',
@@ -128,6 +132,7 @@ export const RenderedZone = forwardRef(
       staticSpawns,
       options,
       parseInfo,
+      spawnContextMenu = () => {}
     },
     forwardRef,
   ) => {
@@ -136,24 +141,6 @@ export const RenderedZone = forwardRef(
       gl: { domElement },
     } = useThree();
 
-    useEffect(() => {
-      function onPointerMove(event) {
-        // calculate pointer position in normalized device coordinates
-        // (-1 to +1) for both components
-        const { top, left } = domElement.getBoundingClientRect();
-        const modifiedY = event.clientY - top;
-        const modifiedX = event.clientX - left;
-        pointer.x = (modifiedX / domElement.scrollWidth) * 2 - 1;
-        pointer.y = -(modifiedY / domElement.scrollHeight) * 2 + 1; 
-      }
-      
-      window.addEventListener('pointermove', onPointerMove);
-      return () => {
-        if (window) {
-          window.removeEventListener('pointermove', onPointerMove);
-        }
-      };
-    }, [domElement]);
    
     const {
       showPoiLoc,
@@ -245,6 +232,65 @@ export const RenderedZone = forwardRef(
       });
     }, [zoneTexture, wireframe]);
 
+    useEffect(() => {
+      function onPointerMove(event) {
+        // calculate pointer position in normalized device coordinates
+        // (-1 to +1) for both components
+        const { top, left } = domElement.getBoundingClientRect();
+        const modifiedY = event.clientY - top;
+        const modifiedX = event.clientX - left;
+        pointer.x = (modifiedX / domElement.scrollWidth) * 2 - 1;
+        pointer.y = -(modifiedY / domElement.scrollHeight) * 2 + 1; 
+      }
+
+      function onDoubleClick() {
+        raycaster.setFromCamera(pointer, camera);
+        const firstIntersectingSpawn = raycaster.intersectObjects(
+          zoneTexture?.scene?.parent?.children?.filter(a => a.spawn)
+        )?.[0]?.object?.spawn;
+        if (firstIntersectingSpawn) {
+          doTarget(firstIntersectingSpawn.id);
+        }
+      }
+
+      function onClick() {
+        raycaster.setFromCamera(pointer, camera);
+        const firstIntersectingSpawn = raycaster.intersectObjects(
+          zoneTexture?.scene?.parent?.children?.filter(a => a.spawn)
+        )?.[0]?.object?.spawn;
+        if (firstIntersectingSpawn) {
+          setTarget(firstIntersectingSpawn);
+        }
+      }
+
+      function onContextMenu(e) {
+        raycaster.setFromCamera(pointer, camera);
+        const firstIntersectingSpawn = raycaster.intersectObjects(
+          zoneTexture?.scene?.parent?.children?.filter(a => a.spawn)
+        )?.[0]?.object?.spawn;
+        if (firstIntersectingSpawn) {
+          spawnContextMenu(firstIntersectingSpawn);
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      }
+      
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('click', onClick);
+      window.addEventListener('dblclick', onDoubleClick);
+      window.addEventListener('contextmenu', onContextMenu);
+      return () => {
+        if (window) {
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('click', onClick);
+          window.removeEventListener('dblclick', onDoubleClick);
+          window.removeEventListener('contextmenu', onContextMenu);
+
+        }
+      };
+    }, [domElement, zoneTexture?.scene]); // eslint-disable-line
+   
+
     useFrame(() => {
       const ctx = canvasRef.current?.getContext?.('2d');
       ctx && ctx.clearRect(0, 0, domElement.width, domElement.height);
@@ -275,7 +321,7 @@ export const RenderedZone = forwardRef(
       )) {
         const screen = worldToScreen(
           canvasRef.current,
-          new THREE.Vector3(spawn.y * -1, spawn.z + 10, spawn.x),
+          new THREE.Vector3(spawn.y * -1, spawn.z + 8, spawn.x),
           camera,
         );
         let side = 1;
@@ -554,7 +600,7 @@ export const RenderedZone = forwardRef(
           ctx.fillStyle = 'gold';
           ctx.font = `bold ${fontSize + 3}px Arial`;
           ctx.textAlign = 'center';
-          const detail = 'Location Raycast';
+          const detail = processMode ? 'Warp Raycast (Press T)' : 'Location Raycast';
           const detailWidth = ctx.measureText(detail).width;
 
           ctx.fillText(
@@ -810,7 +856,7 @@ export const RenderedZone = forwardRef(
           socket.emit('doAction', {
             processId: selectedProcess.pid,
             payload  : {
-              y: (rayTarget.z - 15) + 0.01,
+              y: (rayTarget.z) + 0.01,
               z: (rayTarget.y) + 0.01,
               x: (rayTarget.x * -1) + 0.01,
             },
@@ -890,17 +936,13 @@ export const RenderedZone = forwardRef(
                   : 'gray';
           return (
             <React.Fragment key={`spawn-${s.id}`}>
+              {s.primary > 0 ? <Item id={s.primary} position={[s.y * -1, s.z + 5, s.x - 5]} /> : null}
+              {s.offhand > 0 ? <Item id={s.offhand} position={[s.y * -1, s.z + 5, s.x + 5]} /> : null}
               <mesh
                 spawn={s}
-                onClick={() => {
-                  setTarget(s);
-                }}
-                onDoubleClick={() => {
-                  doTarget(s.id);
-                }}
                 position={[s.y * -1, s.z + 5, s.x]}
               >
-                <octahedronBufferGeometry args={[7]} />
+                <sphereBufferGeometry args={[4]} />
                 <meshStandardMaterial color={color} />
               </mesh>
             </React.Fragment>
@@ -989,7 +1031,7 @@ export const RenderedZone = forwardRef(
               ref={raycastRef}
               position={[rayTarget.x, rayTarget.y, rayTarget.z]}
             >
-              <octahedronBufferGeometry args={[12]} />
+              <sphereBufferGeometry args={[processMode ? 5 : 12]} />
               <meshStandardMaterial color={'gold'} />
             </mesh>
             {raycastRef.current && (

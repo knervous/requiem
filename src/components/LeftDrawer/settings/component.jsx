@@ -231,7 +231,7 @@ export const SettingsDrawer = () => {
                 }
               />
             }
-            label="Location raycast"
+            label={processMode ? 'Warp Raycast' : 'Location raycast'}
           />
           {/* <FormControlLabel
             control={
