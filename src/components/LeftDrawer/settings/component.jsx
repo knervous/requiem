@@ -6,7 +6,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-
 // scss
 import './component.scss';
 import { SettingsContext } from '../../Context/settings';
@@ -59,7 +58,6 @@ const variationMap = {
   '01': 'Chain',
   '02': 'Plate',
 };
-
 
 export const SettingsDrawer = () => {
   const options = React.useContext(SettingsContext);
@@ -114,6 +112,8 @@ export const SettingsDrawer = () => {
     noStun,
     seeInvisible,
     ultravision,
+    runSpeed,
+    camLock
   } = options;
 
   const [genders, setGenders] = useState([0, 1, 2]);
@@ -132,8 +132,7 @@ export const SettingsDrawer = () => {
     setTextures(textures);
   }, [characterRace]) // eslint-disable-line
 
-   
-  const selectRace = charRace => {
+  const selectRace = (charRace) => {
     const race = raceData.find((r) => r.id === charRace);
     const genders = [0, 1, 2].filter((g) => race[g]?.length);
     setOption('charGender', genders[0]);
@@ -147,23 +146,71 @@ export const SettingsDrawer = () => {
 
   const activeConfigs = useMemo(() => {
     return [
-      { key: 'alwaysDaylight', description: 'Always Daylight', value: alwaysDaylight, },
-      { key: 'enduringBreath', description: 'Enduring Breath', value: enduringBreath, },
-      { key: 'farFallow', description: 'Far Follow', value: farFallow, },
-      { key: 'jumpAlways', description: 'Jump Always', value: jumpAlways, },
-      { key: 'notEncumbered', description: 'Never Encumbered', value: notEncumbered, },
-      { key: 'noAnonymous', description: 'No Anonymous', value: noAnonymous, },
-      { key: 'noBlind', description: 'No Blind', value: noBlind, },
-      { key: 'noDelayedJump', description: 'No Delayed Jump', value: noDelayedJump, },
-      { key: 'noFallDmg', description: 'No Fall Dmg', value: noFallDmg, },
-      { key: 'noRoot', description: 'No Root', value: noRoot, },
-      { key: 'noSilence', description: 'No Silence', value: noSilence, },
-      { key: 'noSnare', description: 'No Snare', value: noSnare, },
-      { key: 'noStun', description: 'No Stun', value: noStun, },
-      { key: 'seeInvisible', description: 'See Invisible', value: seeInvisible, },
-      { key: 'ultravision', description: 'Ultravision', value: ultravision, }
+      {
+        key        : 'runSpeed',
+        description: 'Run Speed',
+        value      : runSpeed,
+        component  : (
+          <>
+            <FormControl fullWidth sx={{ marginTop: 1 }}>
+              <Typography
+                sx={{ fontSize: 14 }}
+                color="text.secondary"
+                gutterBottom
+              >
+                Run Speed: {runSpeed}
+              </Typography>
+              <Slider
+                value={runSpeed}
+                onChange={({ target: { value } }) => {
+                  setOption('runSpeed', value);
+                }}
+                step={0.1}
+                min={0}
+                max={1.3}
+              />
+            </FormControl>
+          </>
+        ),
+      },
+      {
+        key        : 'alwaysDaylight',
+        description: 'Always Daylight',
+        value      : alwaysDaylight,
+      },
+      {
+        key        : 'enduringBreath',
+        description: 'Enduring Breath',
+        value      : enduringBreath,
+      },
+      { key: 'farFallow', description: 'Far Follow', value: farFallow },
+      { key: 'jumpAlways', description: 'Jump Always', value: jumpAlways },
+      {
+        key        : 'notEncumbered',
+        description: 'Never Encumbered',
+        value      : notEncumbered,
+      },
+      { key: 'noAnonymous', description: 'No Anonymous', value: noAnonymous },
+      { key: 'noBlind', description: 'No Blind', value: noBlind },
+      {
+        key        : 'noDelayedJump',
+        description: 'No Delayed Jump',
+        value      : noDelayedJump,
+      },
+      { key: 'noFallDmg', description: 'No Fall Dmg', value: noFallDmg },
+      { key: 'noRoot', description: 'No Root', value: noRoot },
+      { key: 'noSilence', description: 'No Silence', value: noSilence },
+      { key: 'noSnare', description: 'No Snare', value: noSnare },
+      { key: 'noStun', description: 'No Stun', value: noStun },
+      {
+        key        : 'seeInvisible',
+        description: 'See Invisible',
+        value      : seeInvisible,
+      },
+      { key: 'ultravision', description: 'Ultravision', value: ultravision },
     ];
-  }, [alwaysDaylight,
+  }, [
+    alwaysDaylight,
     enduringBreath,
     farFallow,
     jumpAlways,
@@ -177,8 +224,10 @@ export const SettingsDrawer = () => {
     noSnare,
     noStun,
     seeInvisible,
-    ultravision,]);
-
+    ultravision,
+    runSpeed,
+    setOption,
+  ]);
 
   return (
     <div
@@ -281,7 +330,8 @@ export const SettingsDrawer = () => {
               </MenuItem>
             </Select>
           </FormControl>
-          <FormControl sx={{ marginTop: 1 }} fullWidth>
+         
+          <FormControl sx={{ marginTop: 1, marginBottom: 2 }} fullWidth>
             <Typography
               sx={{ fontSize: 14, marginTop: 2, width: '80%' }}
               color="text.secondary"
@@ -298,6 +348,17 @@ export const SettingsDrawer = () => {
               max={20}
             />
           </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={camLock}
+                onChange={({ target: { checked } }) =>
+                  setOption('camLock', checked)
+                }
+              />
+            }
+            label="Follow Character"
+          />
         </AccordionDetails>
       </Accordion>
 
@@ -560,7 +621,7 @@ export const SettingsDrawer = () => {
               }
             >
               <MenuItem key={'charVariation-none'} value={''}>
-                  None
+                None
               </MenuItem>
               {variations.map((v) => (
                 <MenuItem key={`charVariation-${v}`} value={v}>
@@ -647,13 +708,14 @@ export const SettingsDrawer = () => {
             </Typography>
             <Slider
               value={locationTrailOpacity}
-              onChange={(e) => setOption('locationTrailOpacity', +e.target.value)}
+              onChange={(e) =>
+                setOption('locationTrailOpacity', +e.target.value)
+              }
               step={0.01}
               min={0.01}
               max={1}
             />
           </FormControl>
-    
         </AccordionDetails>
       </Accordion>
 
@@ -758,17 +820,22 @@ export const SettingsDrawer = () => {
             <Typography>Active Config</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {activeConfigs.map(({ key, description, value }) => <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value}
-                  onChange={({ target: { checked } }) =>
-                    setOption(key, checked)
-                  }
-                />
-              }
-              label={description}
-            />)}
+            {activeConfigs.map(
+              ({ key, description, value, component }) =>
+                component ?? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={({ target: { checked } }) =>
+                          setOption(key, checked)
+                        }
+                      />
+                    }
+                    label={description}
+                  />
+                ),
+            )}
           </AccordionDetails>
         </Accordion>
       )}

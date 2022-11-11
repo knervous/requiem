@@ -36,3 +36,26 @@
   z-index:1000;
   color: white;
 }
+
+.MuiDialog-paper[role=dialog]  {
+  border-radius: 10px;
+  background-image: url('../../../public/ui/border2.jpg');
+  background-repeat: repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  border: 1px solid #b2b2b2;
+  padding: 10px;
+}
+
+.action-list {
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid #b2b2b2;
+  .MuiButtonBase-root, .MuiListItem-root {
+    padding: 0px;
+    height: 35px;
+    div {
+      padding: 15px;
+    }
+  }
+}

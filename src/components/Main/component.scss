@@ -5,8 +5,15 @@
   //background-image: url("../../img/eq_wallpaper.jpg");
   background-repeat: unset;
   // background-size: auto;
+  overflow: hidden;
 }
 
+#root, .dashboard-content, .main-content {
+  overflow: hidden;
+}
+html, body {
+  overflow: hidden;
+}
 .App-header {
   min-height: 100vh;
   display: flex;

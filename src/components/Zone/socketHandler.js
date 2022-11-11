@@ -32,6 +32,8 @@ export class SocketHandler {
         const deserialized = JSON.parse(data);
         if (typeof this.callbacks[deserialized.Type] === 'function') {
           this.callbacks[deserialized.Type](deserialized.Payload);
+        } else {
+          console.warn('No hookup', data);
         }
       } catch (e) { 
         console.warn('Error receiving ws message', e, data);

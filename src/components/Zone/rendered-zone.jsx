@@ -170,7 +170,7 @@ export const RenderedZone = forwardRef(
       setAnimationList,
       cameraType,
       cameraFollowMe,
-      followTel
+      followTel,
     } = options;
     // Skybox
     useSkybox(skybox);
@@ -180,6 +180,7 @@ export const RenderedZone = forwardRef(
     const [target, setTarget] = useState(myTarget);
     const [staticIndex, setStaticIndex] = useState(-1);
     const [rayTarget, setRayTarget] = useState(null);
+    const prevLoc = useRef({ x: null, y: null, z: null });
     const [{ bannerScale, bannerLoc }, setBanner] = useState({
       bannerScale: 0,
       bannerLoc  : { x: 0, y: 0, z: 0 },
@@ -364,7 +365,7 @@ export const RenderedZone = forwardRef(
         ctx.font = isTarget
           ? `bold ${fontSize + 3}px Arial`
           : `bold ${fontSize}px Arial`;
-        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}${spawn.spawnType === 3 ? '\'s Corpse' : ''}`;
+        const level = `Level ${spawn.level} ${classes[spawn.classId] ?? ''}${spawn.spawnType === 3 || spawn.spawnType === 2 ? '\'s Corpse' : ''}`;
 
         ctx.fillText(
           level,
@@ -601,7 +602,7 @@ export const RenderedZone = forwardRef(
           ctx.fillStyle = 'gold';
           ctx.font = `bold ${fontSize + 3}px Arial`;
           ctx.textAlign = 'center';
-          const detail = processMode ? 'Warp Raycast (Press T)' : 'Location Raycast';
+          const detail = processMode ? 'Warp (T) Move (R)' : 'Location Raycast';
           const detailWidth = ctx.measureText(detail).width;
 
           ctx.fillText(
@@ -737,22 +738,21 @@ export const RenderedZone = forwardRef(
       }
     }, [myTarget]) //eslint-disable-line
 
-    const targetMe = useCallback(() => {
+    const targetObject = useCallback((obj = character || parseInfo?.locations?.[0]) => {
       if (!zoneTexture.scene) {
         return;
       }
       zoneTexture.scene.position.set(0, 0, 0);
       setTimeout(() => {
-        const firstLoc = parseInfo?.locations?.[0];
         const charPosition = new THREE.Vector3(
-          (character?.y ?? firstLoc?.y ?? 0) * -1,
-          (character?.z ?? firstLoc?.z ?? 0) + 15,
-          character?.x ?? firstLoc?.x ?? 0,
+          (obj?.y ?? 0) * -1,
+          (obj?.z ?? 0) + 15,
+          obj?.x ?? 0,
         );
         const lookPosition = new THREE.Vector3(
-          charPosition.x + 100,
-          charPosition.y + 100,
-          charPosition.z + 100,
+          charPosition.x,
+          charPosition.y + 150,
+          charPosition.z,
         );
         camera.position.set(lookPosition.x, lookPosition.y, lookPosition.z);
         controls.current.target?.copy?.(charPosition);
@@ -761,7 +761,7 @@ export const RenderedZone = forwardRef(
     }, [zoneTexture, character, parseInfo]) //eslint-disable-line
 
     useEffect(() => {
-      targetMe();
+      targetObject();
       if (zoneTexture) {
         onLoaded();
       }
@@ -863,16 +863,54 @@ export const RenderedZone = forwardRef(
             },
             type: 'warp',
           });
+
+          setTimeout(() => {
+            targetObject();
+          }, 50);
+        }
+
+        if (event.key === 'r' && raycastRef?.current && rayTarget?.x) {
+          const y = (rayTarget.z) + 0.01;
+          const z = (rayTarget.y) + 0.01;
+          const x = (rayTarget.x * -1) + 0.01;
+          socket.emit('doAction', {
+            processId: selectedProcess.pid,
+            payload  : {
+              command: `/moveto loc ${x} ${y} ${z}`
+            },
+            type: 'command',
+          });
         }
       };
       window.addEventListener('keydown', keyHandler);
 
       return () => window.removeEventListener('keydown', keyHandler);
-    }, [rayTarget, socket, selectedProcess.pid]);
+    }, [rayTarget, socket, selectedProcess.pid, targetObject]);
+
+    useEffect(() => {
+
+      if (character?.x === undefined) {
+        return;
+      }
+
+      if (prevLoc.current.x !== null) {
+        const deltaX = character.x - prevLoc.current.x;
+        const deltaY = character.y - prevLoc.current.y;
+        const deltaZ = character.z - prevLoc.current.z;
+
+        const offset = new THREE.Vector3(deltaY * -1, deltaZ, deltaX);
+        camera.position.addVectors(camera.position, offset);
+      }
+
+      prevLoc.current.x = character.x;
+      prevLoc.current.y = character.y;
+      prevLoc.current.z = character.z;
+    }, [character?.x, character?.y, character?.z, camera.position]);
+
 
     // Expose functions to parent
     useImperativeHandle(forwardRef, () => ({
-      targetMe,
+      targetObject,
       followMe,
       doTel: followPulse,
     }));

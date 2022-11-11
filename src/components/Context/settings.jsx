@@ -58,6 +58,27 @@ const defaultOptions = {
   noStun                : false,
   seeInvisible          : false,
   ultravision           : false,
+  runSpeed              : 0.7,
+  camLock               : false,
+  ui                    : {
+    target: {
+      show: true,
+      x   : (window.innerWidth / 2) - 50,
+      y   : 25
+    },
+    chat: {
+      show  : true,
+      x     : (window.innerWidth / 2) - 120,
+      y     : window.height - 250,
+      width : 250,
+      height: 300,
+    },
+    group: {
+      show: true,
+      x   : 25,
+      y   : 450
+    },
+  }
 };
 export const SettingsProvider = ({ children }) => {
   const [options, setOptions] = useState(

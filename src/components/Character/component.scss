@@ -5,6 +5,7 @@
   //background-image: url("../../img/eq_wallpaper.jpg");
   background-repeat: unset;
   // background-size: auto;
+  overflow: hidden;
 }
 
 .App-header {
@@ -15,4 +16,8 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.root {
+  overflow: hidden;
 }

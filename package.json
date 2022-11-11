@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-json-tree": "^0.17.0",
+    "react-resizable": "^3.0.4",
     "react-scripts": "5.0.0",
     "react-toast-notifications": "^2.5.1",
     "socket.io-client": "^4.5.1",
