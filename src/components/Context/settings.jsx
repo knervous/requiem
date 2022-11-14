@@ -64,20 +64,30 @@ const defaultOptions = {
     target: {
       show: true,
       x   : (window.innerWidth / 2) - 50,
-      y   : 25
+      y   : 11
     },
     chat: {
       show  : true,
       x     : (window.innerWidth / 2) - 120,
-      y     : window.height - 250,
+      y     : window.innerHeight - 250,
       width : 250,
       height: 300,
+    },
+    character: {
+      show: true,
+      x   : 25,
+      y   : 250
     },
     group: {
       show: true,
       x   : 25,
       y   : 450
     },
+    macros: {
+      show: true,
+      x   : window.innerWidth - 220,
+      y   : window.innerHeight - 250,
+    }
   }
 };
 export const SettingsProvider = ({ children }) => {

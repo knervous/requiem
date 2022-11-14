@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dtinsight/molecule": "^1.2.0",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^4.12.4",
+    "@monaco-editor/react": "^4.4.6",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.10.12",
     "@mui/styles": "^5.1.1",
@@ -19,7 +21,9 @@
     "isomorphic-ws": "^5.0.0",
     "material-ui-color-picker": "^3.5.1",
     "material-ui-popup-state": "^1.9.3",
+    "monaco-editor": "^0.34.1",
     "mui-color": "^2.0.0-beta.2",
+    "raw-loader": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
@@ -71,6 +75,7 @@
     "gltf-pipeline": "^3.0.4",
     "node-fetch": "^3.1.0",
     "sass": "^1.43.4",
-    "sass-loader": "^10.1.0"
+    "sass-loader": "^10.1.0",
+    "typescript": "^4.8.4"
   }
 }

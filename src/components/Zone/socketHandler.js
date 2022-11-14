@@ -51,7 +51,7 @@ export class SocketHandler {
     };
   }
   emit(message, payload, callback) {
-    console.log('Emit', message, payload, callback); // eslint-disable-line
+    // console.log('Emit', message, payload, callback); // eslint-disable-line
     let callbackId;
     if (typeof callback === 'function') {
       const id = v4();

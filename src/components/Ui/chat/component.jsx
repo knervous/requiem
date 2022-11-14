@@ -53,7 +53,6 @@ export const Chat = () => {
   const chatRef = useRef(null);
 
   const mq = useMq();
-
   const handleKeyDown = useCallback(e => {
     if (e.key === 'Enter') {
       mq?.doCommand(cmd);

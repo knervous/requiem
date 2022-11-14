@@ -9,6 +9,7 @@ import {
 import './component.scss';
 import { useRef } from 'react';
 import { SettingsProvider } from '../Context/settings';
+import { MacroProvider } from '../Context/macroContext';
 
 
 // Testing
@@ -60,13 +61,15 @@ const CustomToast = ({ children, ...props }) => {
 export const Main = () => {
   return (
     <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
-      <SettingsProvider>
-        <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
-          <div className="app">
-            <LeftDrawer />
-          </div>
-        </ThemeProvider>
-      </SettingsProvider>
+      <MacroProvider>
+        <SettingsProvider>
+          <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+            <div className="app">
+              <LeftDrawer />
+            </div>
+          </ThemeProvider>
+        </SettingsProvider>
+      </MacroProvider>
     </ToastProvider>
   );
 };

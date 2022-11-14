@@ -56,6 +56,7 @@ import supportedZones from './supportedZones';
 import { ConnectionDialog } from './connection';
 import raceData from '../../common/raceData.json';
 import UiOverlay from '../Ui/component';
+import { MacroEditorDialog } from '../Dialogs/macro-editor';
 
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
@@ -125,6 +126,10 @@ export const Zone = () => {
   const closeActivePopover = useCallback(() => setActivePopoverOpen(false), [
     setActivePopoverOpen,
   ]);
+
+  // Macro Editor Dialog
+  const [macroEditorOpen, setMacroEditorOpen] = useState(false);
+  const openMacroEditor = () => setMacroEditorOpen(true);
 
   // Connection Dialog
   const [connectionOptionsOpen, setConnectionOptionsOpen] = useState(false);
@@ -257,7 +262,7 @@ export const Zone = () => {
         noStun,
         seeInvisible,
         ultravision,
-        runSpeed
+        runSpeed,
       },
       type: 'activeConfig',
     });
@@ -281,8 +286,8 @@ export const Zone = () => {
     ultravision,
   ]);
 
-  const addChatLine = useCallback(line => {
-    setChatLines(lines => [...lines, line]);
+  const addChatLine = useCallback((line) => {
+    setChatLines((lines) => [...lines, line]);
   }, []);
   const doConnect = async () => {
     if (socket) {
@@ -330,7 +335,7 @@ export const Zone = () => {
       sendConfig();
 
       newSocket.emit('refreshProcesses', await getOffsets());
-      newSocket.on('chat', message => {
+      newSocket.on('chat', (message) => {
         addChatLine(message);
       });
       newSocket.on('activeProcesses', setProcesses);
@@ -349,12 +354,12 @@ export const Zone = () => {
           addToast(
             <>
               <span>Mob spawned: {spawn.displayedName}</span>
-              <br/>
+              <br />
               <Button
                 onClick={(_e) => {
                   if (zoneRef.current) {
                     zoneRef.current.targetObject(spawnOpen);
-                  } 
+                  }
                 }}
               >
                 Camera Pan
@@ -497,12 +502,16 @@ export const Zone = () => {
         if (showNpcs) {
           ret =
               ret &&
-              (showPcs ? [1, 0, 3, 2].includes(s.spawnType) : s.spawnType === 1 || s.spawnType === 3);
+              (showPcs
+                ? [1, 0, 3, 2].includes(s.spawnType)
+                : s.spawnType === 1 || s.spawnType === 3);
         }
         if (showPcs) {
           ret =
               ret &&
-              (showNpcs ? [1, 0, 3, 2].includes(s.spawnType) : s.spawnType === 0 || s.spawnType === 3);
+              (showNpcs
+                ? [1, 0, 3, 2].includes(s.spawnType)
+                : s.spawnType === 0 || s.spawnType === 3);
         }
         return ret;
       });
@@ -576,12 +585,16 @@ export const Zone = () => {
     })();
     if (!selectedProcess.zoneViewer) {
       socket?.emit?.('selectProcess', selectedProcess.pid);
-      window.socketAction = (type, payload) => {
-        socket.emit('doAction', {
-          processId: selectedProcess.pid,
-          payload,
-          type,
-        });
+      window.socketAction = (type, payload, callback) => {
+        socket.emit(
+          'doAction',
+          {
+            processId: selectedProcess.pid,
+            payload,
+            type,
+          },
+          callback,
+        );
       };
     }
   }, [selectedProcess, socket, selectedZone, zoneName]);
@@ -682,16 +695,18 @@ export const Zone = () => {
   );
 
   return (
-    <ZoneContext.Provider value={{
-      character,
-      zone,
-      groupMembers,
-      spawnContextMenu,
-      doTarget,
-      chatLines,
-      socket,
-      selectedProcess
-    }}>
+    <ZoneContext.Provider
+      value={{
+        character,
+        zone,
+        groupMembers,
+        spawnContextMenu,
+        doTarget,
+        chatLines,
+        socket,
+        selectedProcess,
+      }}
+    >
       <Paper className="zone-container" elevation={1}>
         <Card className="zone-header" variant="outlined">
           <CardContent className="zone-header">
@@ -713,14 +728,14 @@ export const Zone = () => {
                 }
 
                 <div className="overlay-buttons">
-                  {socket && (character || parseInfo) && (
+                  {true && (true || character || parseInfo) && (
                     <>
                       <Button
                         ref={actionPopoverRef}
                         variant="contained"
                         onClick={openActivePopover}
                       >
-                      Actions
+                        Actions
                       </Button>
                       <Popover
                         anchorEl={actionPopoverRef.current}
@@ -733,20 +748,28 @@ export const Zone = () => {
                       >
                         <List className="action-list">
                           <ListItem>
-                            <ListItemButton onClick={() => {
-                              if (zoneRef.current) {
-                                zoneRef.current.targetObject(character);
-                              }
-                              closeActivePopover();
-                            }}>
-        
+                            <ListItemButton
+                              onClick={() => {
+                                if (zoneRef.current) {
+                                  zoneRef.current.targetObject(character);
+                                }
+                                closeActivePopover();
+                              }}
+                            >
                               <ListItemText primary="Jump to Me" />
                             </ListItemButton>
                           </ListItem>
                           <Divider />
                           <ListItem>
-                            <ListItemButton >
-      
+                            <ListItemButton onClick={() => {
+                              openMacroEditor();
+                            }}>
+                              <ListItemText primary="Macro Editor" />
+                            </ListItemButton>
+                          </ListItem>
+                          <Divider />
+                          <ListItem>
+                            <ListItemButton>
                               <ListItemText primary="Oh shit" />
                             </ListItemButton>
                           </ListItem>
@@ -785,7 +808,7 @@ export const Zone = () => {
                         {processes.concat(zoneViewer).map((p, i) =>
                           p.zoneViewer ? (
                             <MenuItem key="zv" value={p}>
-                            Zone Viewer
+                              Zone Viewer
                             </MenuItem>
                           ) : (
                             <MenuItem key={`process${i}`} value={p}>
@@ -829,7 +852,9 @@ export const Zone = () => {
                   <>
                     <TextField
                       size="small"
-                      onChange={({ target: { value } }) => setSpawnFilter(value)}
+                      onChange={({ target: { value } }) =>
+                        setSpawnFilter(value)
+                      }
                       label="Spawn Filter"
                       value={spawnFilter}
                     />
@@ -837,11 +862,11 @@ export const Zone = () => {
                       style={{ marginLeft: 8 }}
                       id="demo-simple-select-label"
                     >
-                    Showing {filteredSpawns.length} of {spawns.length} Spawns
+                      Showing {filteredSpawns.length} of {spawns.length} Spawns
                     </InputLabel>
                     <Button variant="outlined" onClick={handleSearchOpen}>
                       <Typography variant="subheading" color="inherit" noWrap>
-                      Spawn Search
+                        Spawn Search
                       </Typography>
                     </Button>
                   </>
@@ -868,7 +893,7 @@ export const Zone = () => {
                       style={{ marginLeft: 8 }}
                       id="demo-simple-select-label"
                     >
-                    Showing {filteredStaticSpawns.length} of{' '}
+                      Showing {filteredStaticSpawns.length} of{' '}
                       {staticSpawns.length} Static Spawns
                     </InputLabel>
                   </>
@@ -887,7 +912,7 @@ export const Zone = () => {
                   style={{ cursor: 'move' }}
                   id="draggable-dialog-title"
                 >
-                Spawn Search and Filter
+                  Spawn Search and Filter
                 </DialogTitle>
                 <DialogContent>
                   <div style={{ height: 600 }}>
@@ -903,7 +928,7 @@ export const Zone = () => {
                 </DialogContent>
                 <DialogActions>
                   <Button autoFocus onClick={handleSearchClose}>
-                  Done
+                    Done
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -931,7 +956,7 @@ export const Zone = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                      Level: {detailedSpawn.level}
+                        Level: {detailedSpawn.level}
                       </Typography>
 
                       <Typography
@@ -939,7 +964,7 @@ export const Zone = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                      Class: {classes[detailedSpawn.classId]}
+                        Class: {classes[detailedSpawn.classId]}
                       </Typography>
 
                       <Typography
@@ -947,7 +972,7 @@ export const Zone = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                      Race:{' '}
+                        Race:{' '}
                         {raceData.find((r) => r.id === detailedSpawn.race)
                           ?.name ?? 'Unknown'}
                       </Typography>
@@ -957,7 +982,7 @@ export const Zone = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                      Location (YXZ): {detailedSpawn.y}, {detailedSpawn.x},{' '}
+                        Location (YXZ): {detailedSpawn.y}, {detailedSpawn.x},{' '}
                         {detailedSpawn.z}
                       </Typography>
 
@@ -966,7 +991,7 @@ export const Zone = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                      Health: {detailedSpawn.hp}%
+                        Health: {detailedSpawn.hp}%
                       </Typography>
 
                       <div style={{ margin: '10px 0px' }} />
@@ -988,15 +1013,18 @@ export const Zone = () => {
                 </DialogContent>
 
                 <DialogActions>
-                  <Button autoFocus onClick={() => {
-                    if (zoneRef.current) {
-                      zoneRef.current.targetObject(detailedSpawn);
-                    } 
-                  }}>
-                  Camera Pan
+                  <Button
+                    autoFocus
+                    onClick={() => {
+                      if (zoneRef.current) {
+                        zoneRef.current.targetObject(detailedSpawn);
+                      }
+                    }}
+                  >
+                    Camera Pan
                   </Button>
                   <Button autoFocus onClick={() => doTarget(detailedSpawn.id)}>
-                  Target
+                    Target
                   </Button>
                   <Button
                     autoFocus
@@ -1012,10 +1040,10 @@ export const Zone = () => {
                       });
                     }}
                   >
-                  Warp
+                    Warp
                   </Button>
                   <Button autoFocus onClick={handleSpawnClose}>
-                  Done
+                    Done
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1028,6 +1056,13 @@ export const Zone = () => {
                 doConnect={doConnect}
                 doDisconnect={doDisconnect}
                 connected={!!socket}
+              />
+
+              {/* Connection Dialog */}
+              <MacroEditorDialog
+                open={macroEditorOpen}
+                setOpen={setMacroEditorOpen}
+                PaperComponent={PaperComponent}
               />
 
               {/* UI Overlay */}
@@ -1067,28 +1102,28 @@ export const Zone = () => {
                 )}
               </Canvas>
               {threeRef.current &&
-              ReactDOM.createPortal(
-                <canvas
-                  style={{
-                    position     : 'absolute',
-                    top          : 0,
-                    left         : 0,
-                    pointerEvents: 'none',
-                  }}
-                  width={threeRef.current?.width ?? 1}
-                  height={threeRef.current?.height ?? 1}
-                  ref={canvasRef}
-                ></canvas>,
-                threeRef.current.parentNode,
+                ReactDOM.createPortal(
+                  <canvas
+                    style={{
+                      position     : 'absolute',
+                      top          : 0,
+                      left         : 0,
+                      pointerEvents: 'none',
+                    }}
+                    width={threeRef.current?.width ?? 1}
+                    height={threeRef.current?.height ?? 1}
+                    ref={canvasRef}
+                  ></canvas>,
+                  threeRef.current.parentNode,
+                )}
+              {threeRef.current && (
+                <UiOverlay rootNode={threeRef.current.parentNode} />
               )}
-              {
-                threeRef.current && <UiOverlay rootNode={threeRef.current.parentNode} />
-              }
-            
             </div>
           </CardContent>
           <CardActions></CardActions>
         </Card>
-      </Paper></ZoneContext.Provider>
+      </Paper>
+    </ZoneContext.Provider>
   );
 };

@@ -7,6 +7,7 @@ import { Chat } from './chat/component';
 
 import './component.scss';
 import { Group } from './group/component';
+import { Macros } from './macros';
 import { Target } from './target';
 
 const processMode =
@@ -25,6 +26,7 @@ export const UiOverlay = ({ rootNode }) => {
         <Character />
         <Group />
         <Chat />
+        <Macros />
       </div>
       , rootNode)
     </UiContext.Provider>

@@ -1,0 +1,23 @@
+.macro-box {
+    z-index: 1000;
+}
+
+.ui-element-macro-box {
+    border-radius: 10px;
+    border: 2px solid #b2b2b2;
+    background: rgba(0,0,0,0.3);
+    max-height: 200px;
+    overflow-y: auto;
+    width: 400px;
+    padding: 5px 15px;
+
+    .macro-sec-actions {
+        width: 120px;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .MuiListItem-root {
+        padding: 0px;
+    }
+
+}
