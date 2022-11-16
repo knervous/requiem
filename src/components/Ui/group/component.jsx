@@ -7,14 +7,14 @@ import { usePersistentUiLoc } from '../hooks/usePersistentUiLoc';
 
 import './component.scss';
 
-export const Group = () => {
+export const Group = ({ rootNode }) => {
   const { character, spawnContextMenu, groupMembers, doTarget } = useContext(ZoneContext);
-  const { onStop, x, y, show } = usePersistentUiLoc('group');
+  const { onStop, x, y, show } = usePersistentUiLoc('group', rootNode);
 
   return show && character ? 
     <Draggable
       onStop={onStop}
-      defaultPosition={{ x, y }}
+      position={{ x, y }}
       handle=".ui-element-group"
       cancel={'[class*="MuiDialogContent-root"]'}
     >

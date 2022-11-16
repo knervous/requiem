@@ -15,18 +15,16 @@ const processMode =
 
 export const UiContext = createContext(null);
 
-export const UiOverlay = ({ rootNode }) => {
-  const { character } = useContext(ZoneContext);
-
+export const UiOverlay = ({ rootNode, character }) => {
   return processMode && character && rootNode ? (
     <UiContext.Provider value={{ rootNode }}>
       createPortal(
       <div className="ui-overlay">
-        <Target />
-        <Character />
-        <Group />
-        <Chat />
-        <Macros />
+        <Target rootNode={rootNode}/>
+        <Character rootNode={rootNode}/>
+        <Group rootNode={rootNode}/>
+        <Chat rootNode={rootNode}/>
+        <Macros rootNode={rootNode}/>
       </div>
       , rootNode)
     </UiContext.Provider>

@@ -1,9 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { ZoneContext } from '../../Zone/component';
 
-
-import Editor from '@monaco-editor/react';
-
 /**
  * @typedef Macroquest
  * @property {import('./mq').MacroQuest.TopLevelObjects} tlo
@@ -82,8 +79,16 @@ export const useMq = () => {
           type: 'macro',
         });
       },
+      stopMacro() {
+        socket.emit('doAction', {
+          processId: selectedProcess.pid,
+          payload  : {
+            command: '/nodestop'
+          },
+          type: 'command',
+        });
+      },
       tlo: new MqProxy(),
-      Editor
     };
   }, [socket, selectedProcess]);
   window.mq = mq;

@@ -46,26 +46,39 @@ const getColor = (color) => {
   }
 };
 
-export const Chat = () => {
+export const Chat = ({ rootNode }) => {
   const { chatLines, character } = useContext(ZoneContext);
-  const { onStop, x, y, show, } = usePersistentUiLoc('chat');
+  const { onStop, x, y, show, } = usePersistentUiLoc('chat', rootNode);
   const [cmd, setCmd] = useState('');
   const chatRef = useRef(null);
-
+  const inputRef = useRef(null);
   const mq = useMq();
   const handleKeyDown = useCallback(e => {
     if (e.key === 'Enter') {
       mq?.doCommand(cmd);
       setCmd('');
     }
-    
     e.stopPropagation();
   }, [cmd, mq]);
+
+  useEffect(() => {
+    const listener = e => { 
+      console.log('hello', e.key, inputRef.current);
+      if (e.key === '/' && inputRef.current) {
+        console.log('here');
+        const input = inputRef.current.querySelector('input');
+        input.focus();
+        input.value = '/';
+      }
+    };
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
   useEffect(() => {
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [chatLines]);
   return show && character ? (
-    <Draggable onStop={onStop} defaultPosition={{ x, y }} handle=".ui-chat">
+    <Draggable onStop={onStop} position={{ x, y }} handle=".ui-chat">
       <div className="ui-element">
         <div className="chat-handle">
           <Typography sx={{ fontSize: 13, padding: 0, margin: 0 }} gutterBottom>
@@ -93,6 +106,7 @@ export const Chat = () => {
           ))}
         </div>
         <TextField
+          ref={inputRef}
           size="small"
           onKeyDown={handleKeyDown}
           class="cmd-input"

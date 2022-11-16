@@ -7,9 +7,9 @@ import { usePersistentUiLoc } from '../hooks/usePersistentUiLoc';
 
 import './component.scss';
 
-export const Target = () => {
+export const Target = ({ rootNode }) => {
   const { character, spawnContextMenu } = useContext(ZoneContext);
-  const { onStop, x, y, show } = usePersistentUiLoc('target');
+  const { onStop, x, y, show } = usePersistentUiLoc('target', rootNode);
   const display = useMemo(() => {
     if (!character?.target) {
       return '';
@@ -34,7 +34,7 @@ export const Target = () => {
   return show ? 
     <Draggable
       onStop={onStop}
-      defaultPosition={{ x, y }}
+      position={{ x, y }}
       handle=".ui-element-target-box"
       cancel={'[class*="MuiDialogContent-root"]'}
     >

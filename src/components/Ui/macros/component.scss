@@ -6,13 +6,13 @@
     border-radius: 10px;
     border: 2px solid #b2b2b2;
     background: rgba(0,0,0,0.3);
-    max-height: 200px;
+    // max-height: 200px;
     overflow-y: auto;
     width: 400px;
     padding: 5px 15px;
 
     .macro-sec-actions {
-        width: 120px;
+        width: 160px;
         display: flex;
         justify-content: space-evenly;
     }
@@ -20,4 +20,9 @@
         padding: 0px;
     }
 
+}
+
+.macro-list {
+    max-height: 150px;
+    overflow-y: auto;
 }

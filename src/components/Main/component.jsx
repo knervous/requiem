@@ -1,13 +1,14 @@
+import { useRef } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { LeftDrawer } from '../LeftDrawer';
+import { ConfirmProvider } from 'material-ui-confirm';
 
+import { LeftDrawer } from '../LeftDrawer';
 import {
   DefaultToast,
   ToastProvider,
   
 } from 'react-toast-notifications';
 import './component.scss';
-import { useRef } from 'react';
 import { SettingsProvider } from '../Context/settings';
 import { MacroProvider } from '../Context/macroContext';
 
@@ -60,16 +61,18 @@ const CustomToast = ({ children, ...props }) => {
 
 export const Main = () => {
   return (
-    <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
-      <MacroProvider>
-        <SettingsProvider>
-          <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
-            <div className="app">
-              <LeftDrawer />
-            </div>
-          </ThemeProvider>
-        </SettingsProvider>
-      </MacroProvider>
-    </ToastProvider>
+    <ConfirmProvider>
+      <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
+        <MacroProvider>
+          <SettingsProvider>
+            <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+              <div className="app">
+                <LeftDrawer />
+              </div>
+            </ThemeProvider>
+          </SettingsProvider>
+        </MacroProvider>
+      </ToastProvider>
+    </ConfirmProvider>
   );
 };

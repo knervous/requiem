@@ -188,6 +188,7 @@ export const Zone = () => {
   const [groupMembers, setGroupMembers] = useState([]);
   const [myTarget, setMyTarget] = useState('');
   const [chatLines, setChatLines] = useState([]);
+  const [macroRunning, setMacroRunning] = useState(false);
   const cameraControls = useRef();
   const retryRef = useRef(false);
   const zoneViewerRef = useRef(true);
@@ -337,6 +338,9 @@ export const Zone = () => {
       newSocket.emit('refreshProcesses', await getOffsets());
       newSocket.on('chat', (message) => {
         addChatLine(message);
+      });
+      newSocket.on('macroRunning', (running) => {
+        setMacroRunning(running);
       });
       newSocket.on('activeProcesses', setProcesses);
       newSocket.on('setSpawns', (spawns) => {
@@ -702,6 +706,7 @@ export const Zone = () => {
         groupMembers,
         spawnContextMenu,
         doTarget,
+        macroRunning,
         chatLines,
         socket,
         selectedProcess,
@@ -1117,7 +1122,7 @@ export const Zone = () => {
                   threeRef.current.parentNode,
                 )}
               {threeRef.current && (
-                <UiOverlay rootNode={threeRef.current.parentNode} />
+                <UiOverlay rootNode={threeRef.current.parentNode} character={character} />
               )}
             </div>
           </CardContent>

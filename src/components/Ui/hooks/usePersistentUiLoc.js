@@ -1,21 +1,20 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SettingsContext } from '../../Context/settings';
-import { UiContext } from '../component';
 
 const def = { x: 0, y: 0, show: true };
 
-export const usePersistentUiLoc = name => {
+export const usePersistentUiLoc = (name, rootNode) => {
   const { ui, setOption } = useContext(SettingsContext);
-  const { rootNode } = useContext(UiContext);
+  const [force, ren] = useState();
+  const forceRender = () => ren({});
   const onStop = useCallback((e) => {
     const { x, y } = e.target.getBoundingClientRect();
-    const { x: rootNodeX, } = rootNode.getBoundingClientRect();
     setOption('ui', { ...ui, [name]: {
       ...ui[name] ?? {},
-      x: x - rootNodeX,
+      x,
       y,
     } });
-  }, [ui, name, setOption, rootNode]);
+  }, [ui, name, setOption]);
 
   const onResize = useCallback((_, { size: { width, height } }) => {
     setOption('ui', { ...ui, [name]: {
@@ -31,10 +30,28 @@ export const usePersistentUiLoc = name => {
     }
   }, [setOption, name, ui]);
   
+  const { x, y } = useMemo(() => {
+    if (!ui[name]) {
+      return { x: 100, y: 100 };
+    }
 
+    return {
+      x: ui[name].x + rootNode.getBoundingClientRect().left,
+      y: ui[name].y
+    };
+  }, [ui, name, rootNode, force]); // eslint-disable-line
+
+  useEffect(() => {
+    const observer = new ResizeObserver(forceRender);
+    observer.observe(rootNode);
+    return () => observer.unobserve(rootNode);
+  }, [rootNode]);
+  
   return {
     onStop,
     onResize,
-    ...(ui[name] ?? {})
+    ...(ui[name] ?? {}),
+    x,
+    y
   };
 };

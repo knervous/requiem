@@ -32,10 +32,10 @@ mq.listeners.addSpawnListener(spawn => {
   mq.log(\`A mob spawned! \${spawn.displayedName}\`);
 })
 `;
-const getNewMacro = () => ({
-  id  : v4(),
-  text: defaultJs,
-  name: 'New Macro'
+const getNewMacro = (name = 'New Macro', text = defaultJs,) => ({
+  id: v4(),
+  text,
+  name
 });
 
 export const MacroProvider = ({ children }) => {
@@ -51,6 +51,10 @@ export const MacroProvider = ({ children }) => {
   
   const addMacro = useCallback(() => {
     setMacros(macros => [...macros, getNewMacro()]);
+  }, []);
+
+  const uploadMacro = useCallback((name, text) => {
+    setMacros(macros => [...macros, getNewMacro(name, text)]);
   }, []);
 
   const deleteMacro = useCallback(id => {
@@ -77,6 +81,7 @@ export const MacroProvider = ({ children }) => {
         addMacro,
         deleteMacro,
         updateMacro,
+        uploadMacro,
         macros,
         openEditor,
         closeEditor,
