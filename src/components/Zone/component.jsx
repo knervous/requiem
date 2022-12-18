@@ -1075,6 +1075,7 @@ export const Zone = () => {
               <Canvas ref={threeRef}>
                 {/* <SkyBox /> */}
                 <CameraControls
+                  addToast={addToast}
                   controls={cameraControls}
                   type={cameraType}
                   flySpeed={flySpeed}

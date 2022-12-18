@@ -17,6 +17,8 @@ import {
 import { OrbitControls, PointerLockControls } from '@react-three/drei';
 import CameraControlsDef from 'camera-controls';
 import { useRef } from 'react';
+import { useToasts } from 'react-toast-notifications';
+
 
 const subsetOfTHREE = {
   MOUSE     : MOUSE,
@@ -59,11 +61,12 @@ const KEYCODE = {
 };
 
 export const CameraControls = forwardRef(
-  ({ controls, type = 'orbit', flySpeed = 10 }, ref) => {
+  ({ controls, type = 'orbit', flySpeed = 10, addToast }, ref) => {
     const {
       camera,
       gl: { domElement },
     } = useThree();
+
 
     const derivedType = useMemo(() => {
       if (type === 'fly' && noPointerLock) {
@@ -137,7 +140,7 @@ export const CameraControls = forwardRef(
             break;
         }
         moveState.current = newState;
-
+        addToast(JSON.stringify(moveState.current));
       };
       const downListener = listener(1);
       const upListener = listener(0);
