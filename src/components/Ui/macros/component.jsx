@@ -30,6 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { ZoneContext } from '../../Zone/component';
 import Tooltip from '@mui/material/Tooltip';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import Mq from '!raw-loader!../../../common/mq.d.ts' // eslint-disable-line
 
 function download(filename, text) {
@@ -105,7 +106,6 @@ export const Macros = ({ rootNode }) => {
     },
     [confirm, deleteMacro],
   );
-
   return show ? (
     <Draggable onStop={onStop} position={{ x, y }} handle=".chat-handle">
       <div className="ui-element ui-element-macro-box">
@@ -170,7 +170,7 @@ export const Macros = ({ rootNode }) => {
         <DialogActions
           sx={{
             alignContent  : 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'end',
             color         : 'whitesmoke',
           }}
           className="macro-buttons"
@@ -205,22 +205,22 @@ export const Macros = ({ rootNode }) => {
           }}
         >
           {macroRunning ? (
-            <Box sx={{ display: 'flex', alignContent: 'center' }}>
+            <Box className="macro-info" sx={{ display: 'flex', alignContent: 'center' }}>
               <CircularProgress
-                size={20}
-                sx={{ marginRight: 1, marginTop: 0.7 }}
+                size={15}
+                sx={{ marginRight: 1, marginTop: 0.3 }}
               />
               <Typography
-                sx={{ fontSize: 14, marginBottom: 0, marginTop: 0.7 }}
+                sx={{ fontSize: 14, marginBottom: 0, }}
                 color="text.secondary"
                 gutterBottom
               >
                 Macro is running
               </Typography>
-              <Button onClick={mq?.stopMacro}>
-                <StopIcon />
-                Terminate
-              </Button>
+              <Tooltip title="Stop macro">
+                <StopIcon sx={{ cursor: 'pointer' }}onClick={mq?.stopMacro} />
+              </Tooltip>
+          
             </Box>
           ) : (
             <Typography

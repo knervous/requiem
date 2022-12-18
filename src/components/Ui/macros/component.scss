@@ -21,7 +21,12 @@
     }
 
 }
-
+.macro-info {
+    display: flex;
+    align-content: center;
+    width: 170px;
+    justify-content: space-evenly;
+}
 .macro-list {
     max-height: 150px;
     overflow-y: auto;
