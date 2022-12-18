@@ -140,7 +140,7 @@ export const CameraControls = forwardRef(
             break;
         }
         moveState.current = newState;
-        addToast(JSON.stringify(moveState.current));
+        // addToast(JSON.stringify(moveState.current));
       };
       const downListener = listener(1);
       const upListener = listener(0);
