@@ -155,6 +155,11 @@ export const CameraControls = forwardRef(
           }, 200);
         }
       };
+
+      const mdBackup = () => {
+        domElement.tabIndex = 0;
+        domElement.focus();
+      };
       const mouseUp = async () => {
         lockRef.current = false;
       };
@@ -167,12 +172,16 @@ export const CameraControls = forwardRef(
       window.addEventListener('contextmenu', preventDefault);
 
       if (derivedType === 'fly') {
-       
         domElement.addEventListener('mousedown', mouseDown);
         window.addEventListener('mouseup', mouseUp);
       }
+      if (derivedType === 'fly-backup') {
+        domElement.addEventListener('mousedown', mdBackup);
+      }
 
       return () => {
+        domElement.removeEventListener('mousedown', mdBackup);
+
         window.removeEventListener('keydown', downListener);
         window.removeEventListener('keyup', upListener);
         domElement.removeEventListener('keydown', downListener);
