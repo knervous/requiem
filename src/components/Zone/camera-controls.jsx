@@ -243,15 +243,16 @@ export const CameraControls = forwardRef(
 
       if (derivedType === 'fly-backup') {
         velocity.z -= 5;
+        const doubleSpeed = moveState.current.doubleSpeed && (moveState.current.forward || moveState.current.back) ? 2 : 1; 
         velocity
-          .multiplyScalar(1 * (moveState.current.doubleSpeed ? 2 : 1))
+          .multiplyScalar(doubleSpeed)
           .applyQuaternion(state.camera.quaternion);
 
         if (moveState.current.jump || moveState.current.duck) {
           const jumpvel = new THREE.Vector3();
           jumpvel.y = (moveState.current.jump ? 1 : -1) * flySpeed;
           jumpvel.multiplyScalar(
-            1 * (moveState.current.doubleSpeed ? 2 : 1),
+            doubleSpeed,
           );
           state.camera.position.add(jumpvel);
         }
