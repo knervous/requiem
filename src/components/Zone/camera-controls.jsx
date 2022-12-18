@@ -157,8 +157,8 @@ export const CameraControls = forwardRef(
       };
 
       const mdBackup = () => {
-        domElement.tabIndex = 0;
-        domElement.focus();
+        // domElement.tabIndex = 0;
+        // domElement.focus();
       };
       const mouseUp = async () => {
         lockRef.current = false;
