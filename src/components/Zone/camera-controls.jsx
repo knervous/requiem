@@ -160,6 +160,8 @@ export const CameraControls = forwardRef(
       };
       const preventDefault = (e) => e.preventDefault();
 
+      domElement.addEventListener('keydown', downListener);
+      domElement.addEventListener('keyup', upListener);
       window.addEventListener('keydown', downListener);
       window.addEventListener('keyup', upListener);
       window.addEventListener('contextmenu', preventDefault);
@@ -173,6 +175,8 @@ export const CameraControls = forwardRef(
       return () => {
         window.removeEventListener('keydown', downListener);
         window.removeEventListener('keyup', upListener);
+        domElement.removeEventListener('keydown', downListener);
+        domElement.removeEventListener('keyup', upListener);
         window.removeEventListener('contextmenu', preventDefault);
         domElement.removeEventListener('mousedown', mouseDown);
         window.removeEventListener('mouseup', mouseUp);
