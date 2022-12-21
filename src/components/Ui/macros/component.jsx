@@ -112,7 +112,7 @@ export const Macros = ({ rootNode }) => {
 
   const clampedMacroNumber = Math.min(macros.length, 4);
   return show ? (
-    <Draggable onStop={onStop} position={embedded ? { x: 15, y: height - 220 - (clampedMacroNumber * 32) } : { x, y }} handle=".chat-handle">
+    <Draggable onStop={onStop} position={embedded ? { x: 15, y: height - 150 - (clampedMacroNumber * 32) } : { x, y }} handle=".chat-handle">
       <div className="ui-element ui-element-macro-box">
         <div className="chat-handle">
           <Typography sx={{ fontSize: 13, padding: 0, margin: 0 }} gutterBottom>

@@ -17,7 +17,7 @@ export const Group = ({ rootNode }) => {
   return show && character ? 
     <Draggable
       onStop={onStop}
-      position={embedded ? { x: width - 165, y: height - 200 - (groupMembers.length * 20) } : { x, y }}
+      position={embedded ? { x: width - 165, y: height - 130 - (groupMembers.length * 20) } : { x, y }}
       handle=".ui-element-group"
       cancel={'[class*="MuiDialogContent-root"]'}
     >
