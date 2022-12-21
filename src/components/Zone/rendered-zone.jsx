@@ -738,7 +738,10 @@ export const RenderedZone = forwardRef(
       }
     }, [myTarget]) //eslint-disable-line
 
-    const targetObject = useCallback((obj = character || parseInfo?.locations?.[0]) => {
+    const charRef = useRef(null);
+    charRef.current = character;
+
+    const targetObject = useCallback((obj = charRef?.current || character || parseInfo?.locations?.[0]) => {
       if (!zoneTexture.scene) {
         return;
       }

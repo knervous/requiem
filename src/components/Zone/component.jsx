@@ -20,16 +20,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PowerIcon from '@mui/icons-material/Power';
 import { JSONTree } from 'react-json-tree';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
 import {
   InputLabel,
   MenuItem,
@@ -39,7 +36,7 @@ import {
   TextField,
   InputAdornment,
   Typography,
-  Popover,
+  IconButton,
 } from '@mui/material';
 
 import { Canvas } from '@react-three/fiber';
@@ -57,9 +54,13 @@ import { ConnectionDialog } from './connection';
 import raceData from '../../common/raceData.json';
 import UiOverlay from '../Ui/component';
 import { MacroEditorDialog } from '../Dialogs/macro-editor';
+import { useDrawerContext } from '../LeftDrawer/component';
 
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
+
+const embedded =
+  new URLSearchParams(window.location.search).get('embedded') === 'true';
 
 let initialZone = new URLSearchParams(window.location.search).get('zone');
 if (!supportedZones.some(({ shortName }) => shortName === initialZone)) {
@@ -118,18 +119,9 @@ export const Zone = () => {
   ]);
 
   // Active popover dialog
-  // Spawn Dialog
-  const [activePopoverOpen, setActivePopoverOpen] = useState(false);
-  const openActivePopover = useCallback(() => setActivePopoverOpen(true), [
-    setActivePopoverOpen,
-  ]);
-  const closeActivePopover = useCallback(() => setActivePopoverOpen(false), [
-    setActivePopoverOpen,
-  ]);
 
   // Macro Editor Dialog
   const [macroEditorOpen, setMacroEditorOpen] = useState(false);
-  const openMacroEditor = () => setMacroEditorOpen(true);
 
   // Connection Dialog
   const [connectionOptionsOpen, setConnectionOptionsOpen] = useState(false);
@@ -286,7 +278,7 @@ export const Zone = () => {
     runSpeed,
     ultravision,
   ]);
-
+  const { handleDrawerOpen, handleDrawerClose, drawerOpen } = useDrawerContext();
   const addChatLine = useCallback((line) => {
     setChatLines((lines) => [...lines, line]);
   }, []);
@@ -717,70 +709,48 @@ export const Zone = () => {
           <CardContent className="zone-header">
             <div className="zone-header">
               <div className="btn-row">
-                {
-                  <Button
-                    sx={{
-                      color          : 'black',
-                      backgroundColor: socket ? 'lightgreen' : 'white',
-                    }}
-                    variant="outlined"
-                    onClick={handleConnectionOptionsOpen}
-                  >
-                    <Typography variant="subheading" color="inherit" noWrap>
-                      {socket ? 'Connected' : 'Connect EQ'}
-                    </Typography>
-                  </Button>
-                }
+                {embedded && <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={() => drawerOpen ? handleDrawerClose() : handleDrawerOpen('settings')()}
+                  edge="start"
+                  sx={{ margin: '1px 5px', borderRadius: 2 }}
+                >
 
-                <div className="overlay-buttons">
-                  {true && (true || character || parseInfo) && (
-                    <>
-                      <Button
-                        ref={actionPopoverRef}
-                        variant="contained"
-                        onClick={openActivePopover}
-                      >
-                        Actions
-                      </Button>
-                      <Popover
-                        anchorEl={actionPopoverRef.current}
-                        open={activePopoverOpen}
-                        onClose={closeActivePopover}
-                        anchorOrigin={{
-                          vertical  : 'bottom',
-                          horizontal: 'center',
-                        }}
-                      >
-                        <List className="action-list">
-                          <ListItem>
-                            <ListItemButton
-                              onClick={() => {
-                                if (zoneRef.current) {
-                                  zoneRef.current.targetObject(character);
-                                }
-                                closeActivePopover();
-                              }}
-                            >
-                              <ListItemText primary="Jump to Me" />
-                            </ListItemButton>
-                          </ListItem>
-                          <Divider />
-                          <ListItem>
-                            <ListItemButton onClick={() => {
-                              openMacroEditor();
-                            }}>
-                              <ListItemText primary="Macro Editor" />
-                            </ListItemButton>
-                          </ListItem>
-                          <Divider />
-                          <ListItem>
-                            <ListItemButton>
-                              <ListItemText primary="Oh shit" />
-                            </ListItemButton>
-                          </ListItem>
-                        </List>
-                      </Popover>
-                    </>
+                  <SettingsIcon />
+                </IconButton>
+                }
+                
+                <IconButton
+                  sx={{
+                    color          : 'black',
+                    margin         : '1px 5px', borderRadius   : 2,
+                    backgroundColor: socket ? 'lightgreen' : 'white',
+                  }}
+                  variant="outlined"
+                  onClick={handleConnectionOptionsOpen}
+                >
+                  <Typography variant="subheading" color="inherit" noWrap>
+                    {embedded ? <PowerIcon /> : socket ? 'Connected' : 'Connect EQ'}
+    
+                  </Typography>
+                </IconButton>
+                
+
+                <div className="overlay-buttons" style={embedded ? { top: 70 } : {}}>
+                  {(character || parseInfo) && (
+                    <Button
+                      ref={actionPopoverRef}
+                      variant="contained"
+                      onClick={() => {
+                        if (zoneRef.current) {
+                          zoneRef.current.targetObject(character);
+                        }
+
+                      }}
+                    >
+                        Jump to Me
+                    </Button>
                   )}
                 </div>
 

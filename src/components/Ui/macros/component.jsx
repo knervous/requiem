@@ -30,8 +30,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { ZoneContext } from '../../Zone/component';
 import Tooltip from '@mui/material/Tooltip';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import BugReportIcon from '@mui/icons-material/BugReport';
 import Mq from '!raw-loader!../../../common/mq.d.ts' // eslint-disable-line
+import { useWindowDimensions } from '../../../hooks/useWindowDimensions';
+import { useUiContext } from '../component';
 
 function download(filename, text) {
   const element = document.createElement('a');
@@ -51,6 +52,8 @@ function download(filename, text) {
 
 export const Macros = ({ rootNode }) => {
   const { macroRunning } = useContext(ZoneContext);
+  const { height } = useWindowDimensions();
+  const { embedded } = useUiContext();
   const { onStop, x, y, show } = usePersistentUiLoc('macros', rootNode);
   const fileInput = useRef();
 
@@ -106,8 +109,10 @@ export const Macros = ({ rootNode }) => {
     },
     [confirm, deleteMacro],
   );
+
+  const clampedMacroNumber = Math.min(macros.length, 4);
   return show ? (
-    <Draggable onStop={onStop} position={{ x, y }} handle=".chat-handle">
+    <Draggable onStop={onStop} position={embedded ? { x: 15, y: height - 220 - (clampedMacroNumber * 32) } : { x, y }} handle=".chat-handle">
       <div className="ui-element ui-element-macro-box">
         <div className="chat-handle">
           <Typography sx={{ fontSize: 13, padding: 0, margin: 0 }} gutterBottom>

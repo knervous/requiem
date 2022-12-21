@@ -13,7 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
+import classnames from 'classnames';
 import { useState } from 'react';
 
 import { Zone } from '../Zone/component';
@@ -25,6 +25,12 @@ import './component.scss';
 import { Button } from '@mui/material';
 
 const drawerWidth = 280;
+
+const embedded =
+  new URLSearchParams(window.location.search).get('embedded') === 'true';
+
+const DrawerContext = React.createContext({});
+export const useDrawerContext = () => React.useContext(DrawerContext);
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -77,7 +83,6 @@ export const LeftDrawer = () => {
   const [title, setTitle] = useState('Advanced Map');
   const [content, setContent] = useState(<Zone />);
   
-
   const handleDrawerOpen = (type) => () => {
     setOpen(type);
   };
@@ -87,7 +92,7 @@ export const LeftDrawer = () => {
   };
 
   return (
-    <div className="dashboard-content">
+    <div className={classnames('dashboard-content', { 'dashboard-content-embedded': embedded })}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -103,9 +108,9 @@ export const LeftDrawer = () => {
               <Typography
                 sx={{ marginLeft: 1, fontSize: 16 }}
               >
-              Navigation
+            Navigation
               </Typography>
-             
+            
             </IconButton>
             <IconButton
               color="inherit"
@@ -119,13 +124,13 @@ export const LeftDrawer = () => {
               <Typography
                 sx={{ marginLeft: 1, fontSize: 16 }}
               >
-              Settings
+            Settings
               </Typography>
             </IconButton>
             <Typography variant="h6" noWrap component="div">
               {title}
             </Typography>
-           
+          
           </Toolbar>
           <div className="paypal-donate" style={{ float: 'right', display: 'inline', position: 'absolute', right: 15, top: 12 }}
           >
@@ -188,10 +193,12 @@ export const LeftDrawer = () => {
             />
           )}
         </Drawer>
-        <Main className="main-content" open={open}>
-          <DrawerHeader />
-          {content}
-        </Main>
+        <DrawerContext.Provider value={{ handleDrawerOpen, handleDrawerClose, drawerOpen: open }}>
+          <Main className="main-content" open={open}>
+            <DrawerHeader />
+            {content}
+          </Main>
+        </DrawerContext.Provider>
       </Box>
     </div>
   );

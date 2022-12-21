@@ -1,7 +1,9 @@
 import { Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import Draggable from 'react-draggable';
+import { useWindowDimensions } from '../../../hooks/useWindowDimensions';
 import { ZoneContext } from '../../Zone/component';
+import { useUiContext } from '../component';
 import HealthBar from '../health-bar/component';
 import { usePersistentUiLoc } from '../hooks/usePersistentUiLoc';
 
@@ -10,11 +12,12 @@ import './component.scss';
 export const Group = ({ rootNode }) => {
   const { character, spawnContextMenu, groupMembers, doTarget } = useContext(ZoneContext);
   const { onStop, x, y, show } = usePersistentUiLoc('group', rootNode);
-
+  const { height, width } = useWindowDimensions();
+  const { embedded } = useUiContext();
   return show && character ? 
     <Draggable
       onStop={onStop}
-      position={{ x, y }}
+      position={embedded ? { x: width - 165, y: height - 200 - (groupMembers.length * 20) } : { x, y }}
       handle=".ui-element-group"
       cancel={'[class*="MuiDialogContent-root"]'}
     >

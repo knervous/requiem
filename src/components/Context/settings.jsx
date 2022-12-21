@@ -64,7 +64,7 @@ const defaultOptions = {
     target: {
       show: true,
       x   : (window.innerWidth / 2) - 50,
-      y   : 11
+      y   : 200
     },
     chat: {
       show  : true,

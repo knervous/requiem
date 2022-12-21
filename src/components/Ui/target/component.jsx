@@ -1,13 +1,17 @@
 import { Typography } from '@mui/material';
 import React, { useCallback, useContext, useMemo } from 'react';
 import Draggable from 'react-draggable';
+import { useWindowDimensions } from '../../../hooks/useWindowDimensions';
 import { ZoneContext } from '../../Zone/component';
+import { useUiContext } from '../component';
 import HealthBar from '../health-bar/component';
 import { usePersistentUiLoc } from '../hooks/usePersistentUiLoc';
 
 import './component.scss';
 
 export const Target = ({ rootNode }) => {
+  const { width } = useWindowDimensions();
+  const { embedded } = useUiContext();
   const { character, spawnContextMenu } = useContext(ZoneContext);
   const { onStop, x, y, show } = usePersistentUiLoc('target', rootNode);
   const display = useMemo(() => {
@@ -34,7 +38,7 @@ export const Target = ({ rootNode }) => {
   return show ? 
     <Draggable
       onStop={onStop}
-      position={{ x, y }}
+      position={embedded ? { x: (width / 2) - 85, y: 70 } : { x, y }}
       handle=".ui-element-target-box"
       cancel={'[class*="MuiDialogContent-root"]'}
     >

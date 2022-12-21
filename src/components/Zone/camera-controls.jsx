@@ -17,7 +17,6 @@ import {
 import { OrbitControls, PointerLockControls } from '@react-three/drei';
 import CameraControlsDef from 'camera-controls';
 import { useRef } from 'react';
-import { useToasts } from 'react-toast-notifications';
 
 
 const subsetOfTHREE = {
@@ -61,7 +60,7 @@ const KEYCODE = {
 };
 
 export const CameraControls = forwardRef(
-  ({ controls, type = 'orbit', flySpeed = 10, addToast }, ref) => {
+  ({ controls, type = 'orbit', flySpeed = 10 }, ref) => {
     const {
       camera,
       gl: { domElement },
@@ -159,14 +158,14 @@ export const CameraControls = forwardRef(
         }
       };
 
-      const mdBackup = () => {
-        // domElement.tabIndex = 0;
-        // domElement.focus();
-      };
+
       const mouseUp = async () => {
         lockRef.current = false;
       };
       const preventDefault = (e) => e.preventDefault();
+
+
+
 
       domElement.addEventListener('keydown', downListener);
       domElement.addEventListener('keyup', upListener);
@@ -178,12 +177,29 @@ export const CameraControls = forwardRef(
         domElement.addEventListener('mousedown', mouseDown);
         window.addEventListener('mouseup', mouseUp);
       }
-      if (derivedType === 'fly-backup') {
-        domElement.addEventListener('mousedown', mdBackup);
+
+      const scrollHandler = ({ deltaY }) => {
+        const velocity = new THREE.Vector3();
+        velocity.z = deltaY;
+        if (derivedType === 'fly') {
+          velocity.applyQuaternion(camera.quaternion);
+          camera.position.add(velocity);
+        } else if (derivedType === 'fly-backup') {
+          velocity.applyQuaternion(camera.quaternion);
+  
+          camera.position.add(velocity);
+
+          controls.current.moveTo(camera.position.x, camera.position.y, camera.position.z);
+        }
+      };
+
+      if (['fly', 'fly-backup'].includes(derivedType)) {
+        domElement.addEventListener('wheel', scrollHandler);
       }
 
       return () => {
-        domElement.removeEventListener('mousedown', mdBackup);
+
+        domElement.removeEventListener('wheel', scrollHandler);
 
         window.removeEventListener('keydown', downListener);
         window.removeEventListener('keyup', upListener);
@@ -193,7 +209,7 @@ export const CameraControls = forwardRef(
         domElement.removeEventListener('mousedown', mouseDown);
         window.removeEventListener('mouseup', mouseUp);
       };
-    }, [derivedType, controls, domElement]);
+    }, [derivedType, controls, domElement, camera]);
 
     // Ref to the controls, so that we can update them on every frame using useFrame
     useFrame((state, delta) => {

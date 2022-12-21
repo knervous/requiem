@@ -63,9 +63,7 @@ export const Chat = ({ rootNode }) => {
 
   useEffect(() => {
     const listener = e => { 
-      console.log('hello', e.key, inputRef.current);
       if (e.key === '/' && inputRef.current) {
-        console.log('here');
         const input = inputRef.current.querySelector('input');
         input.focus();
         input.value = '/';

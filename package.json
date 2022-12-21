@@ -19,6 +19,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "camera-controls": "^1.37.4",
+    "classnames": "^2.3.2",
     "isomorphic-ws": "^5.0.0",
     "material-ui-color-picker": "^3.5.1",
     "material-ui-confirm": "^3.0.7",
