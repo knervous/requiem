@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
 
 export const SettingsContext = createContext({});
+export const useSettingsContext = () => useContext(SettingsContext);
 const processMode =
   new URLSearchParams(window.location.search).get('mode') === 'process';
 const defaultOptions = {
@@ -60,6 +61,7 @@ const defaultOptions = {
   ultravision           : false,
   runSpeed              : 0.7,
   camLock               : false,
+  showMacros            : true,
   ui                    : {
     target: {
       show: true,

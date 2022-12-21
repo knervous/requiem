@@ -113,7 +113,8 @@ export const SettingsDrawer = () => {
     seeInvisible,
     ultravision,
     runSpeed,
-    camLock
+    camLock,
+    showMacros
   } = options;
 
   const [genders, setGenders] = useState([0, 1, 2]);
@@ -174,6 +175,11 @@ export const SettingsDrawer = () => {
         ),
       },
       {
+        key        : 'showMacros',
+        description: 'Show Macros',
+        value      : showMacros,
+      },
+      {
         key        : 'alwaysDaylight',
         description: 'Always Daylight',
         value      : alwaysDaylight,
@@ -227,6 +233,7 @@ export const SettingsDrawer = () => {
     ultravision,
     runSpeed,
     setOption,
+    showMacros,
   ]);
 
   return (

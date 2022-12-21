@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext } from 'react';
+import { useSettingsContext } from '../Context/settings';
 
 import { Character } from './character/component';
 import { Chat } from './chat/component';
@@ -15,6 +16,7 @@ const embedded = new URLSearchParams(window.location.search).get('embedded') ===
 export const UiContext = createContext(null);
 export const useUiContext = () => useContext(UiContext);
 export const UiOverlay = ({ rootNode, character }) => {
+  const { showMacros } = useSettingsContext();
   return processMode && character && rootNode ? (
     <UiContext.Provider value={{ rootNode, embedded }}>
       createPortal(
@@ -23,7 +25,7 @@ export const UiOverlay = ({ rootNode, character }) => {
         {!embedded && <Character rootNode={rootNode}/>}
         <Group rootNode={rootNode}/>
         {!embedded && <Chat rootNode={rootNode}/>}
-        <Macros rootNode={rootNode}/>
+        {showMacros && <Macros rootNode={rootNode}/>}
       </div>
       , rootNode)
     </UiContext.Provider>
