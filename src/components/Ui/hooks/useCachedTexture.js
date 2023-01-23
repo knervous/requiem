@@ -92,7 +92,7 @@ export const useCachedTexture = name => {
   return [texture, complete];
 };
 
-export const getCachedTexture = async (name, onProgress = () => {}) => {
+export const getCachedTexture = async (name, onProgress = () => {}, onUnpack = () => {}) => {
   await prom;
   const cachedTexture = await getTextureEntry(name);
 
