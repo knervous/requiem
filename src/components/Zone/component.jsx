@@ -720,8 +720,18 @@ export const Zone = () => {
                   <SettingsIcon />
                 </IconButton>
                 }
-                
-                <IconButton
+                {!embedded ? <Button
+                  sx={{
+                    color          : 'black',
+                    backgroundColor: socket ? 'lightgreen' : 'white',
+                  }}
+                  variant="outlined"
+                  onClick={handleConnectionOptionsOpen}
+                >
+                  <Typography variant="subheading" color="inherit" noWrap>
+                    {socket ? 'Connected' : 'Connect EQ'}
+                  </Typography>
+                </Button> : <IconButton
                   sx={{
                     color          : 'black',
                     margin         : '1px 5px', borderRadius   : 2,
@@ -731,10 +741,10 @@ export const Zone = () => {
                   onClick={handleConnectionOptionsOpen}
                 >
                   <Typography variant="subheading" color="inherit" noWrap>
-                    {embedded ? <PowerIcon /> : socket ? 'Connected' : 'Connect EQ'}
-    
+                    <PowerIcon />
                   </Typography>
-                </IconButton>
+                </IconButton>}
+               
                 
 
                 <div className="overlay-buttons" style={embedded ? { top: 70 } : {}}>
