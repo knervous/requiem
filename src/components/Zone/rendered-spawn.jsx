@@ -49,6 +49,7 @@ export const RenderedSpawn = forwardRef(
           animations,
           isFallback = false;
         try {
+          
           ({ scene, animations } = await gltfLoader.loadAsync(
             `${storageUrl}/${model.toLowerCase()}${spawn.variation ? `_${spawn.variation}` : ''}.glb`,
           ));

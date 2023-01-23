@@ -15,9 +15,8 @@ import Draggable from 'react-draggable';
 import { useEffect } from 'react';
 import { PylonBufferGeometry, worldToScreen } from './extensions';
 
-import { useLoader, useFrame, extend, useThree } from '@react-three/fiber';
+import { useFrame, extend, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import './component.scss';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
@@ -30,6 +29,7 @@ import { LineMaterial } from '../Common/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { Line2 } from 'three/examples/jsm/lines/Line2';
 import { Item } from './item';
+import { useCachedTexture } from '../Ui/hooks/useCachedTexture';
 
 extend({
   EffectComposer,
@@ -181,10 +181,7 @@ export const RenderedZone = forwardRef(
     const [staticIndex, setStaticIndex] = useState(-1);
     const [rayTarget, setRayTarget] = useState(null);
     const prevLoc = useRef({ x: null, y: null, z: null });
-    const [{ bannerScale, bannerLoc }, setBanner] = useState({
-      bannerScale: 0,
-      bannerLoc  : { x: 0, y: 0, z: 0 },
-    });
+
     const characterRef = useRef();
     const parseRef = useRef();
     const raycastRef = useRef(null);
@@ -208,12 +205,10 @@ export const RenderedZone = forwardRef(
       { trailing: true },
     );
 
-    const zoneTexture = useLoader(GLTFLoader, `${storageUrl}/${zoneName}.glb`);
-    const bannerTexture = useLoader(
-      GLTFLoader,
-      `${storageUrl}/textures/banner.glb`,
-    );
+    // const zoneTexture2 = useLoader(GLTFLoader, `${storageUrl}/${zoneName}.glb`);
 
+    const [zoneTexture, pctComplete] = useCachedTexture(`${storageUrl}/${zoneName}.glb`);
+      
     useEffect(() => {
       const listener = (e) => {
         if (e.key === 'Escape') {
@@ -225,10 +220,10 @@ export const RenderedZone = forwardRef(
     }, []);
 
     useEffect(() => {
-      if (!zoneTexture.scene) {
+      if (!zoneTexture?.scene) {
         return;
       }
-      traverseMaterials(zoneTexture.scene, (material) => {
+      traverseMaterials(zoneTexture?.scene, (material) => {
         material.wireframe = wireframe;
       });
     }, [zoneTexture, wireframe]);
@@ -291,19 +286,45 @@ export const RenderedZone = forwardRef(
         }
       };
     }, [domElement, zoneTexture?.scene]); // eslint-disable-line
-   
 
     useFrame(() => {
       const ctx = canvasRef.current?.getContext?.('2d');
       ctx && ctx.clearRect(0, 0, domElement.width, domElement.height);
 
-      if (!canvasRef.current || !zoneTexture.scene) {
+      if (!canvasRef.current) {
         return;
       }
+
+      if (pctComplete !== 1 && pctComplete !== 0) {
+        const canvas = canvasRef.current;
+        if (!ctx || !canvas) {
+          return;
+        }
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        ctx.clearRect(
+          0,
+          0,
+          canvasRef.current.clientWidth,
+          canvasRef.current.clientHeight,
+        );
+        ctx.font = '25px arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+
+        ctx.fillText(`Loading ${zoneName}: ${(pctComplete * 100).toFixed(2)}%`, centerX, centerY + 4);
+      } 
+
+      if (!canvasRef.current || !zoneTexture?.scene) {
+        return;
+      }
+
       if (domElement.clientWidth !== canvasRef.current.width || domElement.clientHeight !== canvasRef.current.height) {
         canvasRef.current.width = domElement.clientWidth;
         canvasRef.current.height = domElement.clientHeight;
       }
+
+     
       
       const frustum = new THREE.Frustum();
       frustum.setFromProjectionMatrix(
@@ -742,10 +763,10 @@ export const RenderedZone = forwardRef(
     charRef.current = character;
 
     const targetObject = useCallback((obj = charRef?.current || character || parseInfo?.locations?.[0]) => {
-      if (!zoneTexture.scene) {
+      if (!zoneTexture?.scene) {
         return;
       }
-      zoneTexture.scene.position.set(0, 0, 0);
+      zoneTexture?.scene?.position?.set(0, 0, 0);
       setTimeout(() => {
         const charPosition = new THREE.Vector3(
           (obj?.y ?? 0) * -1,
@@ -769,19 +790,6 @@ export const RenderedZone = forwardRef(
         onLoaded();
       }
     }, [zoneTexture]) //eslint-disable-line
-
-    // Update banner location when target changes or spawn changes
-    useEffect(() => {
-      const spawn = spawns.find((s) => s.id === target?.id);
-      if (spawn) {
-        setBanner({
-          bannerScale: 6,
-          bannerLoc  : { x: spawn.x, y: spawn.y, z: spawn.z },
-        });
-      } else {
-        setBanner({ bannerScale: 0, bannerLoc: { x: 0, y: 0, z: 0 } });
-      }
-    }, [target, spawns]);
 
     //
     useEffect(() => {
@@ -1054,16 +1062,6 @@ export const RenderedZone = forwardRef(
               target={characterRef.current}
               position={[character.y * -1, character.z + 145, character.x]}
             />
-            {/* Banner for targeting */}
-            <primitive
-              scale={[bannerScale, bannerScale, bannerScale]}
-              position={[
-                bannerLoc.y * -1 - 85,
-                bannerLoc.z + 120,
-                bannerLoc.x - 143,
-              ]}
-              object={bannerTexture?.scene}
-            />
           </>
         )}
         {/** Raycast Loc */}
@@ -1138,7 +1136,7 @@ export const RenderedZone = forwardRef(
           return null;
         })}
         {/* Our zone */}
-        <primitive object={zoneTexture?.scene} />
+        {zoneTexture && <primitive object={zoneTexture?.scene} />}
         {locLine && <primitive object={locLine} />}
       </>
     );
