@@ -986,8 +986,8 @@ export const RenderedZone = forwardRef(
                   : 'gray';
           return (
             <React.Fragment key={`spawn-${s.id}`}>
-              {s.primary > 0 ? <Item id={s.primary} position={[s.y * -1, s.z + 5, s.x - 5]} /> : null}
-              {s.offhand > 0 ? <Item id={s.offhand} position={[s.y * -1, s.z + 5, s.x + 5]} /> : null}
+              {s.primary > 0 && !(s.primary >= 140 && s.primary <= 160) ? <Item id={s.primary} position={[s.y * -1, s.z + 5, s.x - 5]} /> : null}
+              {s.offhand > 0 && !(s.primary >= 140 && s.primary <= 160) ? <Item id={s.offhand} position={[s.y * -1, s.z + 5, s.x + 5]} /> : null}
               <mesh
                 spawn={s}
                 position={[s.y * -1, s.z + 5, s.x]}
