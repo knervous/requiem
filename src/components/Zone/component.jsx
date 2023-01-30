@@ -151,6 +151,8 @@ export const Zone = () => {
     enduringBreath,
     farFallow,
     jumpAlways,
+    noSummon,
+    levitate,
     notEncumbered,
     noAnonymous,
     noBlind,
@@ -256,6 +258,8 @@ export const Zone = () => {
         seeInvisible,
         ultravision,
         runSpeed,
+        noSummon,
+        levitate,
       },
       type: 'activeConfig',
     });
@@ -277,6 +281,8 @@ export const Zone = () => {
     seeInvisible,
     runSpeed,
     ultravision,
+    levitate,
+    noSummon
   ]);
   const { handleDrawerOpen, handleDrawerClose, drawerOpen } = useDrawerContext();
   const addChatLine = useCallback((line) => {

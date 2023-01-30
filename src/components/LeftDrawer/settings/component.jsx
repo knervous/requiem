@@ -101,6 +101,8 @@ export const SettingsDrawer = () => {
     enduringBreath,
     farFallow,
     jumpAlways,
+    levitate,
+    noSummon,
     notEncumbered,
     noAnonymous,
     noBlind,
@@ -180,6 +182,11 @@ export const SettingsDrawer = () => {
         value      : showMacros,
       },
       {
+        key        : 'levitate',
+        description: 'Levitate',
+        value      : levitate,
+      },
+      {
         key        : 'alwaysDaylight',
         description: 'Always Daylight',
         value      : alwaysDaylight,
@@ -208,6 +215,7 @@ export const SettingsDrawer = () => {
       { key: 'noSilence', description: 'No Silence', value: noSilence },
       { key: 'noSnare', description: 'No Snare', value: noSnare },
       { key: 'noStun', description: 'No Stun', value: noStun },
+      { key: 'noSummon', description: 'No Summon', value: noSummon },
       {
         key        : 'seeInvisible',
         description: 'See Invisible',
@@ -234,6 +242,8 @@ export const SettingsDrawer = () => {
     runSpeed,
     setOption,
     showMacros,
+    noSummon,
+    levitate
   ]);
 
   return (

@@ -49,6 +49,8 @@ const defaultOptions = {
   farFallow             : false,
   jumpAlways            : false,
   notEncumbered         : false,
+  noSummon              : false,
+  levitate              : false,
   noAnonymous           : false,
   noBlind               : false,
   noDelayedJump         : false,
