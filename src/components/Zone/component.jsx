@@ -497,9 +497,14 @@ export const Zone = () => {
       : spawns.filter((s) => {
         let ret = Boolean(s) && character?.name !== s?.name;
         if (spawnFilter.length) {
-          ret = s?.displayedName
-            ?.toLowerCase()
-            ?.includes?.(spawnFilter.toLowerCase()) || s?.id?.includes(spawnFilter);
+          if (spawnFilter === 'HOLDING') {
+            ret = s?.primary > 0 || s?.offhand > 0;
+          } else {
+            ret = s?.displayedName
+              ?.toLowerCase()
+              ?.includes?.(spawnFilter.toLowerCase()) || s?.id === spawnFilter;
+          }
+          
         }
         if (showNpcs) {
           ret =
