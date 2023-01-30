@@ -499,7 +499,7 @@ export const Zone = () => {
         if (spawnFilter.length) {
           ret = s?.displayedName
             ?.toLowerCase()
-            ?.includes?.(spawnFilter.toLowerCase());
+            ?.includes?.(spawnFilter.toLowerCase()) || s?.id?.includes(spawnFilter);
         }
         if (showNpcs) {
           ret =
@@ -518,7 +518,8 @@ export const Zone = () => {
         return ret;
       });
   }, [selectedProcess, showNpcs, spawns, spawnFilter, showPcs, character]);
-
+  window.filteredSpawns = filteredSpawns;
+  window.spawns = spawns;
   const filteredZoneDetails = useMemo(() => {
     if (!showPoi) {
       return [];
