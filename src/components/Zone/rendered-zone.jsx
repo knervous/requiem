@@ -171,10 +171,11 @@ export const RenderedZone = forwardRef(
       cameraType,
       cameraFollowMe,
       followTel,
+      axesHelp,
+      axesSize
     } = options;
     // Skybox
     useSkybox(skybox);
-
     const [originalTarget, setOriginalTarget] = useState(null);
     const [doFollow, setDoFollow] = useState(false);
     const [target, setTarget] = useState(myTarget);
@@ -185,6 +186,7 @@ export const RenderedZone = forwardRef(
     const characterRef = useRef();
     const parseRef = useRef();
     const raycastRef = useRef(null);
+    const axesRef = useRef(null);
 
     const followPulse = useThrottledCallback(
       (override = false) => {
@@ -287,6 +289,7 @@ export const RenderedZone = forwardRef(
       };
     }, [domElement, zoneTexture?.scene]); // eslint-disable-line
 
+    // eslint-disable-next-line complexity
     useFrame(() => {
       const ctx = canvasRef.current?.getContext?.('2d');
       ctx && ctx.clearRect(0, 0, domElement.width, domElement.height);
@@ -324,8 +327,6 @@ export const RenderedZone = forwardRef(
         canvasRef.current.height = domElement.clientHeight;
       }
 
-     
-      
       const frustum = new THREE.Frustum();
       frustum.setFromProjectionMatrix(
         new THREE.Matrix4().multiplyMatrices(
@@ -334,6 +335,57 @@ export const RenderedZone = forwardRef(
         ),
       );
       followPulse();
+
+      // Axes Helper
+      if (axesRef.current && axesHelp) {
+        const coordMap = [
+          { axis: 'Y', pt: new THREE.Vector3(axesSize / 3, 0, 0) },
+          { axis: 'Z', pt: new THREE.Vector3(0, axesSize / 3, 0) },
+          { axis: 'X', pt: new THREE.Vector3(0, 0, axesSize / 3) },
+        ];
+        for (const { axis, pt } of coordMap.filter(({ pt }) => frustum.containsPoint(pt))) {
+          const screen = worldToScreen(
+            canvasRef.current,
+            pt,
+            camera,
+          );
+          let side = 1;
+          if (screen.x > canvasRef.current.width / 2) {
+            side = -1;
+          }
+
+          ctx.strokeStyle = '#FFFFFF';
+
+          ctx.beginPath();
+          ctx.moveTo(screen.x, screen.y);
+          ctx.lineTo(screen.x - side * 12, screen.y);
+          ctx.lineTo(screen.x - side * 60, screen.y - 40);
+          ctx.stroke();
+
+          ctx.textAlign = 'start';
+          if (side === -1) {
+            ctx.textAlign = 'end';
+          }
+          const label = `${axis} Axis`;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `bold ${fontSize + 3}px Arial`;
+          ctx.textAlign = 'center';
+          const nameWidth = ctx.measureText(label).width;
+
+          ctx.fillText(
+            label,
+            screen.x -
+            side * 2 -
+            side * nameWidth -
+            side * 16 +
+            (nameWidth * side) / 2,
+            screen.y - 64 + 6,
+          );
+        }
+        // console.log('axes', axesRef.current);
+        // const { geometry: { vertices: [, { x, y, z }] } } = axesRef.current;
+        
+      }
       for (const spawn of spawns.filter(
         (s) =>
           !groupMembers.some((g) => g.displayedName === s.displayedName) &&
@@ -1138,6 +1190,7 @@ export const RenderedZone = forwardRef(
         {/* Our zone */}
         {zoneTexture && <primitive object={zoneTexture?.scene} />}
         {locLine && <primitive object={locLine} />}
+        {axesHelp && <axesHelper ref={axesRef} args={[axesSize]} />}
       </>
     );
   },

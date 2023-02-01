@@ -40,8 +40,8 @@ const subsetOfTHREE = {
 CameraControlsDef.install({ THREE: subsetOfTHREE });
 extend({ CameraControlsDef });
 
-const noPointerLock =
-  new URLSearchParams(window.location.search).get('plock') === 'false';
+const noPointerLock = true;
+// new URLSearchParams(window.location.search).get('plock') === 'false';
 
 const KEYCODE = {
   W          : 87,
@@ -104,6 +104,9 @@ export const CameraControls = forwardRef(
 
     useEffect(() => {
       const listener = (val) => (event) => {
+        if (document.activeElement !== document.body) {
+          return;
+        }
         const newState = { ...moveState.current };
         switch (event.keyCode) {
           case KEYCODE.W:
@@ -163,9 +166,6 @@ export const CameraControls = forwardRef(
         lockRef.current = false;
       };
       const preventDefault = (e) => e.preventDefault();
-
-
-
 
       domElement.addEventListener('keydown', downListener);
       domElement.addEventListener('keyup', upListener);

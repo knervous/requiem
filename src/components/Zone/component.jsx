@@ -47,6 +47,7 @@ import { Loader } from './loader';
 import './component.scss';
 import { useMemo } from 'react';
 import { useToasts } from 'react-toast-notifications';
+import Repeatable from 'react-repeatable';
 import { SocketHandler } from './socketHandler';
 import { SettingsContext } from '../Context/settings';
 import supportedZones from './supportedZones';
@@ -757,9 +758,7 @@ export const Zone = () => {
                   </Typography>
                 </IconButton>}
                
-                
-
-                <div className="overlay-buttons" style={embedded ? { top: 70 } : {}}>
+                <div className="overlay-buttons" style={embedded ? { top: 75 } : {}}>
                   {(character || parseInfo) && (
                     <Button
                       ref={actionPopoverRef}
@@ -774,6 +773,50 @@ export const Zone = () => {
                         Jump to Me
                     </Button>
                   )}
+                  {
+                    [
+                      { label: '-X', prop: 'x', value: -1 },
+                      { label: '+X', prop: 'x', value: 1 },
+                      { label: '-Y', prop: 'y', value: -1 },
+                      { label: '+Y', prop: 'y', value: 1 },
+                      { label: '-Z', prop: 'z', value: -1 },
+                      { label: '+Z', prop: 'z', value: 1 },
+                    ].map(({ label, prop, value }) => character && <Repeatable
+                      repeatDelay={250} repeatInterval={32}
+                      onPress={() => {
+                        const pt = { x: character.x, y: character.y, z: character.z };
+                        pt[prop] += value * 15;
+                        socket.emit('doAction', {
+                          processId: selectedProcessRef.current.pid,
+                          payload  : {
+                            x: pt.y + 0.01,
+                            z: pt.z + 0.01,
+                            y: pt.x + 0.01
+                          },
+                          type: 'warp',
+                        });
+                      }}
+                      onHold={() => {
+                        const pt = { x: character.x, y: character.y, z: character.z };
+                        pt[prop] += value * 3;
+                        setCharacter(char => ({ ...char, ...pt }));
+                        socket.emit('doAction', {
+                          processId: selectedProcessRef.current.pid,
+                          payload  : {
+                            x: pt.y + 0.01,
+                            z: pt.z + 0.01,
+                            y: pt.x + 0.01
+                          },
+                          type: 'warp',
+                        });
+                      }}
+                    >
+                      <Button sx={{ margin: 1 }} variant="contained">
+                        {label}
+                      </Button>
+                    
+                    </Repeatable>)
+                  }
                 </div>
 
                 {processMode && (

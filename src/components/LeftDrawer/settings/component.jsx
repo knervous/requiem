@@ -84,6 +84,8 @@ export const SettingsDrawer = () => {
     locationColor,
     flySpeed,
     wireframe,
+    axesHelp,
+    axesSize,
     spawnWireframe,
     locationRaycast,
     setOption,
@@ -275,6 +277,33 @@ export const SettingsDrawer = () => {
               step={1}
               min={5}
               max={25}
+            />
+          </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={axesHelp}
+                onChange={({ target: { checked } }) =>
+                  setOption('axesHelp', checked)
+                }
+              />
+            }
+            label="Axes Helper"
+          />
+          <FormControl fullWidth>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Axes Helper Size: {axesSize}
+            </Typography>
+            <Slider
+              value={axesSize}
+              onChange={(e) => setOption('axesSize', +e.target.value)}
+              step={1}
+              min={50}
+              max={15000}
             />
           </FormControl>
           <FormControlLabel

@@ -32,6 +32,8 @@ const defaultOptions = {
   cameraType            : 'fly',
   flySpeed              : 2,
   wireframe             : false,
+  axesHelp              : false,
+  axesSize              : 5000,
   grid                  : false,
   locationTrails        : 5,
   characterRace         : 1,
