@@ -1,0 +1,30 @@
+.macro-editor {
+    .macro-editor-monaco {
+        z-index: 1000;
+        margin: 10px;
+    }
+    .MuiDialog-paper[role=dialog] {
+        padding: 0px !important;
+      background: #3c3c3c !important;
+      border-radius: 0;
+      border: 1px solid grey;
+      height: calc(100vh - 180px);
+    }
+
+    .MuiDialogContent-root {
+        padding: 0px !important;
+    }
+    .macro-editor-content {
+        height: calc(100vh - 200px);
+
+    }
+    .macro-editor-buttons {
+        border: 2px inset solid #b2b2b2;
+        padding-right: 15px;
+    }
+    
+    .macro-editor-title {
+        padding: 10px;
+        padding-left: 15px;
+    }
+  }

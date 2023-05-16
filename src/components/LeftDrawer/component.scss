@@ -1,0 +1,39 @@
+.dashboard-content {
+  width: 100vw;
+  height: 100vh;
+  & > div {
+    width: 100%;
+    height: 100%;
+  }
+}
+.main-content {
+  padding: 0px !important;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-content-embedded {
+  header {
+    display: none;
+  }
+  main > div:not(.MuiPaper-root) {
+    display: none;
+  }
+}
+
+.connection-content {
+  display: block;
+  min-height: 350px;
+  min-width: 500px;
+  margin: 5px;
+  & > * {
+    margin: 5px 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+ .paypal-donate {
+    display: none !important;
+ } 
+}

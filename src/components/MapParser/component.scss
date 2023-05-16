@@ -1,0 +1,25 @@
+.map-parser-content {
+   & > div {
+    height: 100vh;
+    max-height: 100%;
+    overflow-y: auto;
+    //padding: 10px 150px;
+   }
+  
+   * { font-family: monospace !important; }
+}
+
+.map-parser-req-software {
+   width: 70%;
+   margin: 10px auto;
+}
+
+ .map-parser-installation {
+   width: 90%;
+   margin: 10px auto;
+}
+
+
+.map-parser-installation-steps {
+  text-align: left;
+}
