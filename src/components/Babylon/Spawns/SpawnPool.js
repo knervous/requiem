@@ -25,12 +25,6 @@ class SpawnPool {
     while (!this.#scene) {
       await new Promise(res => setTimeout(res, 100));
     }
-    import('./data/animations/hum.json').then(({ default: HUM_animations }) => {
-      console.log('anim', HUM_animations);
-      // this.#HUM_animations = HUM_animations.map(animation => AnimationGroup.Parse(animation, this.#scene));
-      this.#HUM_animations = HUM_animations;
-      this.#setInitialized();
-    });
   }
 
   setScene(scene) {

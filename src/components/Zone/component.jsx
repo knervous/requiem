@@ -14,8 +14,6 @@ import { OP_CODES, getOpCode, getOpCodeDesc } from '../../net/packet/opcodes';
 import { ZoneSocket } from '../../net/socket';
 
 import './component.scss';
-import { Button } from '@mui/material';
-import { ThreeZone } from '../ThreeJS/Zone';
 import { BabylonZone } from '../Babylon/Zone';
 
 
