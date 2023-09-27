@@ -1,36 +1,11 @@
-import React, {
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { createPortal } from 'react-dom';
-import { Engine, Model, Scene, useEngine, useScene } from 'react-babylonjs';
-
-import '@babylonjs/loaders/glTF';
-
-import { Vector3, CannonJSPlugin, Database } from '@babylonjs/core';
-import { Inspector } from '@babylonjs/inspector';
-import { Camera } from './Camera';
-import CANNON from 'cannon';
-import { SpawnPool } from './SpawnPool';
-import { GlobalStoreProvider } from '../../state';
-import { BabylonContext } from './Context';
-import { spawnPool } from './Spawns/SpawnPool';
-import mockData from './mockSpawns.json';
-
-Database.IDBStorageEnabled = true;
-
-const storageUrl = 'https://mqbrowser.blob.core.windows.net/zones/';
-const map = {
+export const textureAnimationMap = {
   b_m0001: {
     frames: 4,
     time  : 200,
   },
   d_13mf1: {
     frames: 3,
-    time  : 148,
+    time  : 150,
   },
   d_1blockdrip1: {
     frames: 4,
@@ -82,15 +57,15 @@ const map = {
   },
   d_cabrok1w1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_cabrok2w1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_caulstonea1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_caveuwater1: {
     frames: 4,
@@ -106,7 +81,7 @@ const map = {
   },
   d_checkdirt1a1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_chessdrk1: {
     frames: 4,
@@ -130,7 +105,7 @@ const map = {
   },
   d_cobw1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_cornerfall1: {
     frames: 4,
@@ -146,7 +121,7 @@ const map = {
   },
   d_dirt3a1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_dnwat01: {
     frames: 4,
@@ -165,7 +140,7 @@ const map = {
     time  : 200,
   },
   d_falls1: {
-    frames: 8,
+    frames: 7,
     time  : 200,
   },
   d_fire1: {
@@ -182,7 +157,7 @@ const map = {
   },
   d_fount1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_fpwall1: {
     frames: 4,
@@ -233,7 +208,7 @@ const map = {
     time  : 200,
   },
   d_gukfalls1: {
-    frames: 8,
+    frames: 7,
     time  : 200,
   },
   d_gukgrate1: {
@@ -298,31 +273,31 @@ const map = {
   },
   d_kedw1sa1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_kedwalla1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_kf1an1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_kmartilea1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_ksh1anim1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_ktile2a1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_ktileanim1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_kw1: {
     frames: 4,
@@ -330,7 +305,7 @@ const map = {
   },
   d_kw1an1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_lava001: {
     frames: 3,
@@ -354,11 +329,11 @@ const map = {
   },
   d_m0001: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_m0002: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_m0003: {
     frames: 4,
@@ -445,7 +420,7 @@ const map = {
     time  : 200,
   },
   d_mosstilefalls1: {
-    frames: 8,
+    frames: 7,
     time  : 200,
   },
   d_mrbunder1: {
@@ -469,12 +444,12 @@ const map = {
     time  : 200,
   },
   d_pfalls1: {
-    frames: 8,
+    frames: 7,
     time  : 200,
   },
   d_rea1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_redgem1: {
     frames: 4,
@@ -486,7 +461,7 @@ const map = {
   },
   d_rockw2a1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_runwat1: {
     frames: 4,
@@ -582,7 +557,7 @@ const map = {
   },
   d_undrtil1: {
     frames: 3,
-    time  : 148,
+    time  : 150,
   },
   d_unslwall1: {
     frames: 4,
@@ -594,7 +569,7 @@ const map = {
   },
   d_uwbrik1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   d_veelava1: {
     frames: 3,
@@ -614,11 +589,11 @@ const map = {
   },
   d_w1: {
     frames: 4,
-    time  : 100,
+    time  : 300,
   },
   d_w1b: {
     frames: 4,
-    time  : 100,
+    time  : 300,
   },
   d_w1ot: {
     frames: 4,
@@ -626,11 +601,7 @@ const map = {
   },
   d_w2anim1: {
     frames: 4,
-    time  : 148,
-  },
-  d_wafl1: {
-    frames: 3,
-    time  : 148,
+    time  : 150,
   },
   d_wall1rubyall01: {
     frames: 4,
@@ -659,10 +630,6 @@ const map = {
   d_watwood1: {
     frames: 4,
     time  : 200,
-  },
-  d_wawall1: {
-    frames: 3,
-    time  : 148,
   },
   d_wbrikunw1: {
     frames: 4,
@@ -758,7 +725,7 @@ const map = {
   },
   t25_smke1: {
     frames: 5,
-    time  : 148,
+    time  : 150,
   },
   t25_veliumshine01a: {
     frames: 6,
@@ -797,7 +764,7 @@ const map = {
     time  : 200,
   },
   t50_falls1: {
-    frames: 8,
+    frames: 7,
     time  : 100,
   },
   t50_grnwtr1: {
@@ -805,7 +772,7 @@ const map = {
     time  : 200,
   },
   t50_gukfalls1: {
-    frames: 8,
+    frames: 7,
     time  : 248,
   },
   t50_gwater1: {
@@ -938,7 +905,7 @@ const map = {
   },
   t75_b1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   t75_blood1: {
     frames: 4,
@@ -946,7 +913,7 @@ const map = {
   },
   t75_cbw1: {
     frames: 4,
-    time  : 148,
+    time  : 150,
   },
   t75_charfalls1: {
     frames: 4,
@@ -961,7 +928,7 @@ const map = {
     time  : 200,
   },
   t75_falls1: {
-    frames: 8,
+    frames: 7,
     time  : 200,
   },
   t75_greenagua1: {
@@ -1208,87 +1175,4 @@ const map = {
     frames: 15,
     time  : 50,
   },
-};
-const InspectLayer = () => {
-  const scene = useScene();
-
-  useEffect(() => {
-    Inspector.Show(scene, {});
-  }, [scene]);
-};
-
-const RenderedZone = () => {
-  const [engineInit, setEngineInit] = useState(false);
-  const [zone, setZone] = useState('qeytoqrg');
-  const engine = useEngine();
-  const scene = useScene();
-  useEffect(() => {
-    engine.disableManifestCheck = true;
-    setEngineInit(true);
-    spawnPool.addZoneSpawns(
-      mockData.filter((a) => a.name.includes('Marton_Sayer')),
-    );
-  }, [engine]);
-
-  const onCreated = useCallback((zoneScene) => {
-    const recurse = (node) => {
-      node.checkCollisions = true;
-      if (node._children) {
-        node._children.forEach(recurse);
-      }
-    };
-    recurse(zoneScene);
-    spawnPool.setScene(scene);
-  }, [scene]);
-
-  return engineInit ? (
-    <Suspense fallback={null}>
-      <Model
-        onCreated={onCreated}
-        checkCollisions
-        enablePhysics={[
-          new Vector3(0, -9.81, 0),
-          new CannonJSPlugin(true, 10, CANNON),
-        ]}
-        rootUrl={storageUrl}
-        sceneFilename={`${zone}.glb`}
-        name="zone"
-        position={Vector3.Zero()}
-      >
-        {/* <SpawnPool /> */}
-      </Model>
-    </Suspense>
-  ) : null;
-};
-
-export const BabylonZone = () => {
-  const cameraRef = useRef();
-  return (
-    <div>
-      <Engine antialias canvasId="babylonJS">
-        {createPortal(<InspectLayer />, document.body)}
-
-        <Scene
-          enablePhysics={[
-            new Vector3(0, -9.81, 0),
-            new CannonJSPlugin(true, 10, CANNON),
-          ]}
-          collisionsEnabled
-          gravity={new Vector3(0, -0.75, 0)}
-        >
-          <GlobalStoreProvider>
-            <BabylonContext.Provider value={{ camera: cameraRef }}>
-              <RenderedZone />
-              <Camera ref={cameraRef} />
-              <hemisphericLight
-                name="light1"
-                intensity={0.85}
-                direction={Vector3.Up()}
-              />
-            </BabylonContext.Provider>
-          </GlobalStoreProvider>
-        </Scene>
-      </Engine>
-    </div>
-  );
 };

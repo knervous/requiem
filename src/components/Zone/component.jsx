@@ -8,13 +8,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 
+import { BabylonZone } from '../Babylon/Zone';
 import * as ZonePacket from '../../net/packet/ZonePackets';
 import { GlobalStore, ZoneState, useSelector } from '../../state';
 import { OP_CODES, getOpCode, getOpCodeDesc } from '../../net/packet/opcodes';
 import { ZoneSocket } from '../../net/socket';
 
 import './component.scss';
-import { BabylonZone } from '../Babylon/Zone';
 
 
 export const Zone = () => {
@@ -77,11 +77,7 @@ export const Zone = () => {
     <Paper className='zone-container' elevation={1}>
       <Card className='zone-header' variant='outlined'>
         <CardContent className='zone-header'>
-          {
-            // three impl
-            // <ThreeZone />
-            <BabylonZone />
-          }
+          <BabylonZone />
         </CardContent>
       </Card>
     </Paper>

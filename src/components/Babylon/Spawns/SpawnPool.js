@@ -13,8 +13,6 @@ class SpawnPool {
     this.#setInitialized = res;
   });
 
-  #HUM_animations = [];
-  #HUF_animations = [];
   constructor() {
     this.#spawns.clear();
     this.initialize();

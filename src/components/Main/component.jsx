@@ -6,11 +6,10 @@ import { GamePage } from '../GamePage';
 import {
   DefaultToast,
   ToastProvider,
-  
+
 } from 'react-toast-notifications';
-import './component.scss';
 import { SettingsProvider } from '../Context/settings';
-import { MacroProvider } from '../Context/macroContext';
+import './component.scss';
 
 const CustomToast = ({ children, ...props }) => {
   const myToast = useRef(null);
@@ -56,15 +55,13 @@ export const Main = () => {
   return (
     <ConfirmProvider>
       <ToastProvider autoDismiss components={{ Toast: CustomToast }}>
-        <MacroProvider>
-          <SettingsProvider>
-            <ThemeProvider theme={createTheme({ palette: { mode: 'dark' }, typography: { fontFamily: 'Montaga' } })}>
-              <div className="app">
-                <GamePage />
-              </div>
-            </ThemeProvider>
-          </SettingsProvider>
-        </MacroProvider>
+        <SettingsProvider>
+          <ThemeProvider theme={createTheme({ palette: { mode: 'dark' }, typography: { fontFamily: 'Montaga' } })}>
+            <div className="app">
+              <GamePage />
+            </div>
+          </ThemeProvider>
+        </SettingsProvider>
       </ToastProvider>
     </ConfirmProvider>
   );

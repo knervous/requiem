@@ -1,7 +1,5 @@
 import { EQPacket } from '../packet/EQPacket';
 
-const fetchedPaths = [];
-
 export class EqSocket {
   /**
    * @type {WebSocket}
@@ -29,7 +27,7 @@ export class EqSocket {
     this.websock = new WebSocket(`ws://${process.env.REACT_APP_EQ_SERVER}:${port}`);
     this.websock.binaryType = 'arraybuffer';
     const self = this;
-    return new Promise((res, rej) => {
+    return new Promise((res, _rej) => {
       this.websock.onerror = function (event) {
         console.error('Error connecting to server', event, port);
         setTimeout(1500, () => {
