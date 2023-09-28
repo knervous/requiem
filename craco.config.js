@@ -8,7 +8,7 @@ module.exports = {
       plugin : CracoEsbuildPlugin,
       options: {
         esbuildMinimizerOptions: {
-          target: 'es2015',
+          target: 'es2020',
           css   : true,
         },
       },
