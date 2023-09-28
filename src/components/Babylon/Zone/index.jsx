@@ -32,7 +32,12 @@ const RenderedZone = () => {
       engine.enableOfflineSupport = true;
     }
     zoneController.loadZoneScene(new Scene(engine), zone, canvasRef.current);
-    Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+    if (process.env.REACT_APP_INSPECTOR === 'true') {
+      Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+    }
+    window.showInspector = () => {
+      Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+    };
 
     engine.runRenderLoop(() => {
       if (zoneController.scene && zoneController.CameraController.camera) {
