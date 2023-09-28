@@ -70,6 +70,14 @@ class SkyController {
       upperLayerTexture.vOffset -= 0.0001;
       upperLayerTexture.vOffset -= 0.0001;
     }, 10);
+
+
+    this.setFog(scene);
+  }
+
+  setFog(_scene) {
+    // scene.fogMode = Scene.FOGMODE_LINEAR;
+    // scene.fogEnd = 6000;
   }
 }
 

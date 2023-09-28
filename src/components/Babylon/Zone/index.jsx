@@ -12,13 +12,17 @@ import { zoneController } from '../controllers/ZoneController';
 
 Database.IDBStorageEnabled = true;
 
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
 /**
  * @type {import('@babylonjs/core/Engines/engine').Engine}
  */
 let engine = null;
 
 const RenderedZone = () => {
-  const [zone, _setZone] = useState('qeynos2');
+  const [zone, _setZone] = useState(params.zone ?? 'qeytoqrg');
   const canvasRef = useRef();
 
   useEffect(() => {

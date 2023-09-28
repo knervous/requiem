@@ -31,6 +31,7 @@
     "camera-controls": "^1.37.4",
     "cannon": "^0.6.2",
     "classnames": "^2.3.2",
+    "linear-octree": "^0.2.0",
     "material-ui-color-picker": "^3.5.1",
     "material-ui-confirm": "^3.0.7",
     "material-ui-popup-state": "^1.9.3",
@@ -47,6 +48,7 @@
     "react-repeatable": "^2.0.1",
     "react-toast-notifications": "^2.5.1",
     "redux": "^4.2.1",
+    "sparse-octree": "^7.1.8",
     "three": "^0.143.0",
     "use-debounce": "^8.0.3",
     "uuid": "^8.3.2"

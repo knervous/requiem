@@ -9,6 +9,8 @@ import { textureAnimationMap } from './textureAnimationMap';
 import { cameraController } from './CameraController';
 import { lightController } from './LightController';
 import { skyController } from './SkyController';
+import { musicController } from './MusicController';
+import { soundController } from './SoundController';
   
 const sceneVersion = 1;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
@@ -19,7 +21,7 @@ async function getInitializedHavok() {
   return await HavokPhysics();
 }
   
-const assumedFramesPerSecond = 60;
+const assumedFramesPerSecond = 240;
 const earthGravity = -9.81;
 
 const testNode = (node, point) => {
@@ -69,6 +71,8 @@ class ZoneController {
   CameraController = cameraController;
   LightController = lightController;
   SkyController = skyController;
+  MusicController = musicController;
+  SoundController = soundController;
 
   dispose() {
     if (this.scene) {
@@ -78,6 +82,8 @@ class ZoneController {
     this.CameraController.dispose();
     this.LightController.dispose();
     this.SkyController.dispose();
+    this.MusicController.dispose();
+    this.SoundController.dispose();
   }
 
   async loadZoneScene (scene, zoneName, canvas) {
@@ -92,7 +98,6 @@ class ZoneController {
       console.error('Could not load physics engine');
       return;
     }
-    this.scene._physicsEngine.gravity = scene.gravity;
 
     // Load serialized scene in IDB
     let storedScene = await getDataEntry(zoneName);
@@ -113,7 +118,7 @@ class ZoneController {
 
     this.zoneMetadata = await fetch(`${storageUrl}${zoneName}.json`).then(r => r.json());
 
-
+    
     // Objects
     if (!this.hadStoredScene) {
       await Promise.all(Object.entries(this.zoneMetadata.objects).map(([key, val]) => this.instantiateObjects(key, val)));
@@ -127,14 +132,22 @@ class ZoneController {
       }
     }
 
+    // Set up aabb tree
+    await this.setupAabbTree();
+
+    // Music
+    this.MusicController.hookUpZoneMusic(scene, this.zoneName, this.zoneMetadata.music, this.aabbTree);
+
+    // Sound
+    this.SoundController.hookUpZoneSounds(scene, this.zoneMetadata.sound2d, this.zoneMetadata.sound3d);
+
+    scene.audioListenerPositionProvider = () => this.CameraController.camera.globalPosition;
+
     // Lights
-    this.LightController.loadLights(scene, this.zoneMetadata.lights, this.hadStoredScene);
+    this.LightController.loadLights(scene, this.zoneMetadata.lights, this.hadStoredScene, this.aabbTree);
 
     // Sky 
     await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
-
-    // Set up aabb tree
-    await this.setupAabbTree();
 
     // Start zone hook
     this.collideCounter = 0;
@@ -173,25 +186,10 @@ class ZoneController {
       } else if (aabbRegion.regions.includes(3)) {
         console.log('Hit pvp zone');
       }
-  
     }
-  
-    this.collideCounter++;
-    if (this.collideCounter % 20 === 0) {
-      this.collideCounter = 0;
-      // Lights on/off
-      const sortedLights = this.LightController.zoneLights.sort((a, b) =>
-        Vector3.Distance(a.position, this.lastCameraPosition) >
-            Vector3.Distance(b.position, this.lastCameraPosition) ? 1 : -1);
-  
-      for (const light of sortedLights.slice(0, 8)) {
-        light.setEnabled(true);
-      }
-      for (const light of sortedLights.slice(8, this.LightController.zoneLights.length)) {
-        light.setEnabled(false);
-      }
-  
-    }
+
+    this.LightController.updateLights(this.CameraController.camera.globalPosition);
+    this.MusicController.updateMusic(this.CameraController.camera.globalPosition);
   }
 
   async addTextureAnimations() {
@@ -241,7 +239,7 @@ class ZoneController {
           }
         };
       } else {
-        material.freeze();
+        // material.freeze();
       }
     }
 
@@ -304,19 +302,12 @@ class ZoneController {
     }
 
     zoneRoot.name = '__zone__';
-    const zoneRegionMeshes = [];
+
     for (const mesh of zoneRoot.getChildMeshes()) {
-      if (mesh.metadata?.gltf?.extras) {
-        const extras = mesh.metadata?.gltf?.extras;
-        zoneRegionMeshes.push({ mesh, extras });
-      }
       mesh.checkCollisions = true;
       mesh.freezeWorldMatrix();
       mesh.scaling.z = 1;
     }
-    setTimeout(() => {
-      zoneRegionMeshes.forEach(({ mesh }) => mesh.setEnabled(false));
-    }, 20);
 
     const recurse = (node) => {
       const matOutliers = ['t75_rea1', 't50_w1', 'd_w1'];
@@ -364,7 +355,7 @@ class ZoneController {
   }
 
   async setupAabbTree() {
-    const aabb = await fetch(`${storageUrl}${this.zoneName}/aabb_tree_pruned.json`).then(a => a.json()).catch(e => ({}));
+    const aabb = await fetch(`${storageUrl}${this.zoneName}_aabb_tree.json`).then(a => a.json()).catch(() => ({}));
     const addParents = node => {
       if (!node.lights) {
         node.lights = [];
@@ -385,3 +376,4 @@ class ZoneController {
 }
 
 export const zoneController = new ZoneController();
+window.zone = zoneController;
