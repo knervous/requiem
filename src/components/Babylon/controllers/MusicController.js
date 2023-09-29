@@ -43,6 +43,8 @@ class MusicController {
    */
   checkOutsideRadius = false;
 
+  touchEventListener = null;
+
   dispose() {
     this.zoneTracks.forEach(({ sound }) => {
       sound.dispose();
@@ -50,7 +52,15 @@ class MusicController {
     this.zoneTracks = [];
   }
 
-  play(idx) {
+  play(idx, fromEvent = false) {
+    if (!fromEvent) {
+      window.removeEventListener('touchend', this.touchEventListener);
+      this.touchEventListener = () => {
+        this.play(idx, true);
+      };
+      window.addEventListener('touchend', this.touchEventListener, { once: true });
+    }
+    
     clearTimeout(this.currentTimeout);
     const { sound, track } = this.zoneTracks[idx];
     sound.play();
@@ -82,7 +92,7 @@ class MusicController {
 
   hookUpZoneMusic(scene, zoneName, tracks, aabbTree) {
     // Disable the default audio unlock button
-    // Engine.audioEngine.useCustomUnlockedButton = true;
+    Engine.audioEngine.useCustomUnlockedButton = true;
 
     // Global Volume 
     Engine.audioEngine.setGlobalVolume(0.5);
@@ -118,9 +128,9 @@ class MusicController {
 
 
   updateMusic(position) {
-    // if (!Engine.audioEngine.unlocked) {
-    //   return;
-    // }
+    if (!Engine.audioEngine.unlocked) {
+      return;
+    }
     if (this.currentTrack !== -1 && this.checkOutsideRadius) {
       const { track: currentTrack } = this.zoneTracks[this.currentTrack];
       if (Vector3.Distance(position, new Vector3(...currentTrack.pos)) > currentTrack.radius) {
