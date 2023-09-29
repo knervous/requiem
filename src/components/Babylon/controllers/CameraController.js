@@ -3,7 +3,7 @@ import { UniversalCamera, Vector3 } from '@babylonjs/core';
 
 class CameraController { 
   /**
-   * @type {import('@babylonjs/core/Cameras').Camera}
+   * @type {import('@babylonjs/core/Cameras').UniversalCamera}
 */
   camera = null;
   isLocked = false;
@@ -63,6 +63,8 @@ class CameraController {
   createCamera = (scene, canvas) => {
     this.camera = new UniversalCamera('__camera__', new Vector3(5, 10, 0), scene);
     this.camera.setTarget(new Vector3(1, 10, 1));
+    this.camera.touchAngularSensibility = 5000;
+
     this.camera.applyGravity = true;
     this.camera.ellipsoid = new Vector3(4, 4.5, 2);
     this.camera.checkCollisions = true;
