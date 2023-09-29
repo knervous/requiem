@@ -118,9 +118,9 @@ class MusicController {
 
 
   updateMusic(position) {
-    if (!Engine.audioEngine.unlocked) {
-      return;
-    }
+    // if (!Engine.audioEngine.unlocked) {
+    //   return;
+    // }
     if (this.currentTrack !== -1 && this.checkOutsideRadius) {
       const { track: currentTrack } = this.zoneTracks[this.currentTrack];
       if (Vector3.Distance(position, new Vector3(...currentTrack.pos)) > currentTrack.radius) {
