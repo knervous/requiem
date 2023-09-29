@@ -93,6 +93,12 @@ class MusicController {
         Engine.audioEngine.unlock();
       }
     }, { once: true });
+
+    window.addEventListener('touchstart', () => {
+      if (!Engine.audioEngine.unlocked) {
+        Engine.audioEngine.unlock();
+      }
+    }, { once: true });
     this.#scene = scene;
     this.zoneTracks = tracks.map((t, idx) => {
       return {
