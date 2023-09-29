@@ -82,7 +82,7 @@ class MusicController {
 
   hookUpZoneMusic(scene, zoneName, tracks, aabbTree) {
     // Disable the default audio unlock button
-    Engine.audioEngine.useCustomUnlockedButton = true;
+    // Engine.audioEngine.useCustomUnlockedButton = true;
 
     // Global Volume 
     Engine.audioEngine.setGlobalVolume(0.5);
@@ -94,7 +94,7 @@ class MusicController {
       }
     }, { once: true });
 
-    window.addEventListener('touchstart', () => {
+    window.addEventListener('touchend', () => {
       if (!Engine.audioEngine.unlocked) {
         Engine.audioEngine.unlock();
       }
