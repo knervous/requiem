@@ -11,6 +11,7 @@ import { lightController } from './LightController';
 import { skyController } from './SkyController';
 import { musicController } from './MusicController';
 import { soundController } from './SoundController';
+import { spawnController } from './SpawnController';
   
 const sceneVersion = 1;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
@@ -21,7 +22,7 @@ async function getInitializedHavok() {
   return await HavokPhysics();
 }
   
-const assumedFramesPerSecond = 240;
+const assumedFramesPerSecond = 500;
 const earthGravity = -9.81;
 
 const testNode = (node, point) => {
@@ -73,6 +74,7 @@ class ZoneController {
   SkyController = skyController;
   MusicController = musicController;
   SoundController = soundController;
+  SpawnController = spawnController;
 
   dispose() {
     if (this.scene) {
@@ -92,12 +94,7 @@ class ZoneController {
     this.zoneName = zoneName;
     this.scene.metadata = { version: sceneVersion };
     this.scene.collisionsEnabled = true;
-    this.scene.gravity = new Vector3(0, earthGravity / assumedFramesPerSecond, 0);
     this.CameraController.createCamera(scene, canvas);
-    if (!await this.loadPhysicsEngine) {
-      console.error('Could not load physics engine');
-      return;
-    }
 
     // Load serialized scene in IDB
     let storedScene = await getDataEntry(zoneName);
@@ -113,6 +110,12 @@ class ZoneController {
       }
     }
 
+    this.scene.gravity = new Vector3(0, -0.3, 0);
+    if (!await this.loadPhysicsEngine) {
+      console.error('Could not load physics engine');
+      return;
+    }
+
     // Zone texture
     await this.loadZoneTexture();
 
@@ -121,16 +124,18 @@ class ZoneController {
     
     // Objects
     if (!this.hadStoredScene) {
-      await Promise.all(Object.entries(this.zoneMetadata.objects).map(([key, val]) => this.instantiateObjects(key, val)));
+      await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)));
     } else {
-      scene.meshes.filter(m => m.metadata?.zoneObject).forEach(mesh => {
-        mesh.freezeWorldMatrix();
-      });
       for (const [key, val] of Object.entries(this.zoneMetadata.objects).filter(([key]) =>
         scene.metadata.animatedMeshes.includes(key))) {
         await this.instantiateObjects(key, val);
       }
     }
+
+    scene.meshes.filter(m => m.metadata?.zoneObject).forEach(mesh => {
+    //  mesh.setEnabled(false);
+      mesh.freezeWorldMatrix();
+    });
 
     // Set up aabb tree
     await this.setupAabbTree();
@@ -148,6 +153,9 @@ class ZoneController {
 
     // Sky 
     await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
+
+    // Spawn controller
+    this.SpawnController.setupSpawnController(scene);
 
     // Start zone hook
     this.collideCounter = 0;
@@ -326,8 +334,10 @@ class ZoneController {
   async loadPhysicsEngine() {
     const HK = await getInitializedHavok();
     const havokPlugin = new HavokPlugin(true, HK);
-    havokPlugin.setGravity(new Vector3(0, earthGravity / assumedFramesPerSecond, 0));
-    return this.scene.enablePhysics(new Vector3(0, earthGravity / assumedFramesPerSecond, 0), havokPlugin);
+    havokPlugin.setGravity(new Vector3(0, -1.0, 0));
+    const didEnable = this.scene.enablePhysics(new Vector3(0, -1.0, 0), havokPlugin);
+    this.scene._physicsEngine.setGravity(new Vector3(0, -1.0, 0));
+    return didEnable;
   }
 
   async instantiateObjects (modelName, model) {
@@ -337,6 +347,7 @@ class ZoneController {
       const [rotX, rotY, rotZ] = v.rot;
       const c = container.instantiateModelsToScene(() => `${modelName}_${idx}`);
       const hasAnimations = c.animationGroups.length > 0;
+
       for (const mesh of c.rootNodes[0].getChildMeshes()) {
         mesh.position = new Vector3(-1 * x, y, z);
         mesh.rotation = new Vector3(Tools.ToRadians(rotX), Tools.ToRadians(180) + Tools.ToRadians(-1 * rotY), Tools.ToRadians(rotZ));

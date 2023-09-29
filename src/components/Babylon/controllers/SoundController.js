@@ -9,8 +9,8 @@ class SoundController {
     });
     this.zoneSounds = [];
   }
-  
-  hookUpZoneSounds(scene, sound2d, sound3d) {
+
+  hookUpZoneSounds(scene, _sound2, sound3d) {
     sound3d.forEach((sound, idx) => {
       const spatialSound = new Sound(`${sound.sound}_${idx}`, `${musicUrl}${sound.sound}.wav`, scene, null, {
         loop        : true,

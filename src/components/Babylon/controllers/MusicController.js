@@ -18,11 +18,6 @@ class MusicController {
   octree = null;
 
   /**
-   * @type {import('@babylonjs/core').Vector3}
-   */
-  lastPosition = new Vector3(0, 0, 0);
-
-  /**
    * @type {number}
    */
   maxRadius = 0;
@@ -41,6 +36,13 @@ class MusicController {
    * @type {number}
    */
   currentTimeout = -1;
+
+
+  /**
+   * @type {boolean}
+   */
+  checkOutsideRadius = false;
+
   dispose() {
     this.zoneTracks.forEach(({ sound }) => {
       sound.dispose();
@@ -50,33 +52,41 @@ class MusicController {
 
   play(idx) {
     clearTimeout(this.currentTimeout);
-    const { sound, track: _track } = this.zoneTracks[idx];
+    const { sound, track } = this.zoneTracks[idx];
     sound.play();
+    sound.setVolume(1, 0.5);
     sound.onEndedObservable.addOnce(() => {
       this.currentTrack = -1;
     });
-    // this.currentTimeout = setTimeout(() => {
-    //   this.currentInterval = setInterval(() => {
-    //     console.log('distance', Vector3.Distance(this.lastPosition, new Vector3(track.x, track.z, track.y)));
-    //     if (Vector3.Distance(this.lastPosition, new Vector3(track.x, track.z, track.y)) > track.radius) {
-    //       sound.stop();
-    //       this.currentTrack = 0;
-    //     }
-    //   }, 2000);
-      
-    // }, track.fadeMs);
+    this.checkOutsideRadius = false;
+    this.currentTimeout = setTimeout(() => {
+      this.checkOutsideRadius = true;
+    }, track.fadeMs);
   }
 
   stopAll() {
+    this.currentTrack = -1;
+    this.checkOutsideRadius = false;
     this.zoneTracks.forEach(({ sound }) => {
-      sound.stop();
+      sound.setVolume(0, 2);
     });
+
+    setTimeout(() => {
+      if (this.currentTrack === -1) {
+        this.zoneTracks.forEach(({ sound }) => {
+          sound.stop();
+        });
+      }
+    }, 2000);
   }
 
   hookUpZoneMusic(scene, zoneName, tracks, aabbTree) {
     // Disable the default audio unlock button
     Engine.audioEngine.useCustomUnlockedButton = true;
 
+    // Global Volume 
+    Engine.audioEngine.setGlobalVolume(0.5);
+    
     // Unlock audio on first user interaction.
     window.addEventListener('click', () => {
       if (!Engine.audioEngine.unlocked) {
@@ -105,16 +115,24 @@ class MusicController {
     if (!Engine.audioEngine.unlocked) {
       return;
     }
-    this.lastPosition = position;
+    if (this.currentTrack !== -1 && this.checkOutsideRadius) {
+      const { track: currentTrack } = this.zoneTracks[this.currentTrack];
+      if (Vector3.Distance(position, new Vector3(...currentTrack.pos)) > currentTrack.radius) {
+        this.stopAll();
+      }
+    }
+
     const threePosition = new ThreeVector3(position.x, position.z, position.y);
-    const track = this.octree.findPoints(threePosition, this.maxRadius, true).sort((a, b) => a.distance - b.distance).slice(0, 1)?.[0]?.data ?? null;
-    
-    if (track !== null && this.currentTrack !== track) {
-      this.stopAll();
-      this.currentTrack = track;
-      this.play(track);
+    const trackIndex = this.octree.findPoints(threePosition, this.maxRadius, true).sort((a, b) => a.distance - b.distance).slice(0, 1)?.[0]?.data ?? null;
+    if (trackIndex !== null && this.currentTrack !== trackIndex) {
+      const { track } = this.zoneTracks[trackIndex];
+      if (Vector3.Distance(position, new Vector3(...track.pos)) < track.radius) {
+        this.stopAll();
+        this.currentTrack = trackIndex;
+        this.play(trackIndex);
+      }
     }
   }
 }
-
+window.Vector3 = Vector3;
 export const musicController = new MusicController();

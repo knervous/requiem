@@ -592,7 +592,6 @@ export const OP_CODES = {
   OP_MobUpdate: 0x0000, // not used anymore, here for backwards compat
 
   // we need to document the differences between these packets to make identifying them easier
-  OP_MobHealth        : 0x0695,
   OP_HPUpdate         : 0x3bcf, // ShowEQ 10/27/05
   OP_Some3ByteHPUpdate: 0x0000, // initial HP update for mobs
   OP_InitialHPUpdate  : 0x0000

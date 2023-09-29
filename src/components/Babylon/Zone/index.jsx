@@ -9,6 +9,8 @@ import '@babylonjs/loaders/glTF';
 import { Database, Scene, Engine } from '@babylonjs/core';
 import { Inspector } from '@babylonjs/inspector';
 import { zoneController } from '../controllers/ZoneController';
+import mockData from '../mockSpawns.json';
+import { spawnController } from '../controllers/SpawnController';
 
 Database.IDBStorageEnabled = true;
 
@@ -22,7 +24,7 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 let engine = null;
 
 const RenderedZone = () => {
-  const [zone, _setZone] = useState(params.zone ?? 'qeytoqrg');
+  const [zone, _setZone] = useState(params.zone ?? 'qeynos');
   const canvasRef = useRef();
 
   useEffect(() => {
@@ -31,7 +33,16 @@ const RenderedZone = () => {
       engine.disableManifestCheck = true;
       engine.enableOfflineSupport = true;
     }
-    zoneController.loadZoneScene(new Scene(engine), zone, canvasRef.current);
+
+    zoneController.loadZoneScene(new Scene(engine), zone, canvasRef.current).then(() => {
+      engine.runRenderLoop(() => {
+        if (zoneController.scene && zoneController.CameraController.camera) {
+          zoneController.scene.render();
+        }
+      });
+
+      // spawnController.addSpawns(mockData);
+    });
     if (process.env.REACT_APP_INSPECTOR === 'true') {
       Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
     }
@@ -39,16 +50,12 @@ const RenderedZone = () => {
       Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
     };
 
-    engine.runRenderLoop(() => {
-      if (zoneController.scene && zoneController.CameraController.camera) {
-        zoneController.scene.render();
-      }
-    });
     window.addEventListener('resize', () => {
       engine.resize();
     });
-
-    
+    return () => {
+      engine.stopRenderLoop();
+    };
     
   }, [zone]);
 

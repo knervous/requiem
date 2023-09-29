@@ -1132,7 +1132,7 @@ export const textureAnimationMap = {
     time  : 100,
   },
   tau_paglow1: {
-    frames: 6,
+    frames: 4,
     time  : 200,
   },
   tau_r1: {

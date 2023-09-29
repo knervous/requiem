@@ -75,4 +75,4 @@ export const setDataEntry = window.setDataEntry = (dataPath, data) =>
     request.onerror = () => res(undefined);
   });
 
-const prom = getDataTable();
+getDataTable();

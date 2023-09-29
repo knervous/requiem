@@ -3,7 +3,7 @@ import { cameraController } from './CameraController';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
 
-const maxLights = 8;
+const maxLights = 5;
 
 class LightController {
   /**
