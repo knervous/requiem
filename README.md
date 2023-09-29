@@ -1,3 +1,3 @@
-# MQ2 Browser Dashboard
+# EQ: Requiem
 
 More to come
