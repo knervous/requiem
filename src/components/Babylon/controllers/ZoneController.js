@@ -217,7 +217,7 @@ class ZoneController {
         if (res.distance > (window.range || 1500)) {
           for (const mesh of res.data) {
             if (mesh.isEnabled()) {
-              mesh.setEnabled(false);
+              // mesh.setEnabled(false);
             }
           }
         }
@@ -237,7 +237,7 @@ class ZoneController {
     }
     if (this.counter % 20 === 0) {
       this.counter = 0;
-      for (const res of this.octree.findPoints(threePosition, window.range || 500)) {
+      for (const res of this.octree.findPoints(threePosition, window.range || 1500)) {
         for (const mesh of res.data) {
           if (!mesh.isEnabled()) {
             mesh.setEnabled(true);
