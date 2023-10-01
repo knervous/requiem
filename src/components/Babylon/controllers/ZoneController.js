@@ -3,7 +3,9 @@ import { SceneLoader, Vector3,
   SceneOptimizer, SceneOptimizerOptions, SceneSerializer,
   Tools, Texture, HavokPlugin } from '@babylonjs/core';
 import HavokPhysics from '@babylonjs/havok';
-  
+import { Vector3 as ThreeVector3 } from 'three';
+import { PointOctree } from 'sparse-octree';
+
 import { getDataEntry, setDataEntry } from '../../../services/idb';
 import { textureAnimationMap } from './textureAnimationMap';
 import { cameraController } from './CameraController';
@@ -14,6 +16,7 @@ import { soundController } from './SoundController';
 import { spawnController } from './SpawnController';
   
 const sceneVersion = 1;
+const objectAnimationThreshold = 10;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
 const objectsUrl = 'https://eqrequiem.blob.core.windows.net/assets/objects/';
 const textureUrl = 'https://eqrequiem.blob.core.windows.net/assets/textures/';
@@ -22,9 +25,6 @@ async function getInitializedHavok() {
   return await HavokPhysics();
 }
   
-const assumedFramesPerSecond = 500;
-const earthGravity = -9.81;
-
 const testNode = (node, point) => {
   if (!node?.min || !node?.max) {
     return false;
@@ -67,7 +67,10 @@ class ZoneController {
   zoneName = '';
   zoneMetadata = {};
   aabbTree = {};
+  animatedMeshes = [];
+  animationGroupMap = {};
   collideCounter = 0;
+  objectAnimationPlaying = [];
   lastPosition = new Vector3(0, 0, 0);
   CameraController = cameraController;
   LightController = lightController;
@@ -94,6 +97,7 @@ class ZoneController {
     this.zoneName = zoneName;
     this.scene.metadata = { version: sceneVersion };
     this.scene.collisionsEnabled = true;
+    // this.scene.performancePriority = ScenePerformancePriority.Intermediate;
     this.CameraController.createCamera(scene, canvas);
 
     // Load serialized scene in IDB
@@ -124,16 +128,15 @@ class ZoneController {
     
     // Objects
     if (!this.hadStoredScene) {
-      await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)));
+      this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
     } else {
       for (const [key, val] of Object.entries(this.zoneMetadata.objects).filter(([key]) =>
         scene.metadata.animatedMeshes.includes(key))) {
-        await this.instantiateObjects(key, val);
+        this.animatedMeshes = this.animatedMeshes.concat(await this.instantiateObjects(key, val));
       }
     }
 
     scene.meshes.filter(m => m.metadata?.zoneObject).forEach(mesh => {
-    //  mesh.setEnabled(false);
       mesh.freezeWorldMatrix();
     });
 
@@ -168,12 +171,34 @@ class ZoneController {
     // Start texture animations
     await this.addTextureAnimations();
 
-    // Start object animations
-    scene.animationGroups.forEach(a => a.play(true));
-
     // Serialize in background
     this.serializeScene();
+    this.counter = 0;
 
+    this.octree = new PointOctree(new ThreeVector3(this.aabbTree.min.x, this.aabbTree.min.z, this.aabbTree.min.y), 
+      new ThreeVector3(this.aabbTree.max.x, this.aabbTree.max.z, this.aabbTree.max.y));
+
+    this.scene.getMeshByName('__zone__').getChildMeshes().concat(this.animatedMeshes).forEach((mesh) => {
+      const { x, y, z } = mesh.absolutePosition || mesh.position;
+      mesh.setEnabled(false);
+      const vec = new ThreeVector3(x, y, z);
+      if (this.octree.get(vec)) {
+        this.octree.set(vec, [...this.octree.get(vec), mesh]);
+      } else {
+        this.octree.set(vec, [mesh]);
+      }
+    });
+
+    const result = this.octree.findPoints(this.CameraController.camera.globalPosition, 1500);
+    for (const res of result) {
+      for (const mesh of res.data) {
+        mesh.setEnabled(true);
+      }
+    }
+
+    this.counter = 0;
+    this.cullCounter = 0;
+    window.perf = 0;
   }
 
   renderHook() {
@@ -181,7 +206,57 @@ class ZoneController {
       return;
     }
     this.lastCameraPosition = { ...this.CameraController.camera.globalPosition };
+    this.counter++;
+    this.cullCounter++;
+    const perf = performance.now();
+    const threePosition = new ThreeVector3(this.lastCameraPosition._x, this.lastCameraPosition._y, this.lastCameraPosition._z);
 
+    if (this.cullCounter % 240 === 0) {
+      this.cullCounter = 0;
+      for (const res of this.octree.findPoints(threePosition, Infinity)) {
+        if (res.distance > (window.range || 1500)) {
+          for (const mesh of res.data) {
+            if (mesh.isEnabled()) {
+              mesh.setEnabled(false);
+            }
+          }
+        }
+        if (res.distance > 200) {
+          for (const mesh of res.data) {
+            if (this.animationGroupMap[mesh.id]) {
+              this.animationGroupMap[mesh.id].forEach(ag => {
+                if (this.objectAnimationPlaying.includes(ag)) {
+                  this.objectAnimationPlaying = this.objectAnimationPlaying.filter(o => o !== ag);
+                  ag.stop();
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+    if (this.counter % 20 === 0) {
+      this.counter = 0;
+      for (const res of this.octree.findPoints(threePosition, window.range || 500)) {
+        for (const mesh of res.data) {
+          if (!mesh.isEnabled()) {
+            mesh.setEnabled(true);
+          }
+        }
+      }
+
+      for (const res of this.octree.findPoints(threePosition, 200)) {
+        for (const mesh of res.data) {
+          if (this.animationGroupMap[mesh.id] && this.objectAnimationPlaying.length <= objectAnimationThreshold) {
+            this.animationGroupMap[mesh.id].forEach(ag => {
+              this.objectAnimationPlaying.push(ag);
+              ag.play(true);
+            });
+          }
+        }
+      }
+    }
+    window.perf += performance.now() - perf;
     const aabbRegion = recurseTreeFromKnownNode(this.lastAabbNode || this.aabbTree, this.CameraController.camera.globalPosition);
     
     if (aabbRegion) {
@@ -314,6 +389,8 @@ class ZoneController {
     for (const mesh of zoneRoot.getChildMeshes()) {
       mesh.checkCollisions = true;
       mesh.freezeWorldMatrix();
+      mesh.isPickable = false;
+      mesh.doNotSyncBoundingInfo = true;
       mesh.scaling.z = 1;
     }
 
@@ -341,11 +418,12 @@ class ZoneController {
   }
 
   async instantiateObjects (modelName, model) {
+    const animatedMeshes = [];
     const container = await SceneLoader.LoadAssetContainerAsync(objectsUrl, `${modelName}.glb.gz`, this.scene, undefined, '.glb');
     for (const [idx, v] of Object.entries(model)) {
       const [x, y, z] = v.pos;
       const [rotX, rotY, rotZ] = v.rot;
-      const c = container.instantiateModelsToScene(() => `${modelName}_${idx}`);
+      const c = container.instantiateModelsToScene(() => `${modelName}_${idx}`, undefined, { doNotInstantiate: true });
       const hasAnimations = c.animationGroups.length > 0;
 
       for (const mesh of c.rootNodes[0].getChildMeshes()) {
@@ -358,11 +436,15 @@ class ZoneController {
           zoneObject: true,
         };
         mesh.id = `${modelName}_${idx}`;
+        this.animationGroupMap[mesh.id] = c.animationGroups;
         if (!hasAnimations) {
           mesh.freezeWorldMatrix();
         }
+        animatedMeshes.push(mesh);
       }
     }
+
+    return animatedMeshes;
   }
 
   async setupAabbTree() {

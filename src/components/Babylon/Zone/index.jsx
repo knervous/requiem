@@ -9,8 +9,8 @@ import '@babylonjs/loaders/glTF';
 import { Database, Scene, Engine } from '@babylonjs/core';
 import { Inspector } from '@babylonjs/inspector';
 import { zoneController } from '../controllers/ZoneController';
-import mockData from '../mockSpawns.json';
-import { spawnController } from '../controllers/SpawnController';
+// import mockData from '../mockSpawns.json';
+// import { spawnController } from '../controllers/SpawnController';
 
 Database.IDBStorageEnabled = true;
 
@@ -22,6 +22,10 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
  * @type {import('@babylonjs/core/Engines/engine').Engine}
  */
 let engine = null;
+
+if (process.env.REACT_APP_INSPECTOR === 'true') {
+  window.engine = () => engine;
+}
 
 const RenderedZone = () => {
   const [zone, _setZone] = useState(params.zone ?? 'qeynos');
