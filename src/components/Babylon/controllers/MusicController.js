@@ -37,13 +37,13 @@ class MusicController {
    */
   currentTimeout = -1;
 
-
   /**
    * @type {boolean}
    */
   checkOutsideRadius = false;
 
   touchEventListener = null;
+  playCallback = null;
 
   dispose() {
     this.zoneTracks.forEach(({ sound }) => {
@@ -52,15 +52,7 @@ class MusicController {
     this.zoneTracks = [];
   }
 
-  play(idx, fromEvent = false) {
-    if (!fromEvent) {
-      window.removeEventListener('touchend', this.touchEventListener);
-      this.touchEventListener = () => {
-        this.play(idx, true);
-      };
-      window.addEventListener('touchend', this.touchEventListener, { once: true });
-    }
-    
+  play(idx) {
     clearTimeout(this.currentTimeout);
     const { sound, track } = this.zoneTracks[idx];
     sound.play();
@@ -108,7 +100,11 @@ class MusicController {
       if (!Engine.audioEngine.unlocked) {
         Engine.audioEngine.unlock();
       }
-    }, { once: true });
+      if (this.playCallback) {
+        this.playCallback();
+        this.playCallback = null;
+      }
+    });
     this.#scene = scene;
     this.zoneTracks = tracks.map((t, idx) => {
       return {
@@ -143,9 +139,12 @@ class MusicController {
     if (trackIndex !== null && this.currentTrack !== trackIndex) {
       const { track } = this.zoneTracks[trackIndex];
       if (Vector3.Distance(position, new Vector3(...track.pos)) < track.radius) {
-        this.stopAll();
-        this.currentTrack = trackIndex;
-        this.play(trackIndex);
+        this.playCallback = () => {
+          this.stopAll();
+          this.currentTrack = trackIndex;
+          this.play(trackIndex);
+        };
+        this.playCallback();
       }
     }
   }
