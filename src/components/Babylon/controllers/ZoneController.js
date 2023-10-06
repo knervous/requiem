@@ -226,13 +226,13 @@ class ZoneController {
     if (this.cullCounter % 240 === 0) {
       this.cullCounter = 0;
       for (const res of this.octree.findPoints(threePosition, Infinity)) {
-        if (res.distance > (2000)) {
-          for (const mesh of res.data) {
-            if (mesh.isEnabled()) {
-              mesh.setEnabled(false);
-            }
-          }
-        }
+        // if (res.distance > (2000)) {
+        //   for (const mesh of res.data) {
+        //     if (mesh.isEnabled()) {
+        //       mesh.setEnabled(false);
+        //     }
+        //   }
+        // }
         if (res.distance > 200) {
           for (const mesh of res.data) {
             if (this.animationGroupMap[mesh.id]) {
