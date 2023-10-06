@@ -1,10 +1,11 @@
 
 import { SceneLoader, Vector3,
   SceneOptimizer, SceneOptimizerOptions, SceneSerializer,
-  Tools, Texture, HavokPlugin } from '@babylonjs/core';
+  Tools, Texture, HavokPlugin, PhysicsAggregate, PhysicsShapeType } from '@babylonjs/core';
 import HavokPhysics from '@babylonjs/havok';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
+
 
 import { getDataEntry, setDataEntry } from '../../../services/idb';
 import { textureAnimationMap } from './textureAnimationMap';
@@ -14,13 +15,14 @@ import { skyController } from './SkyController';
 import { musicController } from './MusicController';
 import { soundController } from './SoundController';
 import { spawnController } from './SpawnController';
-  
+import { guiController } from './GUIController';
+
 const sceneVersion = 1;
 const objectAnimationThreshold = 10;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
 const objectsUrl = 'https://eqrequiem.blob.core.windows.net/assets/objects/';
 const textureUrl = 'https://eqrequiem.blob.core.windows.net/assets/textures/';
-  
+
 async function getInitializedHavok() {
   return await HavokPhysics();
 }
@@ -78,6 +80,7 @@ class ZoneController {
   MusicController = musicController;
   SoundController = soundController;
   SpawnController = spawnController;
+  GuiController = guiController;
 
   dispose() {
     if (this.scene) {
@@ -89,6 +92,7 @@ class ZoneController {
     this.SkyController.dispose();
     this.MusicController.dispose();
     this.SoundController.dispose();
+    this.SpawnController.dispose();
   }
 
   async loadZoneScene (scene, zoneName, canvas) {
@@ -114,8 +118,9 @@ class ZoneController {
       }
     }
 
-    this.scene.gravity = new Vector3(0, -0.3, 0);
-    if (!await this.loadPhysicsEngine) {
+    this.scene.gravity = new Vector3(0, -0.6, 0);
+    console.log('hello');
+    if (!(await this.loadPhysicsEngine())) {
       console.error('Could not load physics engine');
       return;
     }
@@ -158,11 +163,15 @@ class ZoneController {
     await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
 
     // Spawn controller
-    this.SpawnController.setupSpawnController(scene);
+    this.SpawnController.setupSpawnController(scene, this.aabbTree);
+
+    // GUI controller
+    this.GuiController.setupGuiController(scene);
 
     // Start zone hook
     this.collideCounter = 0;
     this.lastPosition = { ...cameraController.camera.position };
+
     this.scene.onAfterRenderObservable.add(this.renderHook.bind(this));
 
     // Optimize
@@ -179,6 +188,9 @@ class ZoneController {
       new ThreeVector3(this.aabbTree.max.x, this.aabbTree.max.z, this.aabbTree.max.y));
 
     this.scene.getMeshByName('__zone__').getChildMeshes().concat(this.animatedMeshes).forEach((mesh) => {
+      if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh) {
+        return;
+      }
       const { x, y, z } = mesh.absolutePosition || mesh.position;
       mesh.setEnabled(false);
       const vec = new ThreeVector3(x, y, z);
@@ -214,10 +226,10 @@ class ZoneController {
     if (this.cullCounter % 240 === 0) {
       this.cullCounter = 0;
       for (const res of this.octree.findPoints(threePosition, Infinity)) {
-        if (res.distance > (window.range || 1500)) {
+        if (res.distance > (2000)) {
           for (const mesh of res.data) {
             if (mesh.isEnabled()) {
-              // mesh.setEnabled(false);
+              mesh.setEnabled(false);
             }
           }
         }
@@ -237,7 +249,7 @@ class ZoneController {
     }
     if (this.counter % 20 === 0) {
       this.counter = 0;
-      for (const res of this.octree.findPoints(threePosition, window.range || 1500)) {
+      for (const res of this.octree.findPoints(threePosition, 2000)) {
         for (const mesh of res.data) {
           if (!mesh.isEnabled()) {
             mesh.setEnabled(true);
@@ -273,6 +285,7 @@ class ZoneController {
 
     this.LightController.updateLights(this.CameraController.camera.globalPosition);
     this.MusicController.updateMusic(this.CameraController.camera.globalPosition);
+    this.SpawnController.updateSpawns(this.CameraController.camera.globalPosition);
   }
 
   async addTextureAnimations() {
@@ -385,9 +398,9 @@ class ZoneController {
     }
 
     zoneRoot.name = '__zone__';
-
     for (const mesh of zoneRoot.getChildMeshes()) {
       mesh.checkCollisions = true;
+      new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
       mesh.freezeWorldMatrix();
       mesh.isPickable = false;
       mesh.doNotSyncBoundingInfo = true;
@@ -410,10 +423,8 @@ class ZoneController {
 
   async loadPhysicsEngine() {
     const HK = await getInitializedHavok();
-    const havokPlugin = new HavokPlugin(true, HK);
-    havokPlugin.setGravity(new Vector3(0, -1.0, 0));
-    const didEnable = this.scene.enablePhysics(new Vector3(0, -1.0, 0), havokPlugin);
-    this.scene._physicsEngine.setGravity(new Vector3(0, -1.0, 0));
+    const havokPlugin = window.hp = new HavokPlugin(true, HK);
+    const didEnable = this.scene.enablePhysics(new Vector3(0, -1.3, 0), havokPlugin);
     return didEnable;
   }
 
@@ -427,6 +438,7 @@ class ZoneController {
       const hasAnimations = c.animationGroups.length > 0;
 
       for (const mesh of c.rootNodes[0].getChildMeshes()) {
+        // new PhysicsAggregate(mesh, PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 0 });
         mesh.position = new Vector3(-1 * x, y, z);
         mesh.rotation = new Vector3(Tools.ToRadians(rotX), Tools.ToRadians(180) + Tools.ToRadians(-1 * rotY), Tools.ToRadians(rotZ));
         mesh.checkCollisions = true;

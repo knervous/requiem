@@ -9,8 +9,8 @@ import '@babylonjs/loaders/glTF';
 import { Database, Scene, Engine } from '@babylonjs/core';
 import { Inspector } from '@babylonjs/inspector';
 import { zoneController } from '../controllers/ZoneController';
-// import mockData from '../mockSpawns.json';
-// import { spawnController } from '../controllers/SpawnController';
+import mockData from '../mockSpawns.json';
+import { spawnController } from '../controllers/SpawnController';
 
 Database.IDBStorageEnabled = true;
 
@@ -34,6 +34,7 @@ const RenderedZone = () => {
   useEffect(() => {
     if (!engine) {
       engine = new Engine(canvasRef.current, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false });
+      engine.setHardwareScalingLevel(1 / window.devicePixelRatio);
       engine.disableManifestCheck = true;
       engine.enableOfflineSupport = true;
     }
@@ -44,8 +45,12 @@ const RenderedZone = () => {
           zoneController.scene.render();
         }
       });
-
-      // spawnController.addSpawns(mockData);
+      setTimeout(() => {
+        if (zone === 'qeytoqrg') {
+          spawnController.addSpawns(mockData.filter(a => a || a.name.includes('gnoll') || a.name.startsWith('Tol')));
+        }
+      }, 500);
+      
     });
     if (process.env.REACT_APP_INSPECTOR === 'true') {
       Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });

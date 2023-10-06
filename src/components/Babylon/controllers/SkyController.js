@@ -27,9 +27,9 @@ class SkyController {
         '.glb'
       );
       skyRoot = sky.meshes[0];
-      skyRoot.scaling.x = 15000;
-      skyRoot.scaling.y = 15000;
-      skyRoot.scaling.z = 15000;
+      skyRoot.scaling.x = 20000;
+      skyRoot.scaling.y = 20000;
+      skyRoot.scaling.z = 20000;
       skyRoot.name = '__sky__';
       const [cloudLayer] = skyRoot.getChildMeshes();
       const multimat = new MultiMaterial('multi', scene);
