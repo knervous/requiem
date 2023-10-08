@@ -131,7 +131,7 @@ class ZoneController {
     this.zoneMetadata = await fetch(`${storageUrl}${zoneName}.json`).then(r => r.json());
 
     
-    // Objects
+    // Objectsa
     if (!this.hadStoredScene) {
       this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
     } else {
@@ -140,10 +140,6 @@ class ZoneController {
         this.animatedMeshes = this.animatedMeshes.concat(await this.instantiateObjects(key, val));
       }
     }
-
-    scene.meshes.filter(m => m.metadata?.zoneObject).forEach(mesh => {
-      mesh.freezeWorldMatrix();
-    });
 
     // Set up aabb tree
     await this.setupAabbTree();
@@ -188,11 +184,11 @@ class ZoneController {
       new ThreeVector3(this.aabbTree.max.x, this.aabbTree.max.z, this.aabbTree.max.y));
 
     this.scene.getMeshByName('__zone__').getChildMeshes().concat(this.animatedMeshes).forEach((mesh) => {
-      if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh) {
+      if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh || mesh.parent?.parent?.metadata?.gltf?.extras?.zoneMesh) {
         return;
       }
+      mesh.addLODLevel?.(2000, null);
       const { x, y, z } = mesh.absolutePosition || mesh.position;
-      mesh.setEnabled(false);
       const vec = new ThreeVector3(x, y, z);
       if (this.octree.get(vec)) {
         this.octree.set(vec, [...this.octree.get(vec), mesh]);
@@ -226,13 +222,6 @@ class ZoneController {
     if (this.cullCounter % 240 === 0) {
       this.cullCounter = 0;
       for (const res of this.octree.findPoints(threePosition, Infinity)) {
-        // if (res.distance > (2000)) {
-        //   for (const mesh of res.data) {
-        //     if (mesh.isEnabled()) {
-        //       mesh.setEnabled(false);
-        //     }
-        //   }
-        // }
         if (res.distance > 200) {
           for (const mesh of res.data) {
             if (this.animationGroupMap[mesh.id]) {
@@ -249,13 +238,6 @@ class ZoneController {
     }
     if (this.counter % 20 === 0) {
       this.counter = 0;
-      for (const res of this.octree.findPoints(threePosition, 2000)) {
-        for (const mesh of res.data) {
-          if (!mesh.isEnabled()) {
-            mesh.setEnabled(true);
-          }
-        }
-      }
 
       for (const res of this.octree.findPoints(threePosition, 200)) {
         for (const mesh of res.data) {
@@ -400,7 +382,10 @@ class ZoneController {
     zoneRoot.name = '__zone__';
     for (const mesh of zoneRoot.getChildMeshes()) {
       mesh.checkCollisions = true;
-      new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
+      if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh || mesh.parent?.parent?.metadata?.gltf?.extras?.zoneMesh) {
+        new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
+      }
+      // new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
       mesh.freezeWorldMatrix();
       mesh.isPickable = false;
       mesh.doNotSyncBoundingInfo = true;
@@ -438,7 +423,6 @@ class ZoneController {
       const hasAnimations = c.animationGroups.length > 0;
 
       for (const mesh of c.rootNodes[0].getChildMeshes()) {
-        // new PhysicsAggregate(mesh, PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 0 });
         mesh.position = new Vector3(-1 * x, y, z);
         mesh.rotation = new Vector3(Tools.ToRadians(rotX), Tools.ToRadians(180) + Tools.ToRadians(-1 * rotY), Tools.ToRadians(rotZ));
         mesh.checkCollisions = true;

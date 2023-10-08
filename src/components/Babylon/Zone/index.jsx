@@ -46,8 +46,9 @@ const RenderedZone = () => {
         }
       });
       setTimeout(() => {
-        if (zone === 'qeytoqrg') {
-          spawnController.addSpawns(mockData.filter(a => a || a.name.includes('gnoll') || a.name.startsWith('Tol')));
+        if (zone === 'qeytoqrg' && params.spawns === 'true') {
+          spawnController.addSpawns(mockData.filter(a => !a.name.includes('JPE')));
+          // a.name.includes('snake') || a.name.includes('skeleton') || a.name.includes('rat') || a.name.includes('gnoll') || a.name.includes('bear') || a.name.includes('bat')));// /|| a.name.startsWith('Tol')));
         }
       }, 500);
       
@@ -58,12 +59,38 @@ const RenderedZone = () => {
     window.showInspector = () => {
       Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
     };
-
-    window.addEventListener('resize', () => {
+    const resizeListener = () => {
       engine.resize();
-    });
+    };
+    const keydownListener = e => {
+      switch (`${e.key}`?.toLowerCase?.()) {
+        case 'i': {
+          Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+          break;
+        }
+        case 'g': {
+          zoneController.CameraController.camera.applyGravity = !zoneController.CameraController.camera.applyGravity;
+          break;
+        }
+        case 'c': {
+          zoneController.CameraController.camera.checkCollisions = !zoneController.CameraController.camera.checkCollisions;
+          break;
+        }
+        case 'b': {
+          Object.values(zoneController.SpawnController.spawns).forEach(spawn => {
+            spawn.rootNode.showBoundingBox = !spawn.rootNode.showBoundingBox; spawn.rootNode.getChildMeshes().forEach(m => m.showBoundingBox = !m.showBoundingBox);
+          });
+          break;
+        }
+        default:
+          break;
+      }
+    };
+    window.addEventListener('resize', resizeListener);
+    window.addEventListener('keydown', keydownListener);
     return () => {
       engine.stopRenderLoop();
+      window.removeEventListener('resize', resizeListener);
     };
     
   }, [zone]);

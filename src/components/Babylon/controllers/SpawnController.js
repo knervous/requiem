@@ -1,4 +1,4 @@
-import { AbstractMesh, PhysicsAggregate, PhysicsShapeType, SceneLoader, Tools, Vector3 } from '@babylonjs/core';
+import { AbstractMesh, BakedVertexAnimationManager, Mesh, PhysicsAggregate, PhysicsShapeType, SceneLoader, Tools, Vector3, Vector4, VertexAnimationBaker } from '@babylonjs/core';
 import { PointOctree } from 'sparse-octree';
 import { Vector3 as ThreeVector3 } from 'three';
 import { TextBlock } from '@babylonjs/gui';
@@ -7,6 +7,7 @@ import raceData from '../../../common/raceData.json';
 import { eqtoBabylonVector } from '../../../util/vector';
 import { Spawn } from '../models/Spawn';
 import { guiController } from './GUIController';
+import { getDataEntry, setDataEntry } from '../../../services/idb';
 
 
 const modelsUrl = 'https://eqrequiem.blob.core.windows.net/assets/models/';
@@ -70,51 +71,180 @@ class SpawnController {
     return this.assetContainers[modelName];
   }
 
-  async addSpawn(modelName, models) {
-    const container = await this.getAssetContainer(modelName);
+  canEquipWeapons(skeleton) {
+    if (!skeleton) {
+      return true;
+    }
+    let lpoint = false, rpoint = false;
+    for (const bone of skeleton.bones) {
+      if (bone.name === 'l_point') {
+        lpoint = true;
+      }
+      if (bone.name === 'r_point') {
+        rpoint = true;
+      }
+      if (lpoint && rpoint) {
+        break;
+      }
+    }
+    return lpoint && rpoint;
+  }
 
+  async addSpawn(modelName, models) {
+    return this.addEquipSpawn(modelName, models);
+    const container = await this.getAssetContainer(modelName);
+    if (this.canEquipWeapons(container?.skeletons[0])) {
+      return;
+      return this.addEquipSpawn(modelName, models);
+    }
+    console.log('model name', modelName, container.meshes, container.skeletons);
     if (!container) { 
       console.log('Did not load model', modelName);
       return;
     }
+    const instSpawn = new Spawn(models[0]);
+
+    // Create root for animations
+    const { rootNodes, animationGroups, skeletons } = container.instantiateModelsToScene(undefined, false, { doNotInstantiate: false });
+    const skeleton = skeletons[0];
+    const root = rootNodes[0];
+    root.position.setAll(0);
+    root.scaling.setAll(1);
+    root.rotationQuaternion = null;
+    root.rotation.setAll(0);
+    for (const mesh of root.getChildMeshes()) {
+      mesh.name = mesh.material.name;
+      // mesh.refreshBoundingInfo(true, true);
+    }
+    const skeletonForAnim = [];
+    const rootForAnim = [];
+   
+   
+    this.updateTextures(-1, { rootNode: root, spawn: instSpawn }, modelName, true);
+    animationGroups.forEach(ag => {
+      const name = ag.name.replace('Clone of ', '');
+      const skel = skeleton.clone(`skeleton_${ name}`);
+      skeletonForAnim.push(skel);
+
+      const rootAnim = root.instantiateHierarchy(undefined, { doNotInstantiate: true }, (source, clone) => {
+        clone.name = source.name;
+      });
+      rootAnim.name = `${modelName}_${ name}`;
+      rootAnim.setEnabled(false);
+      rootForAnim.push(rootAnim);
+    });
+
+    
+    const merged = mergeSkeleton(root, skeleton);
+
+    root.setEnabled(false);
+
+    merged.registerInstancedBuffer('bakedVertexAnimationSettingsInstanced', 4);
+    merged.instancedBuffers.bakedVertexAnimationSettingsInstanced = new Vector4(0, 0, 0, 0);
+
+    const ranges = calculateRanges(animationGroups);
+
+    const frameOffset = 0;
+
+    const setAnimationParameters = (
+      vec,
+      animIndex = Math.floor(Math.random() * animationGroups.length)
+    ) => {
+      const anim = ranges[animIndex];
+      const from = Math.floor(anim.from);
+      const to = Math.floor(anim.to);
+      const ofst = frameOffset;
+      vec.set(from, to - 1, ofst, 60);
+
+      return animIndex;
+    };
+
+    const b = new VertexAnimationBaker(this.#scene, merged);
+    const manager = new BakedVertexAnimationManager(this.#scene);
+
+    merged.bakedVertexAnimationManager = manager;
+    merged.instancedBuffers.bakedVertexAnimationSettingsInstanced = new Vector4(0, 0, 0, 0);
+    setAnimationParameters(merged.instancedBuffers.bakedVertexAnimationSettingsInstanced, 0);
+    merged.setEnabled(false);
+    const cacheName = `${modelName}_vertex_data`;
+    const cachedData = await getDataEntry(cacheName);
+    let buffer;
+    if (cachedData) {
+      buffer = cachedData.data;
+    } else {
+      buffer = await bakeVertexData(merged, animationGroups);
+      await setDataEntry(cacheName, buffer);
+    }
+
+    manager.texture = b.textureFromBakedVertexData(buffer);
+
+    this.#scene.registerBeforeRender(() => {
+      manager.time += this.#scene.getEngine().getDeltaTime() / 1000.0;
+
+      skeletonForAnim.forEach((skel) => {
+        skel.prepare();
+      });
+
+      const frame = manager.time * 60 + frameOffset;
+
+      animationGroups.forEach((animationGroup) => {
+        animationGroup.goToFrame(frame);
+      });
+    });
+
+    for (const animationGroup of animationGroups) {
+      const indexAnim = animationGroups.map(a => a.name).indexOf(animationGroup.name);
+      if (indexAnim >= 0) {
+        AnimationHelper.RetargetAnimationGroupToRoot(animationGroup, rootForAnim[indexAnim]);
+        AnimationHelper.RetargetSkeletonToAnimationGroup(animationGroup, skeletonForAnim[indexAnim]);
+        // animationGroup.play(true);
+      }
+    }
+
+
 
     for (const [_idx, spawnEntry] of Object.entries(models)) {
       const { x, y, z, spawn_id: id, name } = spawnEntry;
-      const instanceContainer = container.instantiateModelsToScene();
-      const rootNode = instanceContainer.rootNodes[0];
+      // const instanceContainer = container.instantiateModelsToScene();
+      const instanceNode = merged.createInstance(`instance_${ id}`);
+      instanceNode.showBoundingBox = true;
+      instanceNode.instancedBuffers.bakedVertexAnimationSettingsInstanced = new Vector4(0, 0, 0, 0);
+      setAnimationParameters(instanceNode.instancedBuffers.bakedVertexAnimationSettingsInstanced, 0);
 
-      if (!rootNode) {
-        console.log('No root node for container spawn', instanceContainer, spawnEntry);
+
+      if (!instanceNode) {
+        console.log('No root node for container spawn', instanceNode, spawnEntry);
         return;
       }
 
-      rootNode.id = `spawn_${id}`;
-      rootNode.name = name;
-      instanceContainer.animationGroups?.[0]?.play(true);
+      instanceNode.id = `spawn_${id}`;
+      instanceNode.name = name;
+      // instanceContainer.animationGroups?.[0]?.play(true);
 
       const scale = spawnEntry.size / 3;
-      rootNode.scaling.z = scale;
-      rootNode.scaling.x = scale;
-      rootNode.scaling.y = scale;
-      const height = rootNode.getHierarchyBoundingVectors().max.y - rootNode.getHierarchyBoundingVectors().min.y;
-      rootNode.position = eqtoBabylonVector(x, y, z + 5);
-      rootNode.rotation = new Vector3(Tools.ToRadians(0), Tools.ToRadians(180) + Tools.ToRadians(spawnEntry.heading), Tools.ToRadians(0));
+      instanceNode.scaling.z = scale;
+      instanceNode.scaling.x = scale;
+      instanceNode.scaling.y = scale;
+      const height = instanceNode.getHierarchyBoundingVectors().max.y - instanceNode.getHierarchyBoundingVectors().min.y;
+      instanceNode.position = eqtoBabylonVector(x, y, z + 5);
+      instanceNode.rotation = new Vector3(Tools.ToRadians(0), Tools.ToRadians(180) + Tools.ToRadians(spawnEntry.heading), Tools.ToRadians(0));
       
-      const ag = new PhysicsAggregate(rootNode, PhysicsShapeType.BOX, { center: new Vector3(0, 1, 0), extents: new Vector3(2, height, 2), mass: 1, restitution: 0, friction: 1 });
+      const ag = new PhysicsAggregate(instanceNode, PhysicsShapeType.BOX, { center: new Vector3(0, -4, 0), extents: new Vector3(2, height, 2), mass: 1, restitution: 0, friction: 1 });
       ag.body.setMassProperties({
         inertia: new Vector3(0, 0, 0)
       });
-      rootNode.setEnabled(false);
-      rootNode.isPickable = true;
+      
+      instanceNode.setEnabled(false);
 
-      for (const mesh of rootNode.getChildMeshes()) {
-        mesh.checkCollisions = true;
-        mesh.name = mesh.material.name;
+      instanceNode.isPickable = true;
+      instanceNode.addLODLevel?.(500, null);
+      instanceNode.checkCollisions = true;
+      instanceNode.name = instanceNode.material.name;
 
-        mesh.metadata = {
-          spawn: true,
-        };
-      }
+      instanceNode.metadata = {
+        spawn: true,
+      };
+     
 
       const nameplate = new TextBlock(`spawn_${id}_nameplate`, name);
       nameplate.color = 'teal';
@@ -126,16 +256,16 @@ class SpawnController {
 
       this.spawns[id] = {
         spawn           : new Spawn(spawnEntry),
-        rootNode,
+        rootNode        : instanceNode,
         physicsAggregate: ag,
-        animationGroups : instanceContainer.animationGroups,
+        animationGroups,
         nameplate,
       };
 
-      this.updateTextures(id);
+      // this.updateTextures(id);
       this.calculateNameplate(id, true);
       
-      const vec = new ThreeVector3(rootNode.absolutePosition.x, rootNode.absolutePosition.y, rootNode.absolutePosition.z);
+      const vec = new ThreeVector3(instanceNode.absolutePosition.x, instanceNode.absolutePosition.y, instanceNode.absolutePosition.z);
       if (this.octree.get(vec)) {
         this.octree.set(vec, [...this.octree.get(vec), id]);
       } else {
@@ -144,9 +274,85 @@ class SpawnController {
     }
   }
 
-  updateTextures(id) {
-    const spawn = this.spawns[id];
-    const model = spawn.spawn.model;
+  async addEquipSpawn(modelName, models) {
+    const container = await this.getAssetContainer(modelName);
+  
+    if (!container) { 
+      console.log('Did not load model', modelName);
+      return;
+    }
+  
+    for (const [_idx, spawnEntry] of Object.entries(models)) {
+      const { x, y, z, spawn_id: id, name } = spawnEntry;
+      const instanceContainer = container.instantiateModelsToScene();
+      const rootNode = instanceContainer.rootNodes[0];
+  
+      if (!rootNode) {
+        console.log('No root node for container spawn', instanceContainer, spawnEntry);
+        return;
+      }
+  
+      rootNode.id = `spawn_${id}`;
+      rootNode.name = name;
+      instanceContainer.animationGroups?.[0]?.play(true);
+  
+      const scale = spawnEntry.size / 3;
+      rootNode.scaling.z = scale;
+      rootNode.scaling.x = scale;
+      rootNode.scaling.y = scale;
+      const height = rootNode.getHierarchyBoundingVectors().max.y - rootNode.getHierarchyBoundingVectors().min.y;
+      rootNode.position = eqtoBabylonVector(x, y, z + 5);
+      rootNode.rotation = new Vector3(Tools.ToRadians(0), Tools.ToRadians(180) + Tools.ToRadians(spawnEntry.heading), Tools.ToRadians(0));
+        
+      const ag = new PhysicsAggregate(rootNode, PhysicsShapeType.BOX, { center: new Vector3(0, 1, 0), extents: new Vector3(2, height, 2), mass: 1, restitution: 0, friction: 1 });
+      ag.body.setMassProperties({
+        inertia: new Vector3(0, 0, 0)
+      });
+      rootNode.setEnabled(false);
+      rootNode.isPickable = true;
+  
+      for (const mesh of rootNode.getChildMeshes()) {
+        mesh.checkCollisions = true;
+        mesh.name = mesh.material.name;
+  
+        mesh.metadata = {
+          spawn: true,
+        };
+      }
+  
+      const nameplate = new TextBlock(`spawn_${id}_nameplate`, name);
+      nameplate.color = 'teal';
+      nameplate.fontFamily = 'arial';
+      nameplate.fontSize = 20;
+      guiController.manager.addControl(nameplate);
+      nameplate.linkOffsetYInPixels = -30;
+      nameplate.isVisible = false;
+  
+      this.spawns[id] = {
+        spawn           : new Spawn(spawnEntry),
+        rootNode,
+        physicsAggregate: ag,
+        animationGroups : instanceContainer.animationGroups,
+        nameplate,
+      };
+  
+      this.updateTextures(id);
+      this.calculateNameplate(id, true);
+        
+      const vec = new ThreeVector3(rootNode.absolutePosition.x, rootNode.absolutePosition.z, rootNode.absolutePosition.y);
+      if (this.octree.get(vec)) {
+        this.octree.set(vec, [...this.octree.get(vec), id]);
+      } else {
+        this.octree.set(vec, [id]);
+      }
+    }
+  
+  }
+
+
+  updateTextures(id, infSpawn = undefined, infModel = undefined, doDelete = false) {
+    const spawn = infSpawn || this.spawns[id];
+    const model = infModel || spawn.spawn.model;
     if (model === '') {
       return;
     }
@@ -166,7 +372,12 @@ class SpawnController {
         if (isVariation(mesh.name, texture)) {
           mesh.setEnabled(true);
         } else {
-          mesh.setEnabled(false);
+          if (doDelete) {
+            mesh.dispose();
+          } else {
+            mesh.setEnabled(false);
+          }
+          
         }
       } else {
         // Humanoid wearing equip
@@ -174,59 +385,140 @@ class SpawnController {
         // One-offs for helm
         if (mesh.name.includes('helm')) {
           if (!mesh.name.endsWith(equip.head.id)) {
-            mesh.setEnabled(false);
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+            
           } else {
             mesh.setEnabled(true);
           }
         }
 
         if (mesh.name.includes('chain') && equip.head.id !== 2) {
-          mesh.setEnabled(false);
+          if (doDelete) {
+            mesh.dispose();
+          } else {
+            mesh.setEnabled(false);
+          }
+          
         }
         if (mesh.name.includes('leather') && equip.head.id !== 1) {
-          mesh.setEnabled(false);
+          if (doDelete) {
+            mesh.dispose();
+          } else {
+            mesh.setEnabled(false);
+          }
+          
         }
 
         // Disable all clk for now
         if (mesh.name.startsWith('d_clk')) {
-          mesh.setEnabled(false);
+          if (doDelete) {
+            mesh.dispose();
+          } else {
+            mesh.setEnabled(false);
+          }
+          
         }
 
         // Chest
         if (matchPrefix(`${model}ch`, mesh.name)) {
-          mesh.setEnabled(isVariation(mesh.name, equip.head.id));
+          if (isVariation(mesh.name, equip.head.id)) {
+            mesh.setEnabled(true);
+
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
+         
+          
         }
 
         // Face
         if (matchPrefix(`${model}he00`, mesh.name) && /[0-9]1$/.test(mesh.name)) {
-          mesh.setEnabled(mesh.name.endsWith(`${spawn.spawn.face}1`));
+          if (mesh.name.endsWith(`${spawn.spawn.face}1`)) {
+            mesh.setEnabled(true);
+  
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
+           
         }
 
         // Hands
         if (matchPrefix(`${model}hn`, mesh.name)) {
           if (!isVariation(mesh.name, 0)) {
-            mesh.setEnabled(isVariation(mesh.name, equip.hands.id));
+            if (isVariation(mesh.name, equip.hands.id)) {
+              mesh.setEnabled(true);
+            } else {
+              if (doDelete) {
+                mesh.dispose();
+              } else {
+                mesh.setEnabled(false);
+              }
+            }
           }
         }
 
         // Arms
         if (matchPrefix(`${model}ua`, mesh.name)) {
-          mesh.setEnabled(isVariation(mesh.name, equip.arms.id));
+          if (isVariation(mesh.name, equip.arms.id)) {
+            mesh.setEnabled(true);
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
         }
 
         // Bracers
         if (matchPrefix(`${model}fa`, mesh.name)) {
-          mesh.setEnabled(isVariation(mesh.name, equip.wrist.id));
+          if (isVariation(mesh.name, equip.wrist.id)) {
+            mesh.setEnabled(true);
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
         }
         
         // Legs
         if (matchPrefix(`${model}lg`, mesh.name)) {
-          mesh.setEnabled(isVariation(mesh.name, equip.legs.id));
+          if (isVariation(mesh.name, equip.legs.id)) {
+            mesh.setEnabled(true);
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
         }
 
         // Feet
         if (matchPrefix(`${model}ft`, mesh.name)) {
-          mesh.setEnabled(isVariation(mesh.name, equip.feet.id));
+          if (isVariation(mesh.name, equip.feet.id)) {
+            mesh.setEnabled(true);
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
         }
       }
     }
@@ -271,16 +563,37 @@ class SpawnController {
   }
 
   startIdleAnimations(id, distance) {
-    if (distance < 200) {
+    if (distance < 600) {
       const spawn = this.spawns[id];
       spawn.animationGroups[0]?.play(true);
     }
+  }
+
+  doAnimations(id) {
+
+    // this.#scene.registerBeforeRender(() => {
+    //   manager.time += this.#scene.getEngine().getDeltaTime() / 1000.0;
+
+    //   skeletonForAnim.forEach((skel) => {
+    //     skel.prepare();
+    //   });
+
+    //   const frame = manager.time * 60 + frameOffset;
+
+    //   animationGroups.forEach((animationGroup) => {
+    //     animationGroup.goToFrame(frame);
+    //   });
+    // });
+
   }
 
   async addSpawns (spawns) {
     const spawnList = {};
     for (const spawn of spawns) {
       const model = raceData.find(r => r.id === spawn.race);
+      if ([127, 240].includes(model.id)) {
+        continue;
+      }
       const realModel = (model[spawn.gender] || model['2'] || 'HUM').toLowerCase();
       if (!spawnList[realModel]) {
         spawnList[realModel] = [];
@@ -296,7 +609,7 @@ class SpawnController {
   updateSpawns(position) {
     const perf = performance.now();
 
-    const threePosition = new ThreeVector3(position.x, position.y, position.z);
+    const threePosition = new ThreeVector3(position.x, position.z, position.y);
     const pts = [];
     for (const res of this.octree.findPoints(threePosition, this.spawnCullRange)) {
       pts.push({ distance: res.distance, spawns: res.data });
@@ -306,6 +619,7 @@ class SpawnController {
           spawn.rootNode.setEnabled(true);
           this.calculateNameplate(id);
         }
+        this.doAnimations(id);
         this.startIdleAnimations(id, res.distance);
         this.calculateNameplateOffset(id, res.distance);
       }
@@ -326,7 +640,7 @@ class SpawnController {
             }
           }
         }
-        if (res.distance > 200) {
+        if (res.distance > 600) {
           for (const id of res.data) {
             const spawn = this.spawns[id];
             for (const animationGroup of spawn.animationGroups) {
@@ -343,4 +657,106 @@ class SpawnController {
   }
 }
 
+
+
+function mergeSkeleton(mesh, skeleton) {
+  // pick what you want to merge
+  const allChildMeshes = mesh.getChildMeshes(false);
+  const merged = Mesh.MergeMeshes(allChildMeshes, false, true, undefined, undefined, true);
+  if (merged) {
+    merged.name = '_MergedModel';
+    merged.skeleton = skeleton;
+  }
+
+  return merged;
+}
+
+function calculateRanges(animationGroups) {
+  return animationGroups.reduce((acc, ag, index) => {
+    if (index === 0) {
+      acc.push({ from: Math.floor(ag.from), to: Math.floor(ag.to) });
+    } else {
+      const prev = acc[index - 1];
+
+      acc.push({ from: prev.to + 1, to: prev.to + 1 + Math.floor(ag.to) });
+    }
+    return acc;
+  }, []);
+}
+
+async function bakeVertexData(mesh, ags) {
+  const s = mesh.skeleton;
+  const boneCount = s.bones.length;
+  /** total number of frames in our animations */
+  const frameCount = ags.reduce((acc, ag) => acc + (Math.floor(ag.to) - Math.floor(ag.from)) + 1, 0);
+
+  // reset our loop data
+  let textureIndex = 0;
+  const textureSize = (boneCount + 1) * 4 * 4 * frameCount;
+  const vertexData = new Float32Array(textureSize);
+  // mesh.refreshBoundingInfo(true, true);
+  function* captureFrame() {
+
+    const skeletonMatrices = s.getTransformMatrices(mesh);
+    vertexData.set(skeletonMatrices, textureIndex * skeletonMatrices.length);
+  }
+
+  let ii = 0;
+  for (const ag of ags) {
+    ag.reset();
+    const from = Math.floor(ag.from);
+    const to = Math.floor(ag.to);
+    for (let frameIndex = from; frameIndex <= to; frameIndex++) {
+      if (ii++ === 0) {
+        continue;
+      }
+      // start anim for one frame
+      ag.start(false, 1, frameIndex, frameIndex, false);
+      // wait for finishing
+      await ag.onAnimationEndObservable.runCoroutineAsync(captureFrame());
+      textureIndex++;
+      // stop anim
+      ag.stop();
+    }
+  }
+
+  return vertexData;
+}
+
+
+class AnimationHelper {
+  static RetargetSkeletonToAnimationGroup(animationGroup, retargetSkeleton) {
+    for (let i = 0; i < animationGroup.targetedAnimations.length; ++i) {
+      const ta = animationGroup.targetedAnimations[i];
+      const bone = AnimationHelper._FindBoneByTransformNodeName(retargetSkeleton, ta.target.name);
+      if (!bone) {
+        animationGroup.targetedAnimations.splice(i, 1);
+        i--;
+        continue;
+      }
+      bone._linkedTransformNode = ta.target;
+    }
+  }
+
+  static RetargetAnimationGroupToRoot(animationGroup, root) {
+    for (let i = 0; i < animationGroup.targetedAnimations.length; ++i) {
+      const ta = animationGroup.targetedAnimations[i];
+      const children = root.getDescendants(false, (node) => node.name === ta.target.name);
+      if (children.length === 0) {
+        animationGroup.targetedAnimations.splice(i, 1);
+        i--;
+        continue;
+      }
+      ta.target = children[0];
+    }
+  }
+  static _FindBoneByTransformNodeName(skeleton, name) {
+    for (const bone of skeleton.bones) {
+      if (bone._linkedTransformNode.name === name) {
+        return bone;
+      }
+    }
+    return null;
+  }
+}
 export const spawnController = new SpawnController();
