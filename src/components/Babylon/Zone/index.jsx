@@ -11,6 +11,7 @@ import { Inspector } from '@babylonjs/inspector';
 import { zoneController } from '../controllers/ZoneController';
 import mockData from '../mockSpawns.json';
 import { spawnController } from '../controllers/SpawnController';
+import { useToasts } from 'react-toast-notifications';
 
 Database.IDBStorageEnabled = true;
 
@@ -30,7 +31,7 @@ if (process.env.REACT_APP_INSPECTOR === 'true') {
 const RenderedZone = () => {
   const [zone, _setZone] = useState(params.zone ?? 'qeynos');
   const canvasRef = useRef();
-
+  const { addToast } = useToasts();
   useEffect(() => {
     if (!engine) {
       engine = new Engine(canvasRef.current, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false });
@@ -62,17 +63,24 @@ const RenderedZone = () => {
     const resizeListener = () => {
       engine.resize();
     };
+   
     const keydownListener = e => {
       switch (`${e.key}`?.toLowerCase?.()) {
         case 'i': {
-          Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+          if (Inspector.IsVisible) {
+            Inspector.Hide();
+          } else {
+            Inspector.Show(zoneController.scene, { embedMode: true, overlay: true });
+          }
           break;
         }
         case 'g': {
+          addToast(`Gravity ${zoneController.CameraController.camera.applyGravity ? 'disabled' : 'enabled'}`, {});
           zoneController.CameraController.camera.applyGravity = !zoneController.CameraController.camera.applyGravity;
           break;
         }
         case 'c': {
+          addToast(`Collision ${zoneController.CameraController.camera.checkCollisions ? 'disabled' : 'enabled'}`, {});
           zoneController.CameraController.camera.checkCollisions = !zoneController.CameraController.camera.checkCollisions;
           break;
         }
