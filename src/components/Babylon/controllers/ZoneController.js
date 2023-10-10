@@ -210,10 +210,11 @@ class ZoneController {
   }
 
   renderHook() {
-    if (this.CameraController.camera.globalPosition.equals(this.lastCameraPosition)) {
+    if (this.CameraController.camera.globalPosition.equals(this.lastCameraPosition) && this.CameraController.camera.rotation.equals(this.lastCameraRotation)) {
       return;
     }
     this.lastCameraPosition = { ...this.CameraController.camera.globalPosition };
+    this.lastCameraRotation = { ...this.CameraController.camera.rotation };
     this.counter++;
     this.cullCounter++;
     const perf = performance.now();
@@ -409,6 +410,7 @@ class ZoneController {
   async loadPhysicsEngine() {
     const HK = await getInitializedHavok();
     const havokPlugin = window.hp = new HavokPlugin(true, HK);
+    // const didEnable = this.scene.enablePhysics(new Vector3(0, -0.001, 0), havokPlugin);
     const didEnable = this.scene.enablePhysics(new Vector3(0, -1.3, 0), havokPlugin);
     return didEnable;
   }

@@ -99,9 +99,11 @@ const RenderedZone = () => {
     return () => {
       engine.stopRenderLoop();
       window.removeEventListener('resize', resizeListener);
+      window.addEventListener('keydown', keydownListener);
+
     };
     
-  }, [zone]);
+  }, [zone, addToast]);
 
   return <div width="100%" height="100%"><canvas width="100vw" height="100vh" ref={canvasRef} id="renderCanvas"></canvas></div>;
 };

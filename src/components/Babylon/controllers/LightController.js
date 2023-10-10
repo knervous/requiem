@@ -46,8 +46,8 @@ class LightController {
     this.ambientLight.groundColor = Color3.FromHexString('#E69339');
 
     this.playerLight.intensity = 200;
-    // this.playerLight.intensityMode = Light.INTENSITYMODE_LUMINANCE;
-    // this.playerLight.falloffType = Light.FALLOFF_GLTF;
+    this.playerLight.intensityMode = Light.INTENSITYMODE_LUMINANCE;
+    this.playerLight.falloffType = Light.FALLOFF_GLTF;
     this.playerLight.position = cameraController.camera.position;
 
     scene.materials.forEach((mtl) => {
