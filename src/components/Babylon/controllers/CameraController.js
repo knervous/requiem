@@ -61,7 +61,12 @@ class CameraController {
    * @returns 
    */
   createCamera = (scene, canvas) => {
-    this.camera = new UniversalCamera('__camera__', new Vector3(5, 10, 0), scene);
+    let startingLoc = new Vector3(5, 10, 0);
+    if (sessionStorage.getItem('cam-loc')) {
+      const { x, y, z } = JSON.parse(sessionStorage.getItem('cam-loc'));
+      startingLoc = new Vector3(x, y, z);
+    }
+    this.camera = new UniversalCamera('__camera__', startingLoc, scene);
     this.camera.setTarget(new Vector3(1, 10, 1));
     this.camera.touchAngularSensibility = 5000;
 

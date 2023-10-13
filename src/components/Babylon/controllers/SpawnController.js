@@ -1,4 +1,4 @@
-import { AbstractMesh, BoundingInfo, Mesh, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Scene, SceneLoader, Tools, Vector3 } from '@babylonjs/core';
+import { AbstractMesh, BoundingInfo, Color3, DynamicTexture, Mesh, MeshBuilder, ParticleSystem, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Scene, SceneLoader, StandardMaterial, Tools, Vector3 } from '@babylonjs/core';
 import { PointOctree } from 'sparse-octree';
 import { Vector3 as ThreeVector3 } from 'three';
 import { TextBlock } from '@babylonjs/gui';
@@ -9,6 +9,7 @@ import { Spawn } from '../models/Spawn';
 import { guiController } from './GUIController';
 import { cameraController } from './CameraController';
 import { debounce } from '@material-ui/core';
+import { itemController } from './ItemController';
 
 
 const modelsUrl = 'https://eqrequiem.blob.core.windows.net/assets/models/';
@@ -20,8 +21,8 @@ const modelsUrl = 'https://eqrequiem.blob.core.windows.net/assets/models/';
 /**
  * @typedef {object} ZoneSpawn
  * @property {import('../models/Spawn').Spawn} spawn
- * @property {import('@babylonjs/core/Meshes').Mesh} nameplateAnchor
  * @property {import('@babylonjs/core/Meshes').Mesh} rootNode
+ * @property {import('@babylonjs/core/Meshes').Mesh} nameplateMesh
  * @property {boolean} animating
  * @property {PhysicsAggregate} physicsAggregate
  * @property {Array<AnimationGroup>} animationGroups
@@ -143,14 +144,17 @@ class SpawnController {
       console.log('Did not load model', modelName);
       return;
     }
-  
+    
     for (const [_idx, spawnEntry] of Object.entries(models)) {
       const { x, y, z, spawn_id: id, name } = spawnEntry;
       const instanceContainer = container.instantiateModelsToScene();
       instanceContainer.animationGroups?.forEach(ag => this.#scene.removeAnimationGroup(ag));
       const totalAnimatables = instanceContainer.animationGroups.reduce((acc, val) => acc + val.targetedAnimations.length, 0);
       this.#scene._activeAnimatables = this.#scene._activeAnimatables.slice(0, this.#scene._activeAnimatables.length - totalAnimatables);
-      const rootNode = instanceContainer.rootNodes[0];
+      /**
+       * @type {Mesh}
+       */
+      let rootNode = instanceContainer.rootNodes[0];
 
       if (!rootNode) {
         console.log('No root node for container spawn', instanceContainer, spawnEntry);
@@ -161,9 +165,6 @@ class SpawnController {
       rootNode.name = name;
   
       const scale = spawnEntry.size / 3;
-      rootNode.scaling.z = scale;
-      rootNode.scaling.x = scale;
-      rootNode.scaling.y = scale;
 
       for (const mesh of rootNode.getChildMeshes()) {
         mesh.checkCollisions = true;
@@ -173,29 +174,69 @@ class SpawnController {
         };
       }
 
+      const spawn = new Spawn(spawnEntry);
+      this.updateTextures(id, { rootNode, spawn, skeleton: instanceContainer.skeletons[0] }, true);
+      rootNode.position.setAll(0);
+      rootNode.scaling.setAll(1);
+      rootNode.rotationQuaternion = null;
+      rootNode.rotation.setAll(0);
+      const instanceSkeleton = instanceContainer.skeletons[0];
+      const skeletonRoot = rootNode.getChildren(undefined, true).find(a => a.name.includes('root'));
+      const merged = Mesh.MergeMeshes(rootNode.getChildMeshes(false), false, true, undefined, false, true);
+      if (merged) {
+        skeletonRoot.parent = merged;
+        skeletonRoot.skeleton = instanceSkeleton;
+        skeletonRoot.skeleton.name = `${name}_skeleton`;
+        rootNode.dispose();
+        rootNode = merged;
+        rootNode.skeleton = skeletonRoot.skeleton;
+        rootNode.id = `spawn_${id}`;
+        rootNode.name = name;
+      } else {
+        rootNode.skeleton = instanceSkeleton;
+      }
+      
+      await this.updatePrimarySecondary(id, { rootNode, spawn, skeleton: instanceSkeleton, skeletonRoot }).catch(() => {});
+
       rootNode.position = eqtoBabylonVector(x, y, z + 5);
+      rootNode.scaling.z = scale;
+      rootNode.scaling.x = scale;
+      rootNode.scaling.y = Math.abs(scale);
+
       rootNode.rotation = new Vector3(Tools.ToRadians(0), Tools.ToRadians(180) + Tools.ToRadians(spawnEntry.heading), Tools.ToRadians(0));
       rootNode.setEnabled(false);
       rootNode.isPickable = true;
- 
-      const nameplate = new TextBlock(`spawn_${id}_nameplate`, name);
-      nameplate.color = 'teal';
-      nameplate.fontFamily = 'arial';
-      nameplate.fontSize = 20;
-      guiController.manager.addControl(nameplate);
-      nameplate.linkOffsetYInPixels = -30;
-      nameplate.isVisible = false;
-  
+
+      // Overhead nameplate
+      const temp = new DynamicTexture('DynamicTexture', 64, this.#scene);
+      const tmpctx = temp.getContext();
+      tmpctx.font = '16px Arial';
+      const textWidth = tmpctx.measureText(spawn.displayedName).width + 20;
+      const textureGround = new DynamicTexture(`${spawn.name}_nameplate_texture`, { width: textWidth, height: 30 }, this.#scene);   
+      const materialGround = new StandardMaterial(`${spawn.name}_nameplate_material`, this.#scene);    				
+      materialGround.diffuseTexture = textureGround;
+      materialGround.diffuseTexture.hasAlpha = true;
+      materialGround.useAlphaFromDiffuseTexture = true;
+      materialGround.emissiveColor = Color3.FromInts(100, 200, 100);
+      materialGround.disableLighting = true;
+      const nameplateMesh = MeshBuilder.CreatePlane(`${spawn.name}_nameplate`, { width: textWidth / 30, height: 1 }, this.#scene);
+      nameplateMesh.parent = rootNode;
+      nameplateMesh.billboardMode = ParticleSystem.BILLBOARDMODE_ALL;
+      nameplateMesh.material = materialGround;
+      textureGround.drawText(spawn.displayedName, null, null, '16px Arial', 'teal', 'transparent', false, true);
+      textureGround.update(false, true);
+      materialGround.onBindObservable.add(() => {
+        this.#scene.getEngine().alphaState.setAlphaBlendFunctionParameters(1, 0x0303 /* ONE MINUS SRC ALPHA */, 1, 0x0303 /* ONE MINUS SRC ALPHA */);
+      });
+
       this.spawns[id] = {
+        spawn,
         rootNode,
-        nameplate,
-        spawn          : new Spawn(spawnEntry),
+        nameplateMesh,
         animating      : false,
         animationGroups: instanceContainer.animationGroups,
       };
   
-      this.updateTextures(id);
-       
       const vec = new ThreeVector3(rootNode.absolutePosition.x, rootNode.absolutePosition.z, rootNode.absolutePosition.y);
       if (this.octree.get(vec)) {
         this.octree.set(vec, [...this.octree.get(vec), id]);
@@ -206,10 +247,10 @@ class SpawnController {
   
   }
 
-
-  updateTextures(id, infSpawn = undefined, infModel = undefined, doDelete = false) {
+  // eslint-disable-next-line
+  updateTextures(id, infSpawn = undefined, doDelete = false) {
     const spawn = infSpawn || this.spawns[id];
-    const model = infModel || spawn.spawn.model;
+    const model = spawn.spawn.model;
     if (model === '') {
       return;
     }
@@ -240,20 +281,22 @@ class SpawnController {
         // Humanoid wearing equip
         const equip = spawn.spawn.equipment;
         // One-offs for helm
-        if (mesh.name.includes('helm')) {
-          if (!mesh.name.endsWith(equip.head.id)) {
-            if (doDelete) {
-              mesh.dispose();
-            } else {
-              mesh.setEnabled(false);
-            }
-            
+        let offsetHeadId = equip.head.id;
+        if ([1].includes(spawn.spawn.race)) {
+          offsetHeadId += 1;
+          if (offsetHeadId > 4) {
+            offsetHeadId = 0;
+          }
+        }
+        if (mesh.name.includes('tm_helm') && !mesh.name.endsWith(offsetHeadId)) {
+          if (doDelete) {
+            mesh.dispose();
           } else {
-            mesh.setEnabled(true);
+            mesh.setEnabled(false);
           }
         }
 
-        if (mesh.name.includes('chain') && equip.head.id !== 2) {
+        if (mesh.name.includes('chain') && !mesh.name.endsWith(offsetHeadId)) {
           if (doDelete) {
             mesh.dispose();
           } else {
@@ -261,7 +304,7 @@ class SpawnController {
           }
           
         }
-        if (mesh.name.includes('leather') && equip.head.id !== 1) {
+        if (mesh.name.includes('leather') && !mesh.name.endsWith(offsetHeadId)) {
           if (doDelete) {
             mesh.dispose();
           } else {
@@ -272,19 +315,10 @@ class SpawnController {
 
         // Disable all clk for now
         if (mesh.name.startsWith('d_clk')) {
-          if (doDelete) {
-            mesh.dispose();
-          } else {
-            mesh.setEnabled(false);
-          }
-          
-        }
-
-        // Chest
-        if (matchPrefix(`${model}ch`, mesh.name)) {
-          if (isVariation(mesh.name, equip.head.id)) {
+          if (isVariation(mesh.name, equip.chest.id - 6)) {
             mesh.setEnabled(true);
-
+            const { blue, green, red } = spawn.spawn.equipment.chest.tint;
+            mesh.material.albedoColor = Color3.FromInts(red, green, blue);
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -292,15 +326,38 @@ class SpawnController {
               mesh.setEnabled(false);
             }
           }
-         
-          
+        }
+
+        // Chest
+        if (matchPrefix(`${model}ch`, mesh.name)) {
+          if (isVariation(mesh.name, equip.chest.id)) {
+            mesh.setEnabled(true);
+          } else {
+            if (doDelete) {
+              mesh.dispose();
+            } else {
+              mesh.setEnabled(false);
+            }
+          }
         }
 
         // Face
-        if (matchPrefix(`${model}he00`, mesh.name) && /[0-9]1$/.test(mesh.name)) {
-          if (mesh.name.endsWith(`${spawn.spawn.face}1`)) {
+        if (matchPrefix(`${model}he00`, mesh.name)) {
+          if (offsetHeadId > 0) {
+            if (!mesh.name.endsWith(`-${offsetHeadId}`)) {
+              if (doDelete) {
+                mesh.dispose();
+              } else {
+                mesh.setEnabled(false);
+              }
+            } else {
+              const mat = this.#scene.materials.find(m => m.name.endsWith(`${spawn.spawn.model}he00${spawn.spawn.face}1`));
+              if (mat) {
+                mesh.material = mat;
+              }
+            }
+          } else if (mesh.name.endsWith(`${spawn.spawn.face}1`)) {
             mesh.setEnabled(true);
-  
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -367,7 +424,13 @@ class SpawnController {
 
         // Feet
         if (matchPrefix(`${model}ft`, mesh.name)) {
-          if (isVariation(mesh.name, equip.feet.id)) {
+          let feetId = equip.feet.id;
+          let checkEnd = false;
+          if (feetId >= 10 && feetId <= 16) {
+            feetId = 0;
+            checkEnd = true;
+          }
+          if (isVariation(mesh.name, feetId) && (!checkEnd || mesh.name.endsWith('02'))) {
             mesh.setEnabled(true);
           } else {
             if (doDelete) {
@@ -379,51 +442,49 @@ class SpawnController {
         }
       }
     }
+   
   }
 
-  calculateNameplate(id, bypassEnabled = false) {
-    const spawn = this.spawns[id];
-    let nameplateAnchor = spawn.rootNode;
-    let maxY = 0;
-    for (const mesh of spawn.rootNode.getChildMeshes()) {
-      mesh.refreshBoundingInfo(true, true);
-      if ((bypassEnabled || mesh.isEnabled()) && mesh.getBoundingInfo().boundingBox.maximum.y > maxY) {
-        maxY = mesh.getBoundingInfo().boundingBox.maximum.y;
-        nameplateAnchor = mesh;
-      }
-    }
-    spawn.nameplate.text = spawn.spawn.displayedName;
-    spawn.nameplate.linkWithMesh(nameplateAnchor);
-    spawn.nameplateAnchor = nameplateAnchor;
-    spawn.nameplateAnchor.occlusionQueryAlgorithmType = AbstractMesh.OCCLUSION_ALGORITHM_TYPE_CONSERVATIVE;
-    spawn.nameplateAnchor.occlusionType = AbstractMesh.OCCLUSION_TYPE_STRICT;
-    spawn.nameplateAnchor.forceRenderingWhenOccluded = true;
-  }
+  async updatePrimarySecondary(id, infSpawn = undefined) {
+    const spawn = infSpawn || this.spawns[id];
+    if (spawn.spawn.equipment.primary.id > 0) {
+      const primary = await itemController.createItem(spawn.spawn.equipment.primary.id);
+      if (primary) {
+        const transformNode = spawn.skeletonRoot.getChildTransformNodes().find(a => a.name.includes('r_point'));
+        const primaryBone = spawn.skeletonRoot.skeleton.bones.find(b => b.name === 'r_point');
 
-  calculateNameplateOffset(id, distance) {
-    const spawn = this.spawns[id];
-    if (!spawn.nameplateAnchor) {
-      this.calculateNameplate(id);
-    }
-    if (distance < 200) {
-      if (spawn.nameplateAnchor.isOccluded) {
-        spawn.nameplate.isVisible = false;
-        return;
+        if (primaryBone && transformNode) {
+          primary.attachToBone(primaryBone);
+          primary.parent = transformNode;
+          primary.rotationQuaternion = null;
+          primary.rotation.setAll(0);
+          primary.scaling.setAll(1);
+          primary.scaling.x = -1;
+          primary.name = `it${spawn.spawn.equipment.primary.id}`;
+          primary.skeleton = spawn.skeleton;
+        }
       }
-      if (!spawn.nameplate.isVisible) {
-        spawn.rootNode.getChildMeshes().forEach(m => m.refreshBoundingInfo(true, true));
-      }
-      const dist = (200 - distance) / 5;
-      spawn.nameplate.isVisible = true;
-      spawn.nameplate.fontSize = window.devicePixelRatio * Math.max(10, 25 - (distance / 8));
-      spawn.nameplate.linkOffsetYInPixels = -15 - dist - (30 / (distance / 10));
-    } else {
-      spawn.nameplate.isVisible = false;
+      
     }
-  }
 
-  doAnimations(id) {
-
+    if (spawn.spawn.equipment.secondary.id > 0) {
+      const secondary = await itemController.createItem(spawn.spawn.equipment.secondary.id);
+      if (secondary) {
+        const secondaryBone = spawn.skeleton.bones.find(b => b.name === 'shield_point');
+        console.log('prim', secondary, secondaryBone);
+        const transformNode = spawn.rootNode.getChildTransformNodes().find(a => a.name.includes('shield_point'));
+        if (secondaryBone && transformNode) {
+          secondary.attachToBone(secondaryBone);
+          secondary.parent = transformNode;
+          secondary.rotationQuaternion = null;
+          secondary.rotation.setAll(0);
+          secondary.scaling.setAll(-1);
+          secondary.scaling.x = -1;
+          secondary.name = `it${spawn.spawn.equipment.secondary.id}`;
+        }
+      }
+      
+    }
   }
 
   async addSpawns (spawns) {
@@ -451,31 +512,9 @@ class SpawnController {
    */
   enableSpawn(spawn) {
     spawn.rootNode.setEnabled(true);
-    let min, max;
-    for (const mesh of spawn.rootNode.getChildMeshes().filter(a => a.isEnabled())) {
-      mesh.checkCollisions = true;
-      mesh.name = mesh.material.name;
-  
-      mesh.metadata = {
-        spawn: true,
-      };
-      mesh.refreshBoundingInfo(true, true);
-      const meshMin = mesh.getBoundingInfo().boundingBox.minimum;
-      const meshMax = mesh.getBoundingInfo().boundingBox.maximum;
-      if (!min) {
-        min = meshMin;
-      }
-      if (!max) {
-        max = meshMax;
-      }
-      min = Vector3.Minimize(min, meshMin);
-      max = Vector3.Maximize(max, meshMax);
-    }
-  
-    spawn.rootNode.setBoundingInfo(new BoundingInfo(min, max));
-    spawn.rootNode.refreshBoundingInfo(true, true);
-
-    const height = spawn.rootNode.getBoundingInfo().boundingBox.maximumWorld.y - spawn.rootNode.getBoundingInfo().boundingBox.minimumWorld.y;
+    spawn.rootNode.refreshBoundingInfo();
+    const height = Math.abs(spawn.rootNode.getBoundingInfo().boundingBox.maximumWorld.y - spawn.rootNode.getBoundingInfo().boundingBox.minimumWorld.y);
+    spawn.nameplateMesh.position.y = spawn.rootNode.getBoundingInfo().boundingBox.minimum.y - 1.2;
     if (spawn.physicsAggregate) {
       spawn.physicsAggregate.dispose();
       delete spawn.physicsAggregate;
@@ -485,7 +524,8 @@ class SpawnController {
       inertia: new Vector3(0, 0, 0)
     });
     spawn.physicsAggregate = ag;
-  
+    spawn.rootNode.scaling.z = Math.abs(spawn.rootNode.scaling.z) * -1;
+    
   }
 
   /**
@@ -494,6 +534,7 @@ class SpawnController {
    */
   disableSpawn(spawn) {
     spawn.rootNode.setEnabled(false);
+    spawn.rootNode.scaling.z = Math.abs(spawn.rootNode.scaling.z);
   }
 
   updateSpawns(position) {
@@ -506,17 +547,14 @@ class SpawnController {
         const spawn = this.spawns[id];
         if (cameraController.camera.isInFrustum(spawn.rootNode) && !spawn.rootNode.isEnabled()) {
           this.enableSpawn(spawn);
-          spawn.rootNode.setEnabled(true);
-          this.calculateNameplate(id);
         } else if (!cameraController.camera.isInFrustum(spawn.rootNode) && spawn.rootNode.isEnabled()) {
-          spawn.rootNode.setEnabled(false);
+          this.disableSpawn(spawn);
         }
         if (res.distance <= this.spawnAnimationRange) {
           spawnsForAnimation.push(spawn);
         }
     
-        this.calculateNameplateOffset(id, res.distance);
-        if ((!cameraController.camera.isInFrustum(spawn.rootNode) || spawn.nameplateAnchor.isOccluded) && spawn.animating) {
+        if ((!cameraController.camera.isInFrustum(spawn.rootNode)) && spawn.animating) {
           const animatables = spawn.animationGroups.map(ag => ag.animatables).flat();
           const startIdx = this.#scene._activeAnimatables.findIndex(ag => animatables[0] === ag);
           if (startIdx > -1) {
@@ -524,7 +562,6 @@ class SpawnController {
           }
           spawn.animating = false;
         } else if (cameraController.camera.isInFrustum(spawn.rootNode) 
-          && !spawn.nameplateAnchor.isOccluded 
           && !spawn.animating
           && res.distance <= this.spawnAnimationRange) {
           this.#scene._activeAnimatables.push(...spawn.animationGroups.map(ag => ag.animatables).flat());
@@ -558,9 +595,6 @@ class SpawnController {
               }
               spawn.animating = false;
             }
-            if (spawn.nameplate.isVisible) {
-              spawn.nameplate.isVisible = false;
-            }
           }
         }
       }
@@ -579,7 +613,7 @@ function mergeSkeleton(mesh, skeleton) {
   const allChildMeshes = mesh.getChildMeshes(false);
   const merged = Mesh.MergeMeshes(allChildMeshes, false, true, undefined, undefined, true);
   if (merged) {
-    merged.name = '_MergedModel';
+    // merged.name = '_MergedModel';
     merged.skeleton = skeleton;
   }
 

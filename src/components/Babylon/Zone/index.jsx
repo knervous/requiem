@@ -12,6 +12,7 @@ import { zoneController } from '../controllers/ZoneController';
 import mockData from '../mockSpawns.json';
 import { spawnController } from '../controllers/SpawnController';
 import { useToasts } from 'react-toast-notifications';
+import { cameraController } from '../controllers/CameraController';
 
 Database.IDBStorageEnabled = true;
 
@@ -48,8 +49,7 @@ const RenderedZone = () => {
       });
       setTimeout(() => {
         if (zone === 'qeytoqrg' && params.spawns === 'true') {
-          spawnController.addSpawns(mockData.filter(a => !a.name.includes('JPE')));
-          // a.name.includes('snake') || a.name.includes('skeleton') || a.name.includes('rat') || a.name.includes('gnoll') || a.name.includes('bear') || a.name.includes('bat')));// /|| a.name.startsWith('Tol')));
+          spawnController.addSpawns(mockData.filter(a => a || a.name.includes('rat') && !a.name.includes('JPE')));
         }
       }, 500);
       
@@ -88,6 +88,15 @@ const RenderedZone = () => {
           Object.values(zoneController.SpawnController.spawns).forEach(spawn => {
             spawn.rootNode.showBoundingBox = !spawn.rootNode.showBoundingBox; spawn.rootNode.getChildMeshes().forEach(m => m.showBoundingBox = !m.showBoundingBox);
           });
+          break;
+        }
+        case 'l': {
+          const { x, y, z } = cameraController.camera.globalPosition;
+          sessionStorage.setItem('cam-loc', JSON.stringify({
+            x, y, z
+          }));
+          addToast(`Storing cam lock at x: ${x}, y: ${y}, z: ${z}`, {});
+
           break;
         }
         default:

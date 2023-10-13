@@ -1,7 +1,7 @@
 
 import { SceneLoader, Vector3,
   SceneOptimizer, SceneOptimizerOptions, SceneSerializer,
-  Tools, Texture, HavokPlugin, PhysicsAggregate, PhysicsShapeType } from '@babylonjs/core';
+  Tools, Texture, HavokPlugin, PhysicsAggregate, PhysicsShapeType, Matrix } from '@babylonjs/core';
 import HavokPhysics from '@babylonjs/havok';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
@@ -16,6 +16,7 @@ import { musicController } from './MusicController';
 import { soundController } from './SoundController';
 import { spawnController } from './SpawnController';
 import { guiController } from './GUIController';
+import { itemController } from './ItemController';
 
 const sceneVersion = 1;
 const objectAnimationThreshold = 10;
@@ -81,6 +82,7 @@ class ZoneController {
   SoundController = soundController;
   SpawnController = spawnController;
   GuiController = guiController;
+  ItemController = itemController;
 
   dispose() {
     if (this.scene) {
@@ -93,6 +95,18 @@ class ZoneController {
     this.MusicController.dispose();
     this.SoundController.dispose();
     this.SpawnController.dispose();
+    this.ItemController.dispose();
+  }
+
+  castRay() {
+    const ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY, Matrix.Identity(), this.CameraController.camera);
+
+    const hit = this.scene.pickWithRay(ray);
+    if (hit.pickedMesh && /spawn_\d+/.test(hit.pickedMesh.id)) {
+      const [, id] = hit.pickedMesh.id.split('_');
+      window.spawn = this.SpawnController.spawns[id];
+      console.log('mesh', hit.pickedMesh);
+    }
   }
 
   async loadZoneScene (scene, zoneName, canvas) {
@@ -119,6 +133,7 @@ class ZoneController {
     }
 
     this.scene.gravity = new Vector3(0, -0.6, 0);
+    this.scene.onPointerDown = this.castRay.bind(this);
     console.log('hello');
     if (!(await this.loadPhysicsEngine())) {
       console.error('Could not load physics engine');
@@ -163,6 +178,9 @@ class ZoneController {
 
     // GUI controller
     this.GuiController.setupGuiController(scene);
+
+    // Item Controller
+    this.ItemController.setupItemController(scene);
 
     // Start zone hook
     this.collideCounter = 0;
