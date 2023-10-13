@@ -1,5 +1,5 @@
 
-const idbVersion = 3;
+const idbVersion = 4;
 const dataTable = 'data';
 const dataTableData = 'data';
 
@@ -17,6 +17,10 @@ export const getDataTable = () =>
         keyPath: 'dataPath'
       });
       dataStore.createIndex('dataPath', 'dataPath', { unique: false });
+      indexedDB.deleteDatabase('babylonjs');
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       res();
     };
   });
@@ -58,7 +62,7 @@ export const getDataEntry = dataPath =>
     };
   });
 
-export const setDataEntry = window.setDataEntry = (dataPath, data) =>
+export const setDataEntry = (dataPath, data) =>
   new Promise(res => {
     const request = indexedDB.open(dataTable, idbVersion);
     request.onsuccess = event => {
