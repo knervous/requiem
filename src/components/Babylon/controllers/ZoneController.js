@@ -1,7 +1,7 @@
 
 import { SceneLoader, Vector3,
   SceneOptimizer, SceneOptimizerOptions, SceneSerializer,
-  Tools, Texture, HavokPlugin, PhysicsAggregate, PhysicsShapeType, Matrix } from '@babylonjs/core';
+  Tools, Texture, HavokPlugin, PhysicsAggregate, PhysicsShapeType } from '@babylonjs/core';
 import HavokPhysics from '@babylonjs/havok';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
@@ -10,13 +10,7 @@ import { PointOctree } from 'sparse-octree';
 import { getDataEntry, setDataEntry } from '../../../services/idb';
 import { textureAnimationMap } from './textureAnimationMap';
 import { cameraController } from './CameraController';
-import { lightController } from './LightController';
-import { skyController } from './SkyController';
-import { musicController } from './MusicController';
-import { soundController } from './SoundController';
-import { spawnController } from './SpawnController';
-import { guiController } from './GUIController';
-import { itemController } from './ItemController';
+import { GameControllerChild } from './GameControllerChild';
 
 const sceneVersion = 1;
 const objectAnimationThreshold = 10;
@@ -61,7 +55,7 @@ const recurseTreeFromKnownNode = (node, position) => {
 };
 
   
-class ZoneController {
+class ZoneController extends GameControllerChild {
   /**
  * @type {import('@babylonjs/core/scene').Scene}
  */
@@ -75,48 +69,20 @@ class ZoneController {
   collideCounter = 0;
   objectAnimationPlaying = [];
   lastPosition = new Vector3(0, 0, 0);
-  CameraController = cameraController;
-  LightController = lightController;
-  SkyController = skyController;
-  MusicController = musicController;
-  SoundController = soundController;
-  SpawnController = spawnController;
-  GuiController = guiController;
-  ItemController = itemController;
 
   dispose() {
     if (this.scene) {
       this.scene.dispose();
     }
-
-    this.CameraController.dispose();
-    this.LightController.dispose();
-    this.SkyController.dispose();
-    this.MusicController.dispose();
-    this.SoundController.dispose();
-    this.SpawnController.dispose();
-    this.ItemController.dispose();
   }
 
-  castRay() {
-    const ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY, Matrix.Identity(), this.CameraController.camera);
-
-    const hit = this.scene.pickWithRay(ray);
-    if (hit.pickedMesh && /spawn_\d+/.test(hit.pickedMesh.id)) {
-      const [, id] = hit.pickedMesh.id.split('_');
-      window.spawn = this.SpawnController.spawns[id];
-      console.log('mesh', hit.pickedMesh);
-    }
-  }
-
-  async loadZoneScene (scene, zoneName, canvas) {
+  async loadZoneScene (scene, zoneName) {
     this.dispose();
     this.scene = scene;
     this.zoneName = zoneName;
     this.scene.metadata = { version: sceneVersion };
     this.scene.collisionsEnabled = true;
-    // this.scene.performancePriority = ScenePerformancePriority.Intermediate;
-    this.CameraController.createCamera(scene, canvas);
+    this.CameraController.createCamera(scene);
 
     // Load serialized scene in IDB
     let storedScene = await getDataEntry(zoneName);
@@ -133,8 +99,7 @@ class ZoneController {
     }
 
     this.scene.gravity = new Vector3(0, -0.6, 0);
-    this.scene.onPointerDown = this.castRay.bind(this);
-    console.log('hello');
+
     if (!(await this.loadPhysicsEngine())) {
       console.error('Could not load physics engine');
       return;
@@ -145,8 +110,7 @@ class ZoneController {
 
     this.zoneMetadata = await fetch(`${storageUrl}${zoneName}.json`).then(r => r.json());
 
-    
-    // Objectsa
+    // Objects
     if (!this.hadStoredScene) {
       this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
     } else {
@@ -175,9 +139,6 @@ class ZoneController {
 
     // Spawn controller
     this.SpawnController.setupSpawnController(scene, this.aabbTree);
-
-    // GUI controller
-    this.GuiController.setupGuiController(scene);
 
     // Item Controller
     this.ItemController.setupItemController(scene);
@@ -335,8 +296,6 @@ class ZoneController {
             ]
           }
         };
-      } else {
-        // material.freeze();
       }
     }
 
@@ -404,7 +363,6 @@ class ZoneController {
       if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh || mesh.parent?.parent?.metadata?.gltf?.extras?.zoneMesh) {
         new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
       }
-      // new PhysicsAggregate(mesh, PhysicsShapeType.MESH, { mass: 0, restitution: 0, friction: 1 });
       mesh.freezeWorldMatrix();
       mesh.isPickable = false;
       mesh.doNotSyncBoundingInfo = true;

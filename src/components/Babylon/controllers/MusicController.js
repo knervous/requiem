@@ -1,10 +1,11 @@
 import { Engine, Sound, Vector3 } from '@babylonjs/core';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
+import { GameControllerChild } from './GameControllerChild';
 
 const musicUrl = 'https://eqrequiem.blob.core.windows.net/assets/music/';
 
-class MusicController {
+class MusicController extends GameControllerChild {
   currentPlaying = null;
 
   /**

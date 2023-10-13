@@ -14,7 +14,8 @@ export const Zone = {
 };
 
 export const UiState = {
-  visibleSpawns: store => store.ui.visibleSpawns
+  visibleSpawns: store => store.ui.visibleSpawns,
+  loading      : store => store.ui.loading,
 };
 
 export const ChatState = {

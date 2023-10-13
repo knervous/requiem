@@ -1,16 +1,13 @@
-import { AbstractMesh, BoundingInfo, Color3, DynamicTexture, Mesh, MeshBuilder, ParticleSystem, PhysicsAggregate, PhysicsBody, PhysicsMotionType, PhysicsShapeBox, PhysicsShapeType, Scene, SceneLoader, StandardMaterial, Tools, Vector3 } from '@babylonjs/core';
+import { AbstractMesh, Color3, DynamicTexture, Mesh, MeshBuilder, ParticleSystem, PhysicsAggregate, PhysicsShapeType, Scene, SceneLoader, StandardMaterial, Tools, Vector3 } from '@babylonjs/core';
 import { PointOctree } from 'sparse-octree';
 import { Vector3 as ThreeVector3 } from 'three';
-import { TextBlock } from '@babylonjs/gui';
 
 import raceData from '../../../common/raceData.json';
 import { eqtoBabylonVector } from '../../../util/vector';
 import { Spawn } from '../models/Spawn';
-import { guiController } from './GUIController';
 import { cameraController } from './CameraController';
-import { debounce } from '@material-ui/core';
 import { itemController } from './ItemController';
-
+import { GameControllerChild } from './GameControllerChild';
 
 const modelsUrl = 'https://eqrequiem.blob.core.windows.net/assets/models/';
 
@@ -27,7 +24,7 @@ const modelsUrl = 'https://eqrequiem.blob.core.windows.net/assets/models/';
  * @property {PhysicsAggregate} physicsAggregate
  * @property {Array<AnimationGroup>} animationGroups
  */
-class SpawnController {
+class SpawnController extends GameControllerChild {
   /**
    * @type {import('@babylonjs/core/scene').Scene} scene
    */
@@ -195,7 +192,7 @@ class SpawnController {
       } else {
         rootNode.skeleton = instanceSkeleton;
       }
-      
+      rootNode.setEnabled(false);
       await this.updatePrimarySecondary(id, { rootNode, spawn, skeleton: instanceSkeleton, skeletonRoot }).catch(() => {});
 
       rootNode.position = eqtoBabylonVector(x, y, z + 5);
@@ -213,7 +210,10 @@ class SpawnController {
       tmpctx.font = '16px Arial';
       const textWidth = tmpctx.measureText(spawn.displayedName).width + 20;
       const textureGround = new DynamicTexture(`${spawn.name}_nameplate_texture`, { width: textWidth, height: 30 }, this.#scene);   
-      const materialGround = new StandardMaterial(`${spawn.name}_nameplate_material`, this.#scene);    				
+      textureGround.drawText(spawn.displayedName, null, null, '16px Arial', 'teal', 'transparent', false, true);
+      textureGround.update(false, true);
+      const materialGround = new StandardMaterial(`${spawn.name}_nameplate_material`, this.#scene);
+
       materialGround.diffuseTexture = textureGround;
       materialGround.diffuseTexture.hasAlpha = true;
       materialGround.useAlphaFromDiffuseTexture = true;
@@ -223,10 +223,9 @@ class SpawnController {
       nameplateMesh.parent = rootNode;
       nameplateMesh.billboardMode = ParticleSystem.BILLBOARDMODE_ALL;
       nameplateMesh.material = materialGround;
-      textureGround.drawText(spawn.displayedName, null, null, '16px Arial', 'teal', 'transparent', false, true);
-      textureGround.update(false, true);
+
       materialGround.onBindObservable.add(() => {
-        this.#scene.getEngine().alphaState.setAlphaBlendFunctionParameters(1, 0x0303 /* ONE MINUS SRC ALPHA */, 1, 0x0303 /* ONE MINUS SRC ALPHA */);
+        this.engine.alphaState.setAlphaBlendFunctionParameters(1, 0x0303 /* ONE MINUS SRC ALPHA */, 1, 0x0303 /* ONE MINUS SRC ALPHA */);
       });
 
       this.spawns[id] = {
@@ -442,7 +441,6 @@ class SpawnController {
         }
       }
     }
-   
   }
 
   async updatePrimarySecondary(id, infSpawn = undefined) {
@@ -452,7 +450,6 @@ class SpawnController {
       if (primary) {
         const transformNode = spawn.skeletonRoot.getChildTransformNodes().find(a => a.name.includes('r_point'));
         const primaryBone = spawn.skeletonRoot.skeleton.bones.find(b => b.name === 'r_point');
-
         if (primaryBone && transformNode) {
           primary.attachToBone(primaryBone);
           primary.parent = transformNode;
@@ -471,7 +468,6 @@ class SpawnController {
       const secondary = await itemController.createItem(spawn.spawn.equipment.secondary.id);
       if (secondary) {
         const secondaryBone = spawn.skeleton.bones.find(b => b.name === 'shield_point');
-        console.log('prim', secondary, secondaryBone);
         const transformNode = spawn.rootNode.getChildTransformNodes().find(a => a.name.includes('shield_point'));
         if (secondaryBone && transformNode) {
           secondary.attachToBone(secondaryBone);
@@ -501,10 +497,7 @@ class SpawnController {
       }
       spawnList[realModel].push(spawn);
     }
-
-    for (const [modelName, models] of Object.entries(spawnList)) {
-      this.addSpawn(modelName, models);
-    }
+    await Promise.all(Object.entries(spawnList).map(([modelName, models]) => this.addSpawn(modelName, models)));
   }
   /**
    * 

@@ -1,9 +1,10 @@
 import { Color3, Engine, Material, MultiMaterial, SceneLoader, SubMesh } from '@babylonjs/core';
 import { GradientMaterial } from '@babylonjs/materials';
+import { GameControllerChild } from './GameControllerChild';
 
 const skyUrl = 'https://eqrequiem.blob.core.windows.net/assets/sky/';
 
-class SkyController {
+class SkyController extends GameControllerChild {
   #moveInterval = -1;
   dispose() {
     clearInterval(this.#moveInterval);

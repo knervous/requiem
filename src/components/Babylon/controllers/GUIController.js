@@ -1,16 +1,16 @@
-import { AdvancedDynamicTexture } from '@babylonjs/gui';
+import { GameControllerChild } from './GameControllerChild';
 
-class GUIController {
+class GUIController extends GameControllerChild {
   /**
      * @type {GUI3DManager}
      */
   manager = null;
   dispose() {
-
+    
   }
 
   setupGuiController (_scene) {
-    this.manager = AdvancedDynamicTexture.CreateFullscreenUI('UI');
+    // this.manager = AdvancedDynamicTexture.CreateFullscreenUI('UI');
   }
 }
 

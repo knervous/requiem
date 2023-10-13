@@ -151,7 +151,6 @@ export const Chat = ({ rootNode }) => {
   const handleKeyDown = useCallback(e => {
     if (e.key === 'Enter') {
       ZoneSocket.send(new ZonePacket.ChannelMessage(OP_CODES.OP_ChannelMessage, '', name, 0, CHANNEL.Say, [0, 0], 100, cmd));
-
       setCmd('');
     }
     e.stopPropagation();

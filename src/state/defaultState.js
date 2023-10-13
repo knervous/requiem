@@ -22,8 +22,9 @@ export const defaultState = {
   },
   ui: {
     settingsOpen : false,
-    visibleSpawns: {}
-  }
+    visibleSpawns: {},
+    loading      : false,
+  },
 };
 
 export default defaultState;

@@ -8,6 +8,9 @@ export const actions = {
   setSpawnOffScreen: createAction('SET_SPAWN_OFF_SCREEN', spawn_id => {
     return { payload: spawn_id };
   }),
+  setLoading: createAction('SET_LOADING', loading => {
+    return { payload: loading };
+  })
 };
 
 export const reducer = createReducer(defaultState, builder => {
@@ -18,6 +21,11 @@ export const reducer = createReducer(defaultState, builder => {
 
   builder.addCase(actions.setSpawnOffScreen, (state, action) => {
     delete state.ui.visibleSpawns[action.payload];
+    return state;
+  });
+
+  builder.addCase(actions.setLoading, (state, action) => {
+    state.ui.loading = action.payload;
     return state;
   });
 });

@@ -15,6 +15,7 @@ import { OP_CODES, getOpCode, getOpCodeDesc } from '../../net/packet/opcodes';
 import { ZoneSocket } from '../../net/socket';
 
 import './component.scss';
+import UiOverlay from '../Ui/component';
 
 
 export const Zone = () => {
@@ -78,6 +79,7 @@ export const Zone = () => {
       <Card className='zone-header' variant='outlined'>
         <CardContent className='zone-header'>
           <BabylonZone />
+
         </CardContent>
       </Card>
     </Paper>

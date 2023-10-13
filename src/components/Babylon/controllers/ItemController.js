@@ -1,4 +1,5 @@
-import { Mesh, SceneLoader, VertexBuffer } from '@babylonjs/core';
+import { Mesh, SceneLoader } from '@babylonjs/core';
+import { GameControllerChild } from './GameControllerChild';
 
 const itemsUrl = 'https://eqrequiem.blob.core.windows.net/assets/items/';
 
@@ -6,7 +7,7 @@ const itemsUrl = 'https://eqrequiem.blob.core.windows.net/assets/items/';
  * @typedef {import('@babylonjs/core').AssetContainer} AssetContainer
  */
 
-class ItemController {
+class ItemController extends GameControllerChild {
   /**
    * @type {import('@babylonjs/core/scene').Scene} scene
    */
@@ -59,9 +60,6 @@ class ItemController {
         rootNode = merged;
         rootNode.skeleton = container.skeletons[0];
       }
-      // rootNode.removeVerticesData(VertexBuffer.ColorKind);
-      // rootNode.removeVerticesData(VertexBuffer.NormalKind);
-      // rootNode.removeVerticesData(VertexBuffer.UVKind);
       return rootNode;
     } catch (e) {
       console.warn(e);

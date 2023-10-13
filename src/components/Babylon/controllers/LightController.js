@@ -2,10 +2,11 @@ import { Color3, HemisphericLight, Light, Vector3, PointLight, Effect } from '@b
 import { cameraController } from './CameraController';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
+import { GameControllerChild } from './GameControllerChild';
 
 const maxLights = 5;
 
-class LightController {
+class LightController extends GameControllerChild {
   /**
      * @type {import('@babylonjs/core/Lights').PointLight[]}
      */

@@ -1,7 +1,7 @@
 import { UniversalCamera, Vector3 } from '@babylonjs/core';
+import { GameControllerChild } from './GameControllerChild';
 
-
-class CameraController { 
+class CameraController extends GameControllerChild { 
   /**
    * @type {import('@babylonjs/core/Cameras').UniversalCamera}
 */
@@ -57,10 +57,9 @@ class CameraController {
   /**
    * 
    * @param {import('@babylonjs/core/scene').Scene} scene 
-   * @param {HTMLCanvasElement} canvas 
    * @returns 
    */
-  createCamera = (scene, canvas) => {
+  createCamera = (scene) => {
     let startingLoc = new Vector3(5, 10, 0);
     if (sessionStorage.getItem('cam-loc')) {
       const { x, y, z } = JSON.parse(sessionStorage.getItem('cam-loc'));
@@ -73,7 +72,7 @@ class CameraController {
     this.camera.applyGravity = true;
     this.camera.ellipsoid = new Vector3(4, 4.5, 2);
     this.camera.checkCollisions = true;
-    this.camera.attachControl(canvas, true);
+    this.camera.attachControl(this.canvas, true);
     this.camera.keysUp.push(87);
     this.camera.keysDown.push(83);
     this.camera.keysRight.push(68);
@@ -82,16 +81,16 @@ class CameraController {
 
     document.addEventListener('keydown', this.keyHandler.bind(this));
   
-    if (scene && canvas) {
+    if (scene && this.canvas) {
       scene.onPointerDown = (e) => {
         if (
-          (e.button === 2 && !this.isLocked && canvas.requestPointerLock) ||
-          canvas.msRequestPointerLock ||
-          canvas.mozRequestPointerLock ||
-          canvas.webkitRequestPointerLock
+          (e.button === 2 && !this.isLocked && this.canvas.requestPointerLock) ||
+          this.canvas.msRequestPointerLock ||
+          this.canvas.mozRequestPointerLock ||
+          this.canvas.webkitRequestPointerLock
         ) {
           try {
-            canvas.requestPointerLock();
+            this.canvas.requestPointerLock();
           } catch {}
         }
       };

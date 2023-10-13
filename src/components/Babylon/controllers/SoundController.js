@@ -1,7 +1,8 @@
 import { Sound, Vector3 } from '@babylonjs/core';
+import { GameControllerChild } from './GameControllerChild';
 const musicUrl = 'https://eqrequiem.blob.core.windows.net/assets/sounds/';
 
-class SoundController {
+class SoundController extends GameControllerChild {
   zoneSounds = [];
   dispose() {
     this.zoneSounds.forEach(sound => {
