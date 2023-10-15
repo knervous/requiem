@@ -497,7 +497,11 @@ class SpawnController extends GameControllerChild {
       }
       spawnList[realModel].push(spawn);
     }
-    await Promise.all(Object.entries(spawnList).map(([modelName, models]) => this.addSpawn(modelName, models)));
+    let remainingSpawnGroups = Object.keys(spawnList).length;
+    this.actions.setLoadingText(`Loading ${remainingSpawnGroups} spawn types`);
+    await Promise.all(Object.entries(spawnList).map(([modelName, models]) => this.addSpawn(modelName, models).then(() => {
+      this.actions.setLoadingText(`Loading ${--remainingSpawnGroups} spawn types`);
+    })));
   }
   /**
    * 
@@ -518,7 +522,6 @@ class SpawnController extends GameControllerChild {
     });
     spawn.physicsAggregate = ag;
     spawn.rootNode.scaling.z = Math.abs(spawn.rootNode.scaling.z) * -1;
-    
   }
 
   /**

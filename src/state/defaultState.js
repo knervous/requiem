@@ -24,6 +24,7 @@ export const defaultState = {
     settingsOpen : false,
     visibleSpawns: {},
     loading      : false,
+    loadingText  : '',
   },
 };
 

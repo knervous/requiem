@@ -101,7 +101,7 @@ export class GameController {
     }
     this.#scene.onPointerDown = this.sceneClicked;
     this.engine.runRenderLoop(() => {
-      if (this.#scene && this.CameraController.camera && !this.loading) {
+      if (this.#scene && this.#scene?.activeCamera && !this.loading) {
         this.#scene.render();
       }
     });
@@ -129,7 +129,9 @@ export class GameController {
       }
       case 'b': {
         Object.values(gameController.SpawnController.spawns).forEach(spawn => {
-          spawn.rootNode.showBoundingBox = !spawn.rootNode.showBoundingBox; spawn.rootNode.getChildMeshes().forEach(m => m.showBoundingBox = !m.showBoundingBox);
+          console.log('s', spawn);
+          spawn.rootNode.showBoundingBox = !spawn.rootNode.showBoundingBox; 
+          spawn.rootNode.getChildMeshes().forEach(m => m.showBoundingBox = !m.showBoundingBox);
         });
         break;
       }

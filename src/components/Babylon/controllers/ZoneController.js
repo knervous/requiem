@@ -5,15 +5,13 @@ import { SceneLoader, Vector3,
 import HavokPhysics from '@babylonjs/havok';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
-
+import zoneInfo from '../../../common/zoneData.json';
 
 import { getDataEntry, setDataEntry } from '../../../services/idb';
 import { textureAnimationMap } from './textureAnimationMap';
-import { cameraController } from './CameraController';
 import { GameControllerChild } from './GameControllerChild';
 
 const sceneVersion = 1;
-const objectAnimationThreshold = 10;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
 const objectsUrl = 'https://eqrequiem.blob.core.windows.net/assets/objects/';
 const textureUrl = 'https://eqrequiem.blob.core.windows.net/assets/textures/';
@@ -69,6 +67,8 @@ class ZoneController extends GameControllerChild {
   collideCounter = 0;
   objectAnimationPlaying = [];
   lastPosition = new Vector3(0, 0, 0);
+  animationRange = 200;
+  objectCullRange = 2000;
 
   dispose() {
     if (this.scene) {
@@ -77,6 +77,7 @@ class ZoneController extends GameControllerChild {
   }
 
   async loadZoneScene (scene, zoneName) {
+    this.actions.setLoadingText(`Loading ${zoneInfo.find(z => z.shortName === zoneName)?.longName}`);
     this.dispose();
     this.scene = scene;
     this.zoneName = zoneName;
@@ -107,9 +108,11 @@ class ZoneController extends GameControllerChild {
 
     // Zone texture
     await this.loadZoneTexture();
+    this.actions.setLoadingText('Loading zone metadata');
 
     this.zoneMetadata = await fetch(`${storageUrl}${zoneName}.json`).then(r => r.json());
 
+    this.actions.setLoadingText('Loading animated objects');
     // Objects
     if (!this.hadStoredScene) {
       this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
@@ -124,6 +127,7 @@ class ZoneController extends GameControllerChild {
     await this.setupAabbTree();
 
     // Music
+    this.actions.setLoadingText('Loading audio');
     this.MusicController.hookUpZoneMusic(scene, this.zoneName, this.zoneMetadata.music, this.aabbTree);
 
     // Sound
@@ -132,9 +136,11 @@ class ZoneController extends GameControllerChild {
     scene.audioListenerPositionProvider = () => this.CameraController.camera.globalPosition;
 
     // Lights
+    this.actions.setLoadingText('Loading lights');
     this.LightController.loadLights(scene, this.zoneMetadata.lights, this.hadStoredScene, this.aabbTree);
 
     // Sky 
+    this.actions.setLoadingText('Loading sky');
     await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
 
     // Spawn controller
@@ -145,7 +151,7 @@ class ZoneController extends GameControllerChild {
 
     // Start zone hook
     this.collideCounter = 0;
-    this.lastPosition = { ...cameraController.camera.position };
+    this.lastPosition = { ...this.CameraController.camera.position };
 
     this.scene.onAfterRenderObservable.add(this.renderHook.bind(this));
 
@@ -153,6 +159,7 @@ class ZoneController extends GameControllerChild {
     SceneOptimizer.OptimizeAsync(scene, SceneOptimizerOptions.ModerateDegradationAllowed());
 
     // Start texture animations
+    this.actions.setLoadingText('Adding texture animations');
     await this.addTextureAnimations();
 
     // Serialize in background
@@ -166,7 +173,7 @@ class ZoneController extends GameControllerChild {
       if (mesh.parent?.metadata?.gltf?.extras?.zoneMesh || mesh.parent?.parent?.metadata?.gltf?.extras?.zoneMesh) {
         return;
       }
-      mesh.addLODLevel?.(2000, null);
+      mesh.addLODLevel?.(this.objectCullRange, null);
       const { x, y, z } = mesh.absolutePosition || mesh.position;
       const vec = new ThreeVector3(x, y, z);
       if (this.octree.get(vec)) {
@@ -175,13 +182,6 @@ class ZoneController extends GameControllerChild {
         this.octree.set(vec, [mesh]);
       }
     });
-
-    const result = this.octree.findPoints(this.CameraController.camera.globalPosition, 1500);
-    for (const res of result) {
-      for (const mesh of res.data) {
-        mesh.setEnabled(true);
-      }
-    }
 
     this.counter = 0;
     this.cullCounter = 0;
@@ -199,10 +199,10 @@ class ZoneController extends GameControllerChild {
     const perf = performance.now();
     const threePosition = new ThreeVector3(this.lastCameraPosition._x, this.lastCameraPosition._y, this.lastCameraPosition._z);
 
-    if (this.cullCounter % 240 === 0) {
+    if (this.cullCounter % 120 === 0) {
       this.cullCounter = 0;
       for (const res of this.octree.findPoints(threePosition, Infinity)) {
-        if (res.distance > 200) {
+        if (res.distance > this.animationRange) {
           for (const mesh of res.data) {
             if (this.animationGroupMap[mesh.id]) {
               this.animationGroupMap[mesh.id].forEach(ag => {
@@ -216,16 +216,32 @@ class ZoneController extends GameControllerChild {
         }
       }
     }
-    if (this.counter % 20 === 0) {
+    if (this.counter % 5 === 0) {
       this.counter = 0;
-
-      for (const res of this.octree.findPoints(threePosition, 200)) {
+      for (const res of this.octree.findPoints(threePosition, this.objectCullRange)) {
         for (const mesh of res.data) {
-          if (this.animationGroupMap[mesh.id] && this.objectAnimationPlaying.length <= objectAnimationThreshold) {
-            this.animationGroupMap[mesh.id].forEach(ag => {
-              this.objectAnimationPlaying.push(ag);
-              ag.play(true);
-            });
+          if (this.CameraController.camera.isInFrustum(mesh) && !mesh.isEnabled()) {
+            mesh.setEnabled(true);
+          } else if (!this.CameraController.camera.isInFrustum(mesh) && mesh.isEnabled()) {
+            mesh.setEnabled(false);
+          }
+          if (mesh.isAnimated) {
+
+            const animationGroups = this.animationGroupMap[mesh.id];
+            if ((!this.CameraController.camera.isInFrustum(mesh)) && mesh.animating) {
+              const animatables = animationGroups.map(ag => ag.animatables).flat();
+              const startIdx = this.scene._activeAnimatables.findIndex(ag => animatables[0] === ag);
+              if (startIdx > -1) {
+                this.scene._activeAnimatables.splice(startIdx, animatables.length);
+              }
+              mesh.animating = false;
+            } else if (this.CameraController.camera.isInFrustum(mesh) 
+              && !mesh.animating
+              && res.distance <= this.animationRange) {
+              this.scene._activeAnimatables.push(...animationGroups.map(ag => ag.animatables).flat());
+              animationGroups[0]?.play(true);
+              mesh.animating = true;
+            }
           }
         }
       }
@@ -251,7 +267,6 @@ class ZoneController extends GameControllerChild {
   }
 
   async addTextureAnimations() {
-
     const addTextureAnimation = (material, textureAnimation) => {
       const [baseTexture] = material.getActiveTextures();
       return Array.from({ length: textureAnimation.frames }, (_, idx) => {
@@ -371,7 +386,6 @@ class ZoneController extends GameControllerChild {
 
     const recurse = (node) => {
       const matOutliers = ['t75_rea1', 't50_w1', 'd_w1'];
-    
       if (matOutliers.includes(node.material?.name)) {
         node.checkCollisions = false;
       }
@@ -386,7 +400,6 @@ class ZoneController extends GameControllerChild {
   async loadPhysicsEngine() {
     const HK = await getInitializedHavok();
     const havokPlugin = window.hp = new HavokPlugin(true, HK);
-    // const didEnable = this.scene.enablePhysics(new Vector3(0, -0.001, 0), havokPlugin);
     const didEnable = this.scene.enablePhysics(new Vector3(0, -1.3, 0), havokPlugin);
     return didEnable;
   }
@@ -397,10 +410,12 @@ class ZoneController extends GameControllerChild {
     for (const [idx, v] of Object.entries(model)) {
       const [x, y, z] = v.pos;
       const [rotX, rotY, rotZ] = v.rot;
-      const c = container.instantiateModelsToScene(() => `${modelName}_${idx}`, undefined, { doNotInstantiate: true });
-      const hasAnimations = c.animationGroups.length > 0;
+      const instanceContainer = container.instantiateModelsToScene(() => `${modelName}_${idx}`, undefined, { doNotInstantiate: true });
+      instanceContainer.animationGroups?.forEach(ag => this.scene.removeAnimationGroup(ag));
 
-      for (const mesh of c.rootNodes[0].getChildMeshes()) {
+      const hasAnimations = instanceContainer.animationGroups.length > 0;
+
+      for (const mesh of instanceContainer.rootNodes[0].getChildMeshes()) {
         mesh.position = new Vector3(-1 * x, y, z);
         mesh.rotation = new Vector3(Tools.ToRadians(rotX), Tools.ToRadians(180) + Tools.ToRadians(-1 * rotY), Tools.ToRadians(rotZ));
         mesh.checkCollisions = true;
@@ -410,10 +425,12 @@ class ZoneController extends GameControllerChild {
           zoneObject: true,
         };
         mesh.id = `${modelName}_${idx}`;
-        this.animationGroupMap[mesh.id] = c.animationGroups;
+        this.animationGroupMap[mesh.id] = instanceContainer.animationGroups;
         if (!hasAnimations) {
           mesh.freezeWorldMatrix();
         }
+        mesh.isAnimated = true;
+        mesh.isAnimating = false;
         animatedMeshes.push(mesh);
       }
     }

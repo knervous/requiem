@@ -1,3 +1,4 @@
+import { GlobalStore } from '../../../state';
 
 
 export class GameControllerChild {
@@ -14,6 +15,14 @@ export class GameControllerChild {
 
   get engine() {
     return this.#gc.engine;
+  }
+
+  get actions() {
+    return GlobalStore.actions;
+  }
+
+  get state() {
+    return GlobalStore.getState();
   }
 
   get CameraController () {

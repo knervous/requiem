@@ -8,10 +8,12 @@ import { CharSelect } from '../CharacterSelect';
 // scss
 import './component.scss';
 import { Splash } from '../Common/splash';
+import { Typography } from '@mui/material';
 
 export const GamePage = () => {
   const gameState = useSelector(GameState.state);
   const loading = useSelector(UiState.loading);
+  const loadingText = useSelector(UiState.loadingText);
   const content = useMemo(() => {
     return <Zone />;
     switch (gameState) {
@@ -25,5 +27,9 @@ export const GamePage = () => {
     }
   }, [gameState]);
 
-  return <>{loading && <Splash />}{content}</>;
+  return <>{loading && <Splash><div className="loading-box">
+    <Typography sx={{ fontSize: 20, padding: 0, margin: 0 }} gutterBottom>
+      {loadingText}
+    </Typography>
+  </div></Splash>}{content}</>;
 };
