@@ -1,18 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import { Button, FormControl, Typography } from '@mui/material';
-import { GAME_STATES, GlobalStore } from '../../state';
-import { OP_CODES, getOpCode, getOpCodeDesc } from '../../net/packet/opcodes';
-import * as EQPacket from '../../net/packet/EQPacket';
+import {
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { Splash, CssTextField, textFieldClasses } from '../Common/splash';
-import { LoginSocket } from '../../net/socket';
+import { gameController } from '../Babylon/controllers/GameController';
+import { GameState, GlobalStore, useSelector } from '../../state';
+import { AboutDialog } from '../Dialogs/about';
+import supportedZones from '../../common/supportedZones.json';
 
 const formControlSx = {
   marginTop: 200,
-  padding  : '120px 0 0 0',
+  padding  : '40px 0 0 0',
   width    : 300,
   display  : 'block',
   margin   : '0 auto',
@@ -21,80 +28,47 @@ const formControlSx = {
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [servers, setServers] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const onMessage = useCallback(async (data) => {
-    const opc = getOpCode(data);
-    switch (opc) {
-      case OP_CODES.OP_LoginAccepted: {
-        setLoading(false);
-        const playerLoginInfo = new EQPacket.PlayerLoginReply(data);
-        if (playerLoginInfo.success) {
-          setStatus('Fetching servers...');
-          GlobalStore.actions.setLoginState(playerLoginInfo.toObject());
-          LoginSocket.send(new EQPacket.ServerListRequest(4));
-        } else {
-          setStatus('Invalid credentials.');
-        }
-        break;
-      }
-      case OP_CODES.OP_ServerListResponse: {
-        setStatus('Logged in.');
-        setLoggedIn(true);
-        const lr = new EQPacket.ListServerResponse(data);
-        setServers(lr.server_list);
-        break;
-      }
-      case OP_CODES.OP_PlayEverquestResponse: {
-        const eqResponse = new EQPacket.PlayEverquestResponse(data);
-        GlobalStore.actions.setSelectedServer(eqResponse.server_id);
-        GlobalStore.actions.setGameState(GAME_STATES.CHAR_SELECT);
-        break;
-      }
-      default:
-        console.warn(
-          `Got unhandled login message: ${getOpCodeDesc(data)}`,
-          data,
-        );
-        break;
+  const [demoZone, setDemoZone] = useState(1);
+
+  const [aboutOpen, setAboutOpen] = useState(false);
+
+  const loginState = useSelector(GameState.loginState);
+
+  const status = useMemo(() => {
+    if (!loginState.triedLogin) {
+      return '';
     }
-  }, []);
+    if (loginState.loggedIn) {
+      return 'Logged in';
+    }
+    return loginState.success ? 'Fetching servers...' : 'Invalid credentials';
+  }, [loginState]);
 
   const serverLogin = useCallback(
     (serverId) => () => {
-      LoginSocket.send(new EQPacket.PlayEverquest([5, false, 0, 0], serverId));
+      gameController.NetLoginController.serverLogin(serverId);
     },
-    [],
+    []
   );
 
-  const onClose = useCallback(() => {}, []);
-  const tryLogin = useCallback(async () => {
-    try {
-      setLoading(true);
-      setStatus('Logging in...');
-      await LoginSocket.connect('7775', onMessage, onClose);
-      LoginSocket.send(new EQPacket.Login(`${username}:${password}`));
-    } catch (e) {
-      setStatus('Could not connect to the login server.');
-      setLoading(false);
-      console.error(e);
-    }
-  }, [username, password, onMessage, onClose]);
+  const tryLogin = useCallback(() => {
+    GlobalStore.actions.setLoginState({ loading: true });
+    gameController.NetLoginController.login(username, password);
+  }, [username, password]);
 
   return (
     <Splash>
-      {loggedIn ? (
+      <AboutDialog open={aboutOpen} setOpen={setAboutOpen} />
+      {loginState.loggedIn ? (
         <FormControl sx={formControlSx}>
-          {servers.length ? (
+          {loginState.serverList.length ? (
             <>
               <Typography variant="h6" noWrap component="div">
                 Server List
               </Typography>
               <List>
-                {servers.map((s) => (
+                {loginState.serverList.map((s) => (
                   <ListItem
                     disablePadding
                     sx={{
@@ -126,11 +100,15 @@ export const Login = () => {
           )}
           <Button
             onClick={() => {
-              setLoggedIn(false);
-              setStatus('');
+              GlobalStore.actions.resetLogin();
             }}
             variant="outlined"
-            sx={{ color: 'white', borderColor: 'white', marginTop: 2, background: 'rgba(0,0,0, .15)', }}
+            sx={{
+              color      : 'white',
+              borderColor: 'white',
+              marginTop  : 2,
+              background : 'rgba(0,0,0, .15)',
+            }}
           >
             Back to login
           </Button>
@@ -180,7 +158,12 @@ export const Login = () => {
             {status}
           </Typography>
           <Button
-            disabled={loading || !username.length || !password.length}
+            disabled={
+              !gameController.dev ||
+              loginState.loading ||
+              !username.length ||
+              !password.length
+            }
             onClick={tryLogin}
             variant="outlined"
             sx={{
@@ -190,8 +173,86 @@ export const Login = () => {
               marginTop  : 2,
             }}
           >
-            Log In
+            {gameController.dev ? 'Log In' : 'Not Available'}
           </Button>
+
+          <Stack
+            direction="row"
+            sx={{ width: '300px', margin: '20px auto 60px auto' }}
+            justifyContent="center"
+            spacing={2}
+          >
+            <FormControl>
+              <Select
+                value={demoZone}
+                sx={{ background: 'rgba(0,0,0, 0.25)', margin: '5px 0' }}
+                onChange={(e) => setDemoZone(e.target.value)}
+              >
+                {Object.entries(supportedZones).map(([zoneId, { longName, shortName }]) => (
+                  <MenuItem value={zoneId}>
+                    {longName} :: {shortName}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                onClick={() => {
+                  GlobalStore.actions.setExploreMode();
+                  const zone = supportedZones[demoZone];
+                  GlobalStore.actions.setZoneInfo({ ...zone, zone: demoZone });
+                }}
+                variant="outlined"
+                sx={{
+                  color     : 'white',
+                  background: 'rgba(0,0,0, .25)',
+                }}
+              >
+                Explore
+              </Button>
+            </FormControl>
+          </Stack>
+          <Stack
+            direction="row"
+            sx={{ width: 'auto', margin: '10px auto 30px auto' }}
+            justifyContent="center"
+            spacing={2}
+          >
+            <Button
+              onClick={() => {
+                setAboutOpen(true);
+              }}
+              variant="outlined"
+              sx={{
+                color     : 'white',
+                background: 'rgba(0,0,0, .25)',
+              }}
+            >
+              Vision
+            </Button>
+            {/* <Button
+              onClick={() => {
+                setAboutOpen(true);
+              }}
+              variant="outlined"
+              sx={{
+                color     : 'white',
+                background: 'rgba(0,0,0, .25)',
+              }}
+            >
+              Contact
+            </Button>
+            <Button
+              onClick={() => {
+                setAboutOpen(true);
+              }}
+              variant="outlined"
+              sx={{
+                color     : 'white',
+                background: 'rgba(0,0,0, .25)',
+              }}
+            >
+              Acknowledgements
+            </Button> */}
+          </Stack>
         </>
       )}
     </Splash>

@@ -1,6 +1,3 @@
-import { GlobalStore } from '../../../state';
-
-
 export class GameControllerChild {
   /** @type {import('./GameController').GameController} */
   #gc = null;
@@ -18,11 +15,38 @@ export class GameControllerChild {
   }
 
   get actions() {
-    return GlobalStore.actions;
+    return this.#gc.actions;
+  }
+
+  get currentScene() {
+    return this.#gc.currentScene;
   }
 
   get state() {
-    return GlobalStore.getState();
+    return this.#gc.state;
+  }
+
+  get loading() {
+    return this.#gc.loading;
+  }
+
+  get exploreMode() {
+    return this.#gc.exploreMode;
+  }
+
+  zone(zoneName, location) {
+    return this.#gc.loadZoneScene(zoneName, false, location);
+  }
+  setLoading(val) {
+    this.#gc.setLoading(val);
+  }
+
+  get zoneLoaded() {
+    return this.#gc.ZoneController.zoneLoaded;
+  }
+
+  get ZoneController() {
+    return this.#gc.ZoneController;
   }
 
   get CameraController () {
@@ -48,5 +72,14 @@ export class GameControllerChild {
   }
   get ItemController () {
     return this.#gc.ItemController;
+  }
+  get NetLoginController () {
+    return this.#gc.NetLoginController;
+  }
+  get NetWorldController () {
+    return this.#gc.NetWorldController;
+  }
+  get NetZoneController () {
+    return this.#gc.NetZoneController;
   }
 }

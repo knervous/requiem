@@ -10,7 +10,7 @@ import { reducer, getActions } from './reducers';
  * @property {ReturnType<getActions>} actions
  */
 
-/** @type {import('@reduxjs/toolkit').EnhancedStore<import('DashboardTypes').GlobalState> & AdditionalGlobalStoreProperties} */
+/** @type {import('@reduxjs/toolkit').EnhancedStore<import('./defaultState.d.ts')> & AdditionalGlobalStoreProperties} */
 export const GlobalStore = configureStore({
   devTools      : true,
   preloadedState: defaultState,
@@ -26,6 +26,12 @@ const GlobalContext = createContext();
 
 export const useStore = createStoreHook(GlobalContext);
 export const useDispatch = createDispatchHook(GlobalContext);
+
+/**
+ * @template T
+ * @param {(store: import('./defaultState')) => T} selector
+ * @returns {T}
+ */
 export const useSelector = createSelectorHook(GlobalContext);
 
 /** Wrap react-redux Provier with some initialization logic for overriding the default state */

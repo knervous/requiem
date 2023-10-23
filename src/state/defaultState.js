@@ -5,7 +5,8 @@ export const defaultState = {
   worldState: {
     server: -1
   },
-  zoneInfo: {
+  exploreMode: false,
+  zoneInfo   : {
     zone     : 2,
     shortName: 'qeynos2',
     longName : 'North Qeynos',
@@ -14,10 +15,19 @@ export const defaultState = {
   zone    : {
     spawns: []
   },
-  loginState: null,
-  character : '',
-  gameState : GAME_STATES.LOGIN,
-  chat      : {
+  loginState: {
+    success   : false,
+    loggedIn  : false,
+    loading   : false,
+    triedLogin: false,
+    lsid      : -1,
+    key       : '',
+    serverList: [],
+    characters: [],
+  },
+  character: '',
+  gameState: GAME_STATES.LOGIN,
+  chat     : {
     chatLines: []
   },
   ui: {

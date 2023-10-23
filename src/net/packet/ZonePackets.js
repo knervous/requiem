@@ -179,5 +179,18 @@ export class ChannelMessage extends EQPacket {
     ], args);
   }
 }
+
+export class Animation extends EQPacket {
+  /**
+       * @param {[] | [data: ArrayBuffer]} args
+       */
+  constructor (...args) {
+    super([
+      ['uint16', 'id'],
+      ['uint8', 'speed'],
+      ['uint8', 'action'],
+    ], args);
+  }
+}
   
   

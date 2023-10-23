@@ -7,9 +7,9 @@ import './component.scss';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { ChatState, ZoneState, useSelector } from '../../../state';
-import { ZoneSocket } from '../../../net/socket';
 import * as ZonePacket from '../../../net/packet/ZonePackets';
 import { OP_CODES } from '../../../net/packet/opcodes';
+import { netZoneController } from '../../Babylon/controllers/NetZoneController';
 
 
 const CHANNEL =
@@ -104,7 +104,7 @@ const parseChat = (line, idx) => {
   </Typography>;
 };
 
-const getColor = (color) => {
+const _getColor = (color) => {
   switch (color) {
     case 0xff + 4: // guild
       return 'lightgreen';
@@ -150,7 +150,7 @@ export const Chat = ({ rootNode }) => {
   const inputRef = useRef(null);
   const handleKeyDown = useCallback(e => {
     if (e.key === 'Enter') {
-      ZoneSocket.send(new ZonePacket.ChannelMessage(OP_CODES.OP_ChannelMessage, '', name, 0, CHANNEL.Say, [0, 0], 100, cmd));
+      netZoneController.socket.send(new ZonePacket.ChannelMessage(OP_CODES.OP_ChannelMessage, '', name, 0, CHANNEL.Say, [0, 0], 100, cmd));
       setCmd('');
     }
     e.stopPropagation();
@@ -194,7 +194,7 @@ export const Chat = ({ rootNode }) => {
           ref={inputRef}
           size="small"
           onKeyDown={handleKeyDown}
-          class="cmd-input"
+          className="cmd-input"
           fullWidth
           id="outlined-basic"
           variant="outlined"

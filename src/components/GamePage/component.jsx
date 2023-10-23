@@ -10,23 +10,31 @@ import './component.scss';
 import { Splash } from '../Common/splash';
 import { Typography } from '@mui/material';
 
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
 export const GamePage = () => {
   const gameState = useSelector(GameState.state);
   const loading = useSelector(UiState.loading);
   const loadingText = useSelector(UiState.loadingText);
+  const exploreMode = useSelector(GameState.exploreMode);
   const content = useMemo(() => {
-    return <Zone />;
+    if (params.zone?.length || exploreMode) {
+      return <Zone />;
+    }
+
     switch (gameState) {
       case GAME_STATES.IN_ZONE:
         return <Zone />;
       case GAME_STATES.CHAR_SELECT:
         return <CharSelect />;
       case GAME_STATES.LOGIN:
+        return <Login />;
       default:
         return <Login />;
     }
-  }, [gameState]);
-
+  }, [gameState, exploreMode]);
   return <>{loading && <Splash><div className="loading-box">
     <Typography sx={{ fontSize: 20, padding: 0, margin: 0 }} gutterBottom>
       {loadingText}

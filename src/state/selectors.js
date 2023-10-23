@@ -1,11 +1,18 @@
 export const GameState = {
-  state     : store => store.gameState,
-  loginState: store => store.loginState,
+  /** @param {import('./defaultState')} store */
+  state      : store => store.gameState,
+  /** @param {import('./defaultState')} store */
+  loginState : store => store.loginState,
+  /** @param {import('./defaultState')} store */
+  exploreMode: store => store.exploreMode,
 };
 
 export const ZoneState = {
+  /** @param {import('./defaultState')} store */
   zoneInfo : store => store.zoneInfo,
+  /** @param {import('./defaultState')} store */
   character: store => store.character,
+  /** @param {import('./defaultState')} store */
   zonePort : store => store.zonePort
 };
 

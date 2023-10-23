@@ -6,10 +6,11 @@ import HavokPhysics from '@babylonjs/havok';
 import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
 import zoneInfo from '../../../common/zoneData.json';
-
 import { getDataEntry, setDataEntry } from '../../../services/idb';
-import { textureAnimationMap } from './textureAnimationMap';
+import { textureAnimationMap } from '../helpers/textureAnimationMap';
 import { GameControllerChild } from './GameControllerChild';
+import { eqtoBabylonVector } from '../../../util/vector';
+import supportedZones from '../../../common/supportedZones.json';
 
 const sceneVersion = 1;
 const storageUrl = 'https://eqrequiem.blob.core.windows.net/assets/zones/';
@@ -59,6 +60,7 @@ class ZoneController extends GameControllerChild {
  */
   scene = null;
   hadStoredScene = false;
+  zoneLoaded = false;
   zoneName = '';
   zoneMetadata = {};
   aabbTree = {};
@@ -67,24 +69,50 @@ class ZoneController extends GameControllerChild {
   collideCounter = 0;
   objectAnimationPlaying = [];
   lastPosition = new Vector3(0, 0, 0);
+  lastAabbNode = null;
   animationRange = 200;
   objectCullRange = 2000;
+  /** @type {RecastJSPlugin} */
+  navigationPlugin = null;
 
   dispose() {
     if (this.scene) {
+      this.scene.onBeforeRenderObservable.remove(this.renderHook.bind(this));
       this.scene.dispose();
     }
+    this.scene = null;
+    this.hadStoredScene = false;
+    this.zoneLoaded = false;
+    this.zoneName = '';
+    this.zoneMetadata = {};
+    this.aabbTree = {};
+    this.animatedMeshes = [];
+    this.animationGroupMap = {};
+    this.collideCounter = 0;
+    this.objectAnimationPlaying = [];
+    this.lastPosition = new Vector3(0, 0, 0);
+    this.lastAabbNode = null;
+
+    this.zoneLoaded = false;
   }
 
-  async loadZoneScene (scene, zoneName) {
+  /**
+   * 
+   * @param {string} zoneName 
+   * @param {boolean} loadSpawns 
+   * @param {import('@babylonjs/core').Vector3} location
+   * @returns 
+   */
+  async loadZoneScene (scene, zoneName, location) {
     this.actions.setLoadingText(`Loading ${zoneInfo.find(z => z.shortName === zoneName)?.longName}`);
     this.dispose();
     this.scene = scene;
     this.zoneName = zoneName;
     this.scene.metadata = { version: sceneVersion };
     this.scene.collisionsEnabled = true;
-    this.CameraController.createCamera(scene);
-
+    this.zoneInfo = this.state.zoneInfo;
+    this.CameraController.createCamera(location);
+   
     // Load serialized scene in IDB
     let storedScene = await getDataEntry(zoneName);
     if (storedScene) {
@@ -113,12 +141,13 @@ class ZoneController extends GameControllerChild {
     this.zoneMetadata = await fetch(`${storageUrl}${zoneName}.json`).then(r => r.json());
 
     this.actions.setLoadingText('Loading animated objects');
+
     // Objects
     if (!this.hadStoredScene) {
       this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
     } else {
       for (const [key, val] of Object.entries(this.zoneMetadata.objects).filter(([key]) =>
-        scene.metadata.animatedMeshes.includes(key))) {
+        this.scene.metadata.animatedMeshes.includes(key))) {
         this.animatedMeshes = this.animatedMeshes.concat(await this.instantiateObjects(key, val));
       }
     }
@@ -144,7 +173,7 @@ class ZoneController extends GameControllerChild {
     await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
 
     // Spawn controller
-    this.SpawnController.setupSpawnController(scene, this.aabbTree);
+    this.SpawnController.setupSpawnController(this.aabbTree);
 
     // Item Controller
     this.ItemController.setupItemController(scene);
@@ -153,7 +182,7 @@ class ZoneController extends GameControllerChild {
     this.collideCounter = 0;
     this.lastPosition = { ...this.CameraController.camera.position };
 
-    this.scene.onAfterRenderObservable.add(this.renderHook.bind(this));
+    this.scene.onBeforeRenderObservable.add(this.renderHook.bind(this));
 
     // Optimize
     SceneOptimizer.OptimizeAsync(scene, SceneOptimizerOptions.ModerateDegradationAllowed());
@@ -174,6 +203,10 @@ class ZoneController extends GameControllerChild {
         return;
       }
       mesh.addLODLevel?.(this.objectCullRange, null);
+      
+    });
+
+    this.animatedMeshes.forEach(mesh => {
       const { x, y, z } = mesh.absolutePosition || mesh.position;
       const vec = new ThreeVector3(x, y, z);
       if (this.octree.get(vec)) {
@@ -182,10 +215,11 @@ class ZoneController extends GameControllerChild {
         this.octree.set(vec, [mesh]);
       }
     });
-
+   
     this.counter = 0;
     this.cullCounter = 0;
     window.perf = 0;
+    this.zoneLoaded = true;
   }
 
   renderHook() {
@@ -196,7 +230,7 @@ class ZoneController extends GameControllerChild {
     this.lastCameraRotation = { ...this.CameraController.camera.rotation };
     this.counter++;
     this.cullCounter++;
-    const perf = performance.now();
+    let perf = performance.now();
     const threePosition = new ThreeVector3(this.lastCameraPosition._x, this.lastCameraPosition._y, this.lastCameraPosition._z);
 
     if (this.cullCounter % 120 === 0) {
@@ -245,25 +279,128 @@ class ZoneController extends GameControllerChild {
           }
         }
       }
+      // this.leafNodes = this.leafNodes.sort((a, b) => 
+      //   Vector3.Distance(new Vector3(a.min.x, a.min.y, a.min.z), this.CameraController.camera.globalPosition) -  
+      // Vector3.Distance(new Vector3(b.min.x, b.min.y, b.min.z), this.CameraController.camera.globalPosition)
+      // );
     }
+
+    // TODO this will be backup logic for eqg zones that do not have a BSP and generated aabb node tree
+    // So will use a format like zone bounds min max and leafNodes[] like we're transforming here in the setupAabbTree function
+    // if (window.lnPerf === undefined) {
+    //   window.lnPerf = 0;
+    // }
+    // const lnPerf = performance.now();
+    // let count = 0;
+    // for (const leafNode of this.leafNodes) {
+    //   count++;
+    //   window.lnCount = count;
+    //   if (testNode(leafNode, threePosition)) {
+    //     // const aabbRegion = res.data;
+    //     // if (aabbRegion.regions?.includes(4)) {
+    //     //   console.log(`Hit zoneline or teleporter!
+    //     //                         ${JSON.stringify({ zone: aabbRegion.zone }, null, 4)}`);
+    //     // } else if (aabbRegion.regions?.includes(1)) {
+    //     //   console.log('Hit water!');
+    //     // } else if (aabbRegion.regions.includes(3)) {
+    //     //   console.log('Hit pvp zone');
+    //     // }
+    //     // break;
+    //     break;
+    //   }
+    // }
+    // window.lnPerf += performance.now() - lnPerf;
+
     window.perf += performance.now() - perf;
+    const aabbPerf = performance.now();
+    if (window.aabbPerf === undefined) {
+      window.aabbPerf = 0;
+    }
     const aabbRegion = recurseTreeFromKnownNode(this.lastAabbNode || this.aabbTree, this.CameraController.camera.globalPosition);
-    
+    window.aabbPerf += performance.now() - aabbPerf;
     if (aabbRegion) {
       this.lastAabbNode = aabbRegion;
       if (aabbRegion.regions?.includes(4)) {
         console.log(`Hit zoneline or teleporter!
                                 ${JSON.stringify({ zone: aabbRegion.zone }, null, 4)}`);
+        const zone = aabbRegion.zone;
+       
+        if (this.exploreMode) {
+          const newZone = {
+            x        : -1,
+            y        : -1,
+            z        : -1,
+            zoneIndex: -1
+          };
+          switch (zone.type) {
+            // Reference
+            case 0:
+              const refZone = this.state.zoneInfo.zonePoints[zone.index];
+              newZone.x = refZone.target_y;
+              newZone.y = refZone.target_x;
+              newZone.z = refZone.target_z;
+              newZone.zoneIndex = refZone.target_zone_id;
+              break;
+            // Absolute
+            case 1:
+              newZone.x = zone.position.x;
+              newZone.y = zone.position.y;
+              newZone.z = zone.position.z;
+              newZone.zoneIndex = zone.zoneIndex;
+              break;
+
+            default:
+              break;
+          }
+          if (newZone.zoneIndex > -1) {
+            const magicNumber = 999999;
+            // Teleport within zone
+            const newLoc = eqtoBabylonVector(newZone.y, newZone.x, newZone.z);
+            // newLoc.x *= -1;
+            if (newLoc.x === magicNumber) {
+              newLoc.x = this.CameraController.camera.globalPosition.x;
+            }
+            if (newLoc.y === magicNumber) {
+              newLoc.y = this.CameraController.camera.globalPosition.y;
+            }
+            if (newLoc.z === magicNumber) {
+              newLoc.z = this.CameraController.camera.globalPosition.z;
+            }
+            
+            if (newZone.zoneIndex === this.state.zoneInfo.zone) {
+
+            } else { // Zone to another zone
+              const z = supportedZones[newZone.zoneIndex];
+              this.actions.setZoneInfo({ ...z, zone: newZone.zoneIndex });
+              this.zone(z.shortName, newLoc);
+              return;
+            }
+          }
+        }
       } else if (aabbRegion.regions?.includes(1)) {
         console.log('Hit water!');
       } else if (aabbRegion.regions.includes(3)) {
         console.log('Hit pvp zone');
       }
     }
-
+    if (window.lightPerf === undefined) {
+      window.lightPerf = 0;
+    }
+    if (window.musicPerf === undefined) {
+      window.musicPerf = 0;
+    }
+    if (window.spawnPerf === undefined) {
+      window.spawnPerf = 0;
+    }
+    perf = performance.now();
     this.LightController.updateLights(this.CameraController.camera.globalPosition);
+    window.lightPerf += performance.now() - perf;
+    perf = performance.now();
     this.MusicController.updateMusic(this.CameraController.camera.globalPosition);
+    window.musicPerf += performance.now() - perf;
+    perf = performance.now();
     this.SpawnController.updateSpawns(this.CameraController.camera.globalPosition);
+    window.spawnPerf += performance.now() - perf;
   }
 
   async addTextureAnimations() {
@@ -400,7 +537,8 @@ class ZoneController extends GameControllerChild {
   async loadPhysicsEngine() {
     const HK = await getInitializedHavok();
     const havokPlugin = window.hp = new HavokPlugin(true, HK);
-    const didEnable = this.scene.enablePhysics(new Vector3(0, -1.3, 0), havokPlugin);
+    const didEnable = this.scene.enablePhysics(new Vector3(0, -4.3, 0), havokPlugin);
+    this.scene._physicsEngine.setGravity(new Vector3(0, -9.5, 0));
     return didEnable;
   }
 
@@ -440,10 +578,8 @@ class ZoneController extends GameControllerChild {
 
   async setupAabbTree() {
     const aabb = await fetch(`${storageUrl}${this.zoneName}_aabb_tree.json`).then(a => a.json()).catch(() => ({}));
+    const leafNodes = [];
     const addParents = node => {
-      if (!node.lights) {
-        node.lights = [];
-      }
       if (node.left) {
         node.left.parent = node;
         addParents(node.left);
@@ -452,9 +588,12 @@ class ZoneController extends GameControllerChild {
         node.right.parent = node;
         addParents(node.right);
       }
+      if (!node.right && !node.left && node.regions?.length) {
+        leafNodes.push(node);
+      }
     };
+    this.leafNodes = leafNodes;
     addParents(aabb);
-
     this.aabbTree = aabb;
   }
 }

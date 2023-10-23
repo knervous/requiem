@@ -1,5 +1,6 @@
 import { UniversalCamera, Vector3 } from '@babylonjs/core';
 import { GameControllerChild } from './GameControllerChild';
+import { eqtoBabylonVector } from '../../../util/vector';
 
 class CameraController extends GameControllerChild { 
   /**
@@ -32,6 +33,13 @@ class CameraController extends GameControllerChild {
       false,
     );
     document.removeEventListener('keydown', this.keyHandler);
+    document.exitPointerLock();
+    this.isLocked = false;
+  }
+
+  constructor() {
+    super();
+    this.onChangePointerLock = this.onChangePointerLock.bind(this);
   }
 
   onChangePointerLock = () => {
@@ -55,17 +63,42 @@ class CameraController extends GameControllerChild {
   };
 
   /**
+   * @param {MouseEvent}e
+   */
+  sceneMouseDown(e) {
+    if (
+      (e.button === 2 && !this.isLocked && this.canvas.requestPointerLock) ||
+      this.canvas.msRequestPointerLock ||
+      this.canvas.mozRequestPointerLock ||
+      this.canvas.webkitRequestPointerLock
+    ) {
+      try {
+        this.canvas.requestPointerLock();
+      } catch {}
+    }
+  }
+
+  sceneMouseUp(e) {
+    if (e.button === 2) {
+      document.exitPointerLock();
+    }
+  }
+  /**
    * 
-   * @param {import('@babylonjs/core/scene').Scene} scene 
+   * @param {import('@babylonjs/core').Vector3} position
    * @returns 
    */
-  createCamera = (scene) => {
-    let startingLoc = new Vector3(5, 10, 0);
+  createCamera = (position) => {
+    if (!position) {
+      const { safe_x, safe_y, safe_z } = this.state.zoneInfo;
+      position = eqtoBabylonVector(safe_x, safe_y, safe_z);
+    }
     if (sessionStorage.getItem('cam-loc')) {
       const { x, y, z } = JSON.parse(sessionStorage.getItem('cam-loc'));
-      startingLoc = new Vector3(x, y, z);
+      position = new Vector3(x, y, z);
     }
-    this.camera = new UniversalCamera('__camera__', startingLoc, scene);
+    position.y += 3;
+    this.camera = new UniversalCamera('__camera__', position, this.currentScene);
     this.camera.setTarget(new Vector3(1, 10, 1));
     this.camera.touchAngularSensibility = 5000;
 
@@ -80,37 +113,18 @@ class CameraController extends GameControllerChild {
     this.camera.keysUpward.push(32);
 
     document.addEventListener('keydown', this.keyHandler.bind(this));
-  
-    if (scene && this.canvas) {
-      scene.onPointerDown = (e) => {
-        if (
-          (e.button === 2 && !this.isLocked && this.canvas.requestPointerLock) ||
-          this.canvas.msRequestPointerLock ||
-          this.canvas.mozRequestPointerLock ||
-          this.canvas.webkitRequestPointerLock
-        ) {
-          try {
-            this.canvas.requestPointerLock();
-          } catch {}
-        }
-      };
-      scene.onPointerUp = e => {
-        if (e.button === 2) {
-          document.exitPointerLock();
-        }
-      };
-    }
+
     
-    document.addEventListener('pointerlockchange', this.onChangePointerLock.bind(this), false);
-    document.addEventListener('mspointerlockchange', this.onChangePointerLock.bind(this), false);
+    document.addEventListener('pointerlockchange', this.onChangePointerLock, false);
+    document.addEventListener('mspointerlockchange', this.onChangePointerLock, false);
     document.addEventListener(
       'mozpointerlockchange',
-      this.onChangePointerLock.bind(this),
+      this.onChangePointerLock,
       false,
     );
     document.addEventListener(
       'webkitpointerlockchange',
-      this.onChangePointerLock.bind(this),
+      this.onChangePointerLock,
       false,
     );
   };

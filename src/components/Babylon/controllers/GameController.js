@@ -9,17 +9,25 @@ import { spawnController } from './SpawnController';
 import { guiController } from './GUIController';
 import { itemController } from './ItemController';
 import { zoneController } from './ZoneController';
-import { Engine, Matrix, Scene, Database, SceneLoader } from '@babylonjs/core';
+import { Engine, Scene, Database, SceneLoader, EngineFactory, ThinEngine } from '@babylonjs/core';
   
 import mockData from '../mockSpawns.json';
 import { Inspector } from '@babylonjs/inspector';
 import { GlobalStore } from '../../../state';
+import { netLoginController } from './NetLoginController';
+import { netWorldController } from './NetWorldController';
+import { netZoneController } from './NetZoneController';
 
 Database.IDBStorageEnabled = true;
 SceneLoader.ShowLoadingScreen = false;
 
+
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
 export class GameController {
-  /** @type {Engine} */
+  /** @type {Engine & WebGPUEngine} */
   engine = null;
   /** @type {Scene} */
   #scene = null;
@@ -27,6 +35,10 @@ export class GameController {
   canvas = null;
 
   loading = false;
+
+  showUi = params.ui === 'true';
+  dev = process.env.REACT_APP_DEV === 'true';
+
 
   CameraController = cameraController;
   LightController = lightController;
@@ -38,6 +50,11 @@ export class GameController {
   ItemController = itemController;
   ZoneController = zoneController;
 
+  // Net
+  NetLoginController = netLoginController;
+  NetWorldController = netWorldController;
+  NetZoneController = netZoneController;
+  
   constructor() {
     this.CameraController.setGameController(this);
     this.LightController.setGameController(this);
@@ -49,62 +66,117 @@ export class GameController {
     this.ItemController.setGameController(this);
     this.ZoneController.setGameController(this);
 
+    // Net
+    this.NetLoginController.setGameController(this);
+    this.NetWorldController.setGameController(this);
+    this.NetZoneController.setGameController(this);
+
+
     this.keyDown = this.keyDown.bind(this);
     this.resize = this.resize.bind(this);
-    this.sceneClicked = this.sceneClicked.bind(this);
+    this.sceneMouseDown = this.sceneMouseDown.bind(this);
+    this.sceneMouseUp = this.sceneMouseUp.bind(this);
+    this.renderLoop = this.renderLoop.bind(this);
+
+
+    const orig = ThinEngine._FileToolsLoadImage;
+    ThinEngine._FileToolsLoadImage = function(buffer, onload, onInternalError, offlineProvider, mimeType, options) {
+      return orig.call(undefined, buffer, onload, onInternalError, mimeType === 'image/webp' ? null : offlineProvider, mimeType, options);
+    };
+
+    // Override DB factory
+    Engine.OfflineProviderFactory = (urlToScene, callbackManifestChecked, disableManifestCheck = false) => {
+      return urlToScene.startsWith('blob') ? null : new Database(urlToScene, callbackManifestChecked, disableManifestCheck);
+    };
   }
 
   get currentScene() {
     return this.#scene;
   }
 
-  loadEngine(canvas, addToast) {
+  async loadEngine(canvas, addToast) {
     if (this.engine) {
       this.engine.dispose();
     }
     this.canvas = canvas;
-    this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+    this.engine = await EngineFactory.CreateAsync(canvas);
     this.engine.setHardwareScalingLevel(1 / window.devicePixelRatio);
     this.engine.disableManifestCheck = true;
     this.engine.enableOfflineSupport = true;
     this.loading = false;
     this.addToast = addToast;
+    this.engine.runRenderLoop(this.renderLoop);
+
   }
 
   resize() {
     this.engine?.resize();
   }
 
-  async loadZoneScene (zoneName, loadSpawns) {
+  setLoading(val) {
+    this.loading = val;
+    GlobalStore.actions.setLoading(val);
+  }
+
+  get exploreMode () {
+    return GlobalStore.getState().exploreMode;
+  }
+
+  get state() {
+    return GlobalStore.getState();
+  }
+
+  get actions() {
+    return GlobalStore.actions;
+  }
+
+  /**
+   * 
+   * @param {string} zoneName 
+   * @param {boolean} loadSpawns 
+   * @param {import('@babylonjs/core').Vector3} location
+   * @returns 
+   */
+  async loadZoneScene (zoneName, loadSpawns, location) {
     this.dispose();
+    this.setLoading(true);
+    this.#scene = null;
     if (!this.engine || !this.canvas) {
       return;
     }
-    GlobalStore.actions.setLoading(true);
-    this.loading = true;
     this.#scene = new Scene(this.engine);
-    await this.ZoneController.loadZoneScene(this.#scene, zoneName);
+    await this.ZoneController.loadZoneScene(this.#scene, zoneName, location);
     if (zoneName === 'qeytoqrg' && loadSpawns) {
-      spawnController.addSpawns(mockData.filter(a => a || a.name.includes('rat') && !a.name.includes('JPE'))).then(() => {
+      spawnController.addSpawns(mockData.filter(a => (a || a.name.includes('Tol') || a.name.includes('gnoll')) && !a.name.includes('JPE'))).then(() => {
         if (process.env.REACT_APP_INSPECTOR === 'true') {
           Inspector.Show(this.#scene, { embedMode: true, overlay: true });
         }
-        GlobalStore.actions.setLoading(false);
-        this.loading = false;
+        this.setLoading(false);
       });
     } else {
       if (process.env.REACT_APP_INSPECTOR === 'true') {
         Inspector.Show(this.#scene, { embedMode: true, overlay: true });
       }
-      GlobalStore.actions.setLoading(false);
-      this.loading = false;
+      // this.setLoading(false);
     }
-    this.#scene.onPointerDown = this.sceneClicked;
-    this.engine.runRenderLoop(() => {
-      if (this.#scene && this.#scene?.activeCamera && !this.loading) {
+
+    if (this.exploreMode) {
+      this.setLoading(false);
+    }
+
+    this.#scene.onPointerDown = this.sceneMouseDown;
+    this.#scene.onPointerUp = this.sceneMouseUp;
+  }
+
+  renderLoop() {
+    if (this.#scene && this.#scene?.activeCamera && !this.loading) {
+      try {
         this.#scene.render();
+      } catch (e) {
+        console.warn(e);
       }
-    });
+      
+    }
   }
 
   keyDown(e) {
@@ -127,9 +199,13 @@ export class GameController {
         zoneController.CameraController.camera.checkCollisions = !gameController.CameraController.camera.checkCollisions;
         break;
       }
+      case 'u': {
+        this.showUi = !this.showUi;
+        GlobalStore.actions.setZoneInfo({ ...GlobalStore.getState().zoneInfo });
+        break;
+      }
       case 'b': {
         Object.values(gameController.SpawnController.spawns).forEach(spawn => {
-          console.log('s', spawn);
           spawn.rootNode.showBoundingBox = !spawn.rootNode.showBoundingBox; 
           spawn.rootNode.getChildMeshes().forEach(m => m.showBoundingBox = !m.showBoundingBox);
         });
@@ -149,22 +225,17 @@ export class GameController {
     }
   }
 
-  sceneClicked() {
-    const ray = this.#scene.createPickingRay(this.#scene.pointerX, this.#scene.pointerY, Matrix.Identity(), this.CameraController.camera);
-    const hit = this.#scene.pickWithRay(ray);
-    if (hit.pickedMesh && /spawn_\d+/.test(hit.pickedMesh.id)) {
-      const [, id] = hit.pickedMesh.id.split('_');
-      window.spawn = this.SpawnController.spawns[id];
-      window.setTargetName?.(window.spawn.spawn.displayedName);
-      console.log('Mesh clicked', hit.pickedMesh);
-    }
+  sceneMouseDown(e) {
+    this.SpawnController.sceneMouseDown(e);
+    this.CameraController.sceneMouseDown(e);
+  }
+
+  sceneMouseUp(e) {
+    this.CameraController.sceneMouseUp(e);
   }
 
   dispose() {
-    if (this.scene) {
-      this.scene.dispose();
-    }
-
+    this.ZoneController.dispose();
     this.CameraController.dispose();
     this.LightController.dispose();
     this.SkyController.dispose();
@@ -172,7 +243,6 @@ export class GameController {
     this.SoundController.dispose();
     this.SpawnController.dispose();
     this.ItemController.dispose();
-    this.ZoneController.dispose();
   }
 
 }

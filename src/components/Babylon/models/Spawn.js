@@ -23,7 +23,7 @@ export class Spawn {
   get displayedName() {
     const fullName = this.name.replace(/_/g, ' ').replace(/\d+$/, '');
     return this.currentHp <= 0 ? `${fullName}'s corpse` : 
-      this.lastName.length ? `${fullName} ${this.lastName}` : fullName;
+      this.lastName.length ? `${fullName} (${this.lastName})` : fullName;
   }
   get deity() {
     return this.#data.deity;

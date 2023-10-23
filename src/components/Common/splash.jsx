@@ -34,8 +34,9 @@ export const Splash = ({ children }) => {
       <Card
         variant="outlined"
         sx={{
-          height    : '100%',
-          background: 'center url(/img/requiem-splash2.png)',
+          height        : '100%',
+          background    : 'center no-repeat url(/img/requiem-splash6.png)',
+          backgroundSize: 'cover'
         }}
       >
         <CardContent>

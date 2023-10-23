@@ -30,7 +30,13 @@ class LightController extends GameControllerChild {
    */
   octree = null;
   dispose() {
-
+    this.zoneLights.forEach(z => {
+      z.dispose();
+    });
+    this.previousLights = [];
+    this.zoneLights = [];
+    this.ambientLight?.dispose();
+    this.playerLight?.dispose();
   }
   /**
    * @param {import('@babylonjs/core/scene').Scene} scene
@@ -75,7 +81,8 @@ class LightController extends GameControllerChild {
     } else {
       this.zoneLights = [...scene.lights.filter(l => l.metadata?.zoneLight)];
     }
-
+    this.zoneLights.forEach(l => l.doNotSerialize = true);
+    
     const { min, max } = aabbTree;
     this.octree = new PointOctree(new ThreeVector3(min.x, min.y, min.z), new ThreeVector3(max.x, max.y, max.z));
     

@@ -8,6 +8,9 @@ export const actions = {
   setCharacter: createAction('SET_CHARACTER', character => {
     return { payload: character };
   }),
+  setExploreMode: createAction('SET_EXPLORE', () => {
+    return { };
+  }),
 };
 
 export const reducer = createReducer(defaultState, builder => {
@@ -18,6 +21,11 @@ export const reducer = createReducer(defaultState, builder => {
 
   builder.addCase(actions.setCharacter, (state, action) => {
     state.character = action.payload;
+    return state;
+  });
+
+  builder.addCase(actions.setExploreMode, (state) => {
+    state.exploreMode = true;
     return state;
   });
 });

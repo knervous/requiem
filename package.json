@@ -50,6 +50,7 @@
     "react-redux": "^8.0.5",
     "react-repeatable": "^2.0.1",
     "react-toast-notifications": "^2.5.1",
+    "recast-detour": "^1.6.2",
     "redux": "^4.2.1",
     "sparse-octree": "^7.1.8",
     "three": "^0.143.0",

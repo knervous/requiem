@@ -134,6 +134,13 @@ export class EQPacket {
             if (retVal[i] instanceof EQPacket) {
               retVal[i] = retVal[i].toObject();
             }
+            if (Array.isArray(retVal[i])) {
+              for (let j = 0; j < retVal.length; j++) {
+                if (retVal[i][j] instanceof EQPacket) {
+                  retVal[i][j] = retVal[i][j].toObject();
+                }
+              }
+            } 
           }
         }
         return { ...acc, [val]: retVal };
@@ -584,12 +591,13 @@ export class CharacterSelectEntry extends EQPacket {
     );
   }
   get characters () {
+    const obj = this.toObject();
     const charArray = [];
     for (let i = 0; i < 10; i++) {
       if (this.name?.[i] && this.name?.[i] !== '<none>') {
         const char = {};
-        for (const attr of this.attributes) {
-          char[attr] = this[attr][i];
+        for (const attr of Array.from(this.attributes).filter(a => a !== 'op_code')) {
+          char[attr] = obj[attr][i];
         }
         charArray.push(char);
       }

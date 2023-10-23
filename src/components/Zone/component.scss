@@ -43,12 +43,16 @@ canvas {
 }
 
 .MuiDialog-paper[role=dialog]  {
-  border-radius: 10px;
+  border-radius: 5px;
   background-image: url('../../../public/ui/border2.jpg');
   background-repeat: repeat;
   background-size: 100% 100%;
   background-position: center;
-  border: 1px solid #b2b2b2;
+  opacity: 1;
+  & > * {
+    opacity: 1;
+  }
+  //border: 1px solid #b2b2b2;
   padding: 10px;
 }
 
