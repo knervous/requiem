@@ -4,7 +4,7 @@ import { Vector3 as ThreeVector3 } from 'three';
 import { PointOctree } from 'sparse-octree';
 import { GameControllerChild } from './GameControllerChild';
 
-const maxLights = 5;
+const maxLights = 8;
 
 class LightController extends GameControllerChild {
   /**
@@ -83,7 +83,7 @@ class LightController extends GameControllerChild {
     } else {
       this.zoneLights = [...scene.lights.filter(l => l.metadata?.zoneLight)];
     }
-    this.zoneLights.forEach(l => l.doNotSerialize = true);
+    // this.zoneLights.forEach(l => l.doNotSerialize = true);
     
     const { min, max } = aabbTree;
     this.octree = new PointOctree(new ThreeVector3(min.x, min.y, min.z), new ThreeVector3(max.x, max.y, max.z));

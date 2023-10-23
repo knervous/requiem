@@ -9,7 +9,7 @@ import { spawnController } from './SpawnController';
 import { guiController } from './GUIController';
 import { itemController } from './ItemController';
 import { zoneController } from './ZoneController';
-import { Engine, Scene, Database, SceneLoader, EngineFactory, ThinEngine } from '@babylonjs/core';
+import { Engine, Scene, Database, SceneLoader, ThinEngine } from '@babylonjs/core';
   
 import mockData from '../mockSpawns.json';
 import { Inspector } from '@babylonjs/inspector';

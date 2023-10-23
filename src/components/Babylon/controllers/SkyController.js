@@ -1,4 +1,4 @@
-import { Color3, Engine, Material, MultiMaterial, Scene, SceneLoader, SubMesh, Texture } from '@babylonjs/core';
+import { Color3, Engine, Material, MultiMaterial, Scene, SceneLoader, SubMesh } from '@babylonjs/core';
 import { GradientMaterial } from '@babylonjs/materials';
 import { GameControllerChild } from './GameControllerChild';
 
