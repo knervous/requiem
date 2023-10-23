@@ -99,7 +99,7 @@ export class GameController {
       this.engine.dispose();
     }
     this.canvas = canvas;
-    this.engine = await EngineFactory.CreateAsync(canvas);
+    this.engine = new Engine(canvas); // await EngineFactory.CreateAsync(canvas);
     this.engine.setHardwareScalingLevel(1 / window.devicePixelRatio);
     this.engine.disableManifestCheck = true;
     this.engine.enableOfflineSupport = true;
@@ -138,8 +138,8 @@ export class GameController {
    * @returns 
    */
   async loadZoneScene (zoneName, loadSpawns, location) {
-    this.dispose();
     this.setLoading(true);
+    this.dispose();
     this.#scene = null;
     if (!this.engine || !this.canvas) {
       return;

@@ -8,6 +8,7 @@ class CameraController extends GameControllerChild {
 */
   camera = null;
   isLocked = false;
+  speedModified = false;
   dispose() {
     if (this.camera) {
       this.camera.dispose();
@@ -32,14 +33,17 @@ class CameraController extends GameControllerChild {
       this.onChangePointerLock,
       false,
     );
-    document.removeEventListener('keydown', this.keyHandler);
+    document.removeEventListener('keydown', this.keyDownHandler);
     document.exitPointerLock();
     this.isLocked = false;
+    this.speedModified = false;
   }
 
   constructor() {
     super();
     this.onChangePointerLock = this.onChangePointerLock.bind(this);
+    this.keyDownHandler = this.keyDownHandler.bind(this);
+    this.keyUpHandler = this.keyUpHandler.bind(this);
   }
 
   onChangePointerLock = () => {
@@ -56,10 +60,21 @@ class CameraController extends GameControllerChild {
     }
   };
 
-  keyHandler = e => {
+  keyDownHandler = e => {
     if (e.key === ' ') {
       this.camera.position.y += 5;
-    } 
+    }
+    if (e.key === 'Shift' && !this.speedModified) {
+      this.speedModified = true;
+      this.camera.speed *= 3;
+    }
+  };
+
+  keyUpHandler = e => {
+    if (e.key === 'Shift' && this.speedModified) {
+      this.speedModified = false;
+      this.camera.speed /= 3;
+    }
   };
 
   /**
@@ -97,7 +112,7 @@ class CameraController extends GameControllerChild {
       const { x, y, z } = JSON.parse(sessionStorage.getItem('cam-loc'));
       position = new Vector3(x, y, z);
     }
-    position.y += 3;
+    position.y += 2;
     this.camera = new UniversalCamera('__camera__', position, this.currentScene);
     this.camera.setTarget(new Vector3(1, 10, 1));
     this.camera.touchAngularSensibility = 5000;
@@ -111,8 +126,9 @@ class CameraController extends GameControllerChild {
     this.camera.keysRight.push(68);
     this.camera.keysLeft.push(65);
     this.camera.keysUpward.push(32);
-
-    document.addEventListener('keydown', this.keyHandler.bind(this));
+    this.camera.speed = 2;
+    document.addEventListener('keydown', this.keyDownHandler.bind(this));
+    document.addEventListener('keyup', this.keyUpHandler.bind(this));
 
     
     document.addEventListener('pointerlockchange', this.onChangePointerLock, false);

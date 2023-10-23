@@ -35,6 +35,7 @@ export const GamePage = () => {
         return <Login />;
     }
   }, [gameState, exploreMode]);
+
   return <>{loading && <Splash><div className="loading-box">
     <Typography sx={{ fontSize: 20, padding: 0, margin: 0 }} gutterBottom>
       {loadingText}

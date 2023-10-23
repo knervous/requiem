@@ -1,4 +1,4 @@
-import { Color3, Engine, Material, MultiMaterial, SceneLoader, SubMesh } from '@babylonjs/core';
+import { Color3, Engine, Material, MultiMaterial, Scene, SceneLoader, SubMesh, Texture } from '@babylonjs/core';
 import { GradientMaterial } from '@babylonjs/materials';
 import { GameControllerChild } from './GameControllerChild';
 
@@ -18,7 +18,6 @@ class SkyController extends GameControllerChild {
   async loadSky(scene, index, fromSerialized) {
     let skyRoot;
     if (!fromSerialized) {
- 
       const sky = await SceneLoader.ImportMeshAsync(
         '',
         skyUrl,
@@ -65,6 +64,13 @@ class SkyController extends GameControllerChild {
     const [cloudTexture] = cloudLayer.material.getActiveTextures();
     const [upperLayerTexture] = upperLayer.material.getActiveTextures();
 
+    // cloudLayer.material.getActiveTextures().forEach(t => {
+    //   // t.
+    //   cloudLayer.material.emissiveTexture = new Texture()
+    // });
+
+    // cloudLayer.material.disableLighting = true;
+    
     this.#moveInterval = setInterval(() => {
       cloudTexture.uOffset += 0.0001;
       cloudTexture.vOffset += 0.0001;
@@ -73,12 +79,13 @@ class SkyController extends GameControllerChild {
     }, 10);
 
 
-    this.setFog(scene);
+    // this.setFog(scene);
   }
 
-  setFog(_scene) {
-    // scene.fogMode = Scene.FOGMODE_LINEAR;
-    // scene.fogEnd = 6000;
+  setFog() {
+    this.currentScene.fogMode = Scene.FOGMODE_LINEAR;
+    this.currentScene.fogEnd = this.state.zoneInfo.fog_maxclip;
+    this.currentScene.fogDensity = this.state.zoneInfo.fog_density;
   }
 }
 

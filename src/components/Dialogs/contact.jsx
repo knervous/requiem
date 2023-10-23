@@ -5,11 +5,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Link,
   Stack,
   Typography
 } from '@mui/material';
 
-export const AboutDialog = ({
+export const ContactDialog = ({
   open,
   setOpen
 }) => {
@@ -22,7 +23,7 @@ export const AboutDialog = ({
       aria-labelledby='draggable-dialog-title'
     >
       <DialogTitle style={{ cursor: 'move', margin: '0 auto' }} id='draggable-dialog-title'>
-        Welcome to EQ: Requiem!
+        Contact
       </DialogTitle>
       <DialogContent>
         <div>
@@ -32,24 +33,13 @@ export const AboutDialog = ({
             direction='row'
             spacing={1}
           >
-
           </Stack>
-
           <Typography
             sx={{ fontSize: 17, marginBottom: 2 }}
             color='text.secondary'
             gutterBottom
           >
-            EQ Requiem is a project with many ambitions. Firstly, it's what you see right here: A playable version of EverQuest in the browser.
-            It will also be cross compatible with the EQEmu login server and clients, allowing players to log in from the client and device of their choice.
-          </Typography>
-          <Typography
-            sx={{ fontSize: 17, marginBottom: 2 }}
-            color='text.secondary'
-            gutterBottom
-          >
-            The server itself will be a Classic+ concept. The level cap will be 50 with all original content up to the first expansion. 
-            The custom content on the server aims to give more depth to main cities and more options for hunting and questing.
+            Please reach out for any reason: critiques, bugs, ideas, praise. This is a passion project that I always love to discuss. I can be contacted on discord at <Link href="https://discordapp.com/users/162654344875999232">temp0</Link>
           </Typography>
 
           <Typography
@@ -57,21 +47,16 @@ export const AboutDialog = ({
             color='text.secondary'
             gutterBottom
           >
-            The demo included in this page will be under construction and reflect the experience of moving in the world during actual gameplay. All features in the demo are subject to change at any time.
-            Here is a list of useful hotkeys:
-            <br/>
-            <br/>
-            I : Toggle BabylonJS inspector
-            <br/>
-            C : Toggle Collision
-            <br/>
-            G : Toggle Gravity
-            <br/>
-            U : Toggle UI
-            <br/>
-            Shift: Toggle fast run speed
+            Updates to the project are posted in the <Link href="https://discord.gg/785p886eCw">EQEmu discord</Link> under eqemulator-projects > project-requiem 
           </Typography>
-         
+      
+          <Typography
+            sx={{ fontSize: 17, marginBottom: 2 }}
+            color='text.secondary'
+            gutterBottom
+          >
+            I can also be contacted at eqadvancedmaps@gmail.com
+          </Typography>
         </div>
       </DialogContent>
       <DialogActions disableSpacing sx={{ margin: '0 auto' }}>

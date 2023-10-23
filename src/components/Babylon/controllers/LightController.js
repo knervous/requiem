@@ -48,7 +48,9 @@ class LightController extends GameControllerChild {
 
 
     // Default intensity is 1. Let's dim the light a small amount
-    this.ambientLight.intensity = 1;
+    this.ambientLight.intensity = 1.5;
+
+    // This will be part of time of day
     this.ambientLight.diffuse = Color3.FromHexString('#FF792F');
     this.ambientLight.groundColor = Color3.FromHexString('#E69339');
 

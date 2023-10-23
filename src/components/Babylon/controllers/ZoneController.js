@@ -169,9 +169,11 @@ class ZoneController extends GameControllerChild {
     this.LightController.loadLights(scene, this.zoneMetadata.lights, this.hadStoredScene, this.aabbTree);
 
     // Sky 
-    this.actions.setLoadingText('Loading sky');
-    await this.SkyController.loadSky(scene, 1, this.hadStoredScene);
-
+    if (this.zoneInfo.sky > 0) {
+      this.actions.setLoadingText('Loading sky');
+      await this.SkyController.loadSky(scene, this.zoneInfo.sky, this.hadStoredScene);
+    }
+    
     // Spawn controller
     this.SpawnController.setupSpawnController(this.aabbTree);
 
@@ -371,6 +373,7 @@ class ZoneController extends GameControllerChild {
 
             } else { // Zone to another zone
               const z = supportedZones[newZone.zoneIndex];
+              this.setLoading(true);
               this.actions.setZoneInfo({ ...z, zone: newZone.zoneIndex });
               this.zone(z.shortName, newLoc);
               return;

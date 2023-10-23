@@ -16,6 +16,8 @@ import { gameController } from '../Babylon/controllers/GameController';
 import { GameState, GlobalStore, useSelector } from '../../state';
 import { AboutDialog } from '../Dialogs/about';
 import supportedZones from '../../common/supportedZones.json';
+import { ContactDialog } from '../Dialogs/contact';
+import { AcknowledgementsDialog } from '../Dialogs/acknowledgements';
 
 const formControlSx = {
   marginTop: 200,
@@ -32,6 +34,8 @@ export const Login = () => {
   const [demoZone, setDemoZone] = useState(1);
 
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [ackOpen, setAckopen] = useState(false);
 
   const loginState = useSelector(GameState.loginState);
 
@@ -60,6 +64,8 @@ export const Login = () => {
   return (
     <Splash>
       <AboutDialog open={aboutOpen} setOpen={setAboutOpen} />
+      <ContactDialog open={contactOpen} setOpen={setContactOpen} />
+      <AcknowledgementsDialog open={ackOpen} setOpen={setAckopen} />
       {loginState.loggedIn ? (
         <FormControl sx={formControlSx}>
           {loginState.serverList.length ? (
@@ -178,7 +184,7 @@ export const Login = () => {
 
           <Stack
             direction="row"
-            sx={{ width: '300px', margin: '20px auto 60px auto' }}
+            sx={{ width: '300px', margin: '20px auto 40px auto' }}
             justifyContent="center"
             spacing={2}
           >
@@ -206,53 +212,35 @@ export const Login = () => {
                   background: 'rgba(0,0,0, .25)',
                 }}
               >
-                Explore
+                Explore demo
               </Button>
             </FormControl>
           </Stack>
           <Stack
-            direction="row"
-            sx={{ width: 'auto', margin: '10px auto 30px auto' }}
+            sx={{ width: 'auto' }}
             justifyContent="center"
             spacing={2}
           >
-            <Button
-              onClick={() => {
-                setAboutOpen(true);
-              }}
-              variant="outlined"
-              sx={{
-                color     : 'white',
-                background: 'rgba(0,0,0, .25)',
-              }}
-            >
+
+            <Typography onClick={() => {
+              setAboutOpen(true);
+            }} variant="h5" sx={{ textDecoration: 'underline', '&:hover': { textDecoration: 'none' } }}>
               Vision
-            </Button>
-            {/* <Button
-              onClick={() => {
-                setAboutOpen(true);
-              }}
-              variant="outlined"
-              sx={{
-                color     : 'white',
-                background: 'rgba(0,0,0, .25)',
-              }}
-            >
+            </Typography>
+
+            <Typography onClick={() => {
+              setContactOpen(true);
+            }} variant="h5" sx={{ textDecoration: 'underline', '&:hover': { textDecoration: 'none' } }}>
               Contact
-            </Button>
-            <Button
-              onClick={() => {
-                setAboutOpen(true);
-              }}
-              variant="outlined"
-              sx={{
-                color     : 'white',
-                background: 'rgba(0,0,0, .25)',
-              }}
-            >
+            </Typography>
+            <Typography onClick={() => {
+              setAckopen(true);
+            }} variant="h5" sx={{ textDecoration: 'underline', '&:hover': { textDecoration: 'none' } }}>
               Acknowledgements
-            </Button> */}
+            </Typography>
+      
           </Stack>
+          
         </>
       )}
     </Splash>
