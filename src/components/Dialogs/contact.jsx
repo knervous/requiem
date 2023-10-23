@@ -39,7 +39,11 @@ export const ContactDialog = ({
             color='text.secondary'
             gutterBottom
           >
-            Please reach out for any reason: critiques, bugs, ideas, praise. This is a passion project that I always love to discuss. I can be contacted on discord at <Link href="https://discordapp.com/users/162654344875999232">temp0</Link>
+            Please reach out for any reason! This is a passion project that is far-reaching and is inspired from many ideas that intersect with the whole world of fantasy. 
+            
+            <br/>
+            <br/>
+            I can be contacted on discord as <Link href="https://discordapp.com/users/162654344875999232">temp0</Link>
           </Typography>
 
           <Typography
