@@ -1,5 +1,8 @@
 const CracoEsbuildPlugin = require('craco-esbuild');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+
 const path = require('path');
 
 module.exports = {
@@ -15,12 +18,29 @@ module.exports = {
     },
     {
       plugin: {
-        overrideWebpackConfig: ({ webpackConfig }) => {
-          webpackConfig.resolve.plugins = webpackConfig.resolve.plugins.filter(
+        /** @param {{ webpackConfig: import('webpack').Configuration}} config */
+        overrideWebpackConfig: ({ webpackConfig: config }) => {
+          config.resolve.plugins = config.resolve.plugins.filter(
             plugin => !(plugin instanceof ModuleScopePlugin)
           );
-      
-          return webpackConfig;
+
+          const terserPlugin = config.optimization.minimizer.find(m => m instanceof TerserPlugin);
+          if (terserPlugin) {
+            terserPlugin.options.minimizer.implementation = TerserPlugin.swcMinify;
+            delete terserPlugin.options.minimizer.options.warnings;
+          }
+          config.plugins.push(
+            new CopyPlugin({
+              patterns: [
+                { from: 'src/net/message/EQMessage.proto', to: 'proto' },
+              ],
+            }),
+          );
+          config.module.rules.push({
+            resourceQuery: /raw/,
+            type         : 'asset/source',
+          });
+          return config;
         }
       }
     }

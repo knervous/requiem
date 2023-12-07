@@ -287,7 +287,7 @@ class SpawnController extends GameControllerChild {
     if (spawn.timestamp) {
       // Get per ms tick velocity
       const diff = thisTimestamp - spawn.timestamp;
-      console.log(`Update x y z :: ${update.x} ${update.y} ${update.z} :: diff ${diff}`);
+      // console.log(`Update x y z :: ${update.x} ${update.y} ${update.z} :: diff ${diff}`);
       if (diff < 500) {
         didMove = false;
       }
@@ -303,7 +303,7 @@ class SpawnController extends GameControllerChild {
     if (didMove && !this.interpolatingSpawns.includes(spawn)) {
       this.interpolatingSpawns.push(spawn);
     } else if (!didMove) {
-      console.log('STOPPED!');
+      // console.log('STOPPED!');
       this.interpolatingSpawns = this.interpolatingSpawns.filter(s => s !== spawn);
     }
 

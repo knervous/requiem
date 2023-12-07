@@ -630,6 +630,15 @@ export class Login extends EQPacket {
   }
 }
 
+export class ProxyConnect extends EQPacket {
+  /**
+   * @param {[ip: string, port: number] | [data: ArrayBuffer]} args
+   */
+  constructor (...args) {
+    super([['char', 'ip'], ['uint32', 'port']], args, OP_CODES.OP_WsProxy);
+  }
+}
+
 export class LoginInfo extends EQPacket {
   /**
    * @param {[login_info: [lsid: string, key: string], zoning: boolean] | [data: ArrayBuffer]} args

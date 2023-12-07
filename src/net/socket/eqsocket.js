@@ -1,69 +1,79 @@
 import { EQPacket } from '../packet/EQPacket';
 
+function base64ToArrayBuffer(base64) {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
 export class EqSocket {
   /**
-   * @type {WebSocket}
+   * @type {WebTransport}
    */
-  websock = null;
+  webtransport = null;
   isConnected = false;
 
-  send (buffer) {
-    if (this.websock !== null && this.websock.readyState !== WebSocket.CLOSED) {
-      this.websock.send(
-        buffer instanceof EQPacket ? buffer.getBuffer() : buffer
-      );
-    } else {
-      console.error('Sending from an unopen socket');
+  async send (buffer) {
+    try {
+      if (this.webtransport !== null) {
+        const writer = this.webtransport.datagrams.writable.getWriter();
+        //      await writer.ready;
+        writer.write(
+          buffer instanceof EQPacket ? buffer.getBuffer() : buffer
+        );
+        writer.releaseLock();
+      } else {
+        console.error('Sending from an unopen socket');
+      }
+    } catch (e) {
+      console.error(e);
     }
+   
   }
   close () {
-    
-    if (this.websock) {
-      console.log('CLosing websock', this.websock);
-      this.websock.close();
-      this.websock = null;
+    if (this.webtransport) {
+      console.log('Closing WebTransport', this.webtransport);
+      this.webtransport.close();
+      this.webtransport = null;
     }
   }
 
-
-  connect (port, onMessage, onClose) {
-    console.log(`Connecting to: ${port}`);
-    if (this.websock !== null && this.websock.readyState !== WebSocket.CLOSED) {
-      this.websock.close();
+  async connect (port, onMessage, onClose) {
+    const WebTransport = window.WebTransport;
+    if (!WebTransport) {
+      return false;
     }
-
-    this.websock = new WebSocket(`ws://${process.env.REACT_APP_EQ_SERVER}:${port}`);
-    this.websock.binaryType = 'arraybuffer';
-    const self = this;
-    return new Promise((res, _rej) => {
-      this.websock.onerror = function (event) {
-        this.isConnected = false;
-        console.error('Error connecting to server', event, port);
-        setTimeout(1500, () => {
-          console.log('Attempting reconnect', port);
-          this.connect(port, onMessage, onClose);
-        });
-      };
-
-      this.websock.onclose = function (event) {
-        onClose(event);
-        this.isConnected = false;
-        setTimeout(1500, () => {
-          console.log('Attempting reconnect', port);
-          this.connect(port, onMessage, onClose);
-        });
-      };
-
-      this.websock.onmessage = function (event) {
-        self._messageHandler?.(event);
-        onMessage(event.data);
-      };
-
-      this.websock.onopen = function (_event) {
-        console.log(`Connected to: ${ port}`);
-        res();
-        this.isConnected = true;
-      };
+    console.log(`Connecting via WebTransport to: ${port}`);
+    if (this.webtransport !== null && !(await this.webtransport.closed)) {
+      this.webtransport.close();
+      this.webtransport = null;
+    }
+    this.webtransport = new WebTransport(`https://${process.env.REACT_APP_EQ_SERVER}:${port}/eq`, {
+      serverCertificateHashes: [
+        {
+          algorithm: 'sha-256',
+          value    : base64ToArrayBuffer('UJmQrrDia/3IO7e40AFnJ+EWP1ZRVcgkAP/m5kCuiok=')
+        }
+      ]
     });
+    await this.webtransport.ready;
+    (async () => {
+      const reader = this.webtransport.datagrams.readable.getReader();
+    
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          onClose();
+          break;
+        }
+        const opcode = new Uint16Array(value.buffer)[0];
+        onMessage(opcode, value.slice(2, value.length));
+      }
+    })();
+
+    
   }
 }

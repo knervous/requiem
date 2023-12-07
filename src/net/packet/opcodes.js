@@ -556,6 +556,7 @@ export const OP_CODES = {
   // Login opcodes
   OP_SessionReady         : 0x0001,
   OP_Login                : 0x0002,
+  OP_WebLogin             : 0x0003,
   OP_ServerListRequest    : 0x0004,
   OP_PlayEverquestRequest : 0x000d,
   OP_PlayEverquestResponse: 0x0021,

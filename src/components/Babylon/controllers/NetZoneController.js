@@ -44,6 +44,14 @@ class NetZoneController extends GameControllerChild {
         const newSpawn = new ZonePacket.Spawn(data).toObject();
         await this.SpawnController.addSpawns([newSpawn]);
         break;
+      case OP_CODES.OP_SpecialMesg:
+        const specialMsg = new ZonePacket.SpecialMessage(data).toObject();
+        GlobalStore.actions.addChatLine(specialMsg);
+        break;
+      case OP_CODES.OP_FormattedMessage:
+        const formattedMessage = new ZonePacket.FormattedMessage(data).toObject();
+        GlobalStore.actions.addChatLine(formattedMessage);
+        break;
       case OP_CODES.OP_ChannelMessage:
         const message = new ZonePacket.ChannelMessage(data).toObject();
         GlobalStore.actions.addChatLine(message);

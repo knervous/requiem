@@ -180,6 +180,37 @@ export class ChannelMessage extends EQPacket {
   }
 }
 
+export class SpecialMessage extends EQPacket {
+  /**
+       * @param {[] | [data: ArrayBuffer]} args
+       */
+  constructor (...args) {
+    super([
+      ['fixed_char', ['header', 3]],
+      ['uint32', 'type'],
+      ['uint32', 'target_spawn_id'],
+      ['char', 'sender'],
+      ['fixed_array', ['unknown12', 'uint8', 12]],
+      ['char', 'message'],
+    ], args);
+  }
+}
+
+export class FormattedMessage extends EQPacket {
+  /**
+       * @param {[] | [data: ArrayBuffer]} args
+       */
+  constructor (...args) {
+    super([
+      ['uint32', 'unknown0'],
+      ['uint32', 'string_id'],
+      ['uint32', 'type'],
+      ['char', 'sender'],
+      ['char', 'message'],
+    ], args);
+  }
+}
+
 export class Animation extends EQPacket {
   /**
        * @param {[] | [data: ArrayBuffer]} args

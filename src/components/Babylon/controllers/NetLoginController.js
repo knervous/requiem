@@ -1,5 +1,7 @@
+import { EQClientPacket } from '../../../net/packet/EQClientPacket';
+import { EQServerPacket } from '../../../net/packet/EQServerPacket';
 import * as EQPacket from '../../../net/packet/EQPacket';
-import { OP_CODES, getOpCode, getOpCodeDesc } from '../../../net/packet/opcodes';
+import { EQOpCodes, getOpCode, getOpCodeDesc } from '../../../net/message';
 import { EqSocket } from '../../../net/socket/eqsocket';
 import { GAME_STATES, GlobalStore } from '../../../state';
 import { GameControllerChild } from './GameControllerChild';
@@ -16,28 +18,28 @@ class NetLoginController extends GameControllerChild {
     this.onClose = this.onClose.bind(this);
   }
 
-  async onMessage(data) {
-    const opc = getOpCode(data);
-    switch (opc) {
-      case OP_CODES.OP_LoginAccepted: {
-        const playerLoginInfo = new EQPacket.PlayerLoginReply(data);
-        GlobalStore.actions.setLoginState({ ...playerLoginInfo.toObject(), loading: false, triedLogin: true });
-        if (playerLoginInfo.success) {
-          this.#socket.send(new EQPacket.ServerListRequest(4));
-        }
+  async onMessage(opcode, data) {
+    switch (opcode) {
+      case EQOpCodes.OP_LoginAccepted: {
+        const playerLoginInfo = EQServerPacket.LoginReply(data);
+        GlobalStore.actions.setLoginState({ ...playerLoginInfo, loading: false, triedLogin: true });
+        console.log('login info', playerLoginInfo);
+        // if (playerLoginInfo.success) {
+        //   this.#socket.send(new EQPacket.ServerListRequest(4));
+        // }
         break;
       }
-      case OP_CODES.OP_ServerListResponse: {
-        const lr = new EQPacket.ListServerResponse(data);
-        GlobalStore.actions.setLoginState({ serverList: lr.toObject().server_list, loggedIn: true });
-        break;
-      }
-      case OP_CODES.OP_PlayEverquestResponse: {
-        const eqResponse = new EQPacket.PlayEverquestResponse(data);
-        GlobalStore.actions.setSelectedServer(eqResponse.server_id);
-        GlobalStore.actions.setGameState(GAME_STATES.CHAR_SELECT);
-        break;
-      }
+      // case EQOpCodes.OP_ServerListResponse: {
+      //   const lr = new EQPacket.ListServerResponse(data);
+      //   GlobalStore.actions.setLoginState({ serverList: lr.toObject().server_list, loggedIn: true });
+      //   break;
+      // }
+      // case EQOpCodes.OP_PlayEverquestResponse: {
+      //   const eqResponse = new EQPacket.PlayEverquestResponse(data);
+      //   GlobalStore.actions.setSelectedServer(eqResponse.server_id);
+      //   GlobalStore.actions.setGameState(GAME_STATES.CHAR_SELECT);
+      //   break;
+      // }
       default:
         console.warn(
             `Got unhandled login message: ${getOpCodeDesc(data)}`,
@@ -58,7 +60,7 @@ class NetLoginController extends GameControllerChild {
     if (!this.#socket.isConnected) {
       await this.#socket.connect('7775', this.onMessage, this.onClose);
     }
-    this.#socket.send(new EQPacket.Login(`${username}:${password}`));
+    this.#socket.send(EQClientPacket.LoginPacket({ username, password }));
   }
 
   async serverLogin(serverId) {
