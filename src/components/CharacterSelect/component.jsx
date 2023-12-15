@@ -60,7 +60,7 @@ export const CharSelect = () => {
                         },
                       }}
                       primary={c.name}
-                      secondary={`Level ${c.level} ${RaceData.find(rd => rd.id === c.race).name} ${ClassData[c.class]} - ${ZoneData.find(z => z.zone === c.zone).longName}`}
+                      secondary={`Level ${c.level} ${RaceData.find(rd => rd.id === c.race).name} ${ClassData[c.charClass]} - ${ZoneData.find(z => z.zone === c.zone).longName}`}
                     />
                   </ListItemButton>
                 </ListItem>

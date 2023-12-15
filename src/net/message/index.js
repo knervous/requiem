@@ -11,33 +11,26 @@ import protoMessage from './EQMessage.proto?raw';
 export const EQMessage = protobuf.parse(protoMessage).root;
 
 /**
- * @type {{[key in OpCodes]: string}}
+ * @type {{[key in OpCodes]: number}}
  */
 export const EQOpCodes = EQMessage.get('eq').getEnum('OpCodes');
 
+const opLookup = EQMessage.lookupEnum('OpCodes');
+
 /**
  * 
- * @param {ArrayBuffer} buffer 
- * @returns {number}
- */
-export const getOpCode = buffer => {
-  const view = new DataView(buffer, 0);
-  return view.getUint16(0, true);
-};
-  
-/**
- * 
- * @param {ArrayBuffer} buffer 
+ * @param {number} opCode 
  * @returns {string}
  */
-export const getOpCodeDesc = buffer => {
-  const view = new DataView(buffer, 0);
-  const opCode = view.getUint16(0, true);
-  for (const [entry, val] of Object.entries(EQOpCodes)) {
-    if (val === opCode) {
-      return entry;
-    }
-  }
-  return EQOpCodes.OP_Unknown;
-};
-  
+export const getOpCodeDesc = opCode => opLookup.valuesById[opCode];
+
+
+console.log('ok', opLookup, getOpCodeDesc(EQOpCodes.OP_LoginWeb));
+
+/**
+ * 
+ * @param {number} opCode 
+ * @returns {string}
+ */
+export const getMessageType = opCode => opLookup.valuesOptions[getOpCodeDesc(opCode)]['(messageType)'];
+

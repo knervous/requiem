@@ -1,7 +1,7 @@
-// generate-protocol.js
+const path = require('path');
 const { generateProtocol } = require('@cldcvr/protobufjs-typescript-gen');
 
 generateProtocol({
-  protocolDir: '.',
-  outDir     : './def',
+  protocolDir: __dirname,
+  outDir     : path.join(__dirname, 'def'),
 });

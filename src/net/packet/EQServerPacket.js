@@ -1,31 +1,36 @@
-import { EQMessage, EQOpCodes } from '../message';
+import { EQMessage, getMessageType } from '../message';
 
-function concatArrayBuffer (buffer1, buffer2) {
-  const newBuffer = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
-  newBuffer.set(new Uint8Array(buffer1), 0);
-  newBuffer.set(new Uint8Array(buffer2), buffer1.byteLength);
-  return newBuffer;
-}
-
-/**
-   * @param {number} opcode 
-   * @param {string} messageType
-   * @param {object} payload
-   * @returns {Uint8Array}
-   */
-function createPacket(opcode, messageType, payload) {
-  const message = EQMessage.lookupType(messageType);
-  const messagePayload = message.create(payload);
-  const messageBuffer = message.encode(messagePayload).finish();
-  const opcodeBuffer = new Uint16Array([opcode]).buffer;
-  return concatArrayBuffer(opcodeBuffer, messageBuffer);
-}
+const decode = (bytes, opcode) => {
+  const message = EQMessage.lookupType(getMessageType(opcode));
+  return message.toObject(message.decode(bytes), { defaults: true });
+};
 
 export class EQServerPacket {
   /**
-  * @param  {import('../message/def/eq').LoginReply} login
+  * @return  {import('../message/def/eq').LoginReply}
   */
-  static LoginReply(bytes) {
-    return EQMessage.lookupType('eq.LoginReply').decode(bytes);
+  static LoginReply(bytes, opcode) {
+    return decode(bytes, opcode);
+  }
+
+  /**
+  * @return  {import('../message/def/eq').LoginServerResponse}
+  */
+  static LoginServerResponse(bytes, opcode) {
+    return decode(bytes, opcode);
+  }
+
+  /**
+  * @return  {import('../message/def/eq').PlayEverquestResponse}
+  */
+  static PlayEverquestResponse(bytes, opcode) {
+    return decode(bytes, opcode);
+  }
+
+  /**
+  * @return  {import('../message/def/eq').CharacterSelect}
+  */
+  static CharacterSelect(bytes, opcode) {
+    return decode(bytes, opcode);
   }
 }

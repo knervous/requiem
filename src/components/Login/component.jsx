@@ -68,7 +68,7 @@ export const Login = () => {
       <AcknowledgementsDialog open={ackOpen} setOpen={setAckopen} />
       {loginState.loggedIn ? (
         <FormControl sx={formControlSx}>
-          {loginState.serverList.length ? (
+          {loginState.serverList?.length ? (
             <>
               <Typography variant="h6" noWrap component="div">
                 Server List
@@ -82,17 +82,17 @@ export const Login = () => {
                       borderRadius: 1,
                       border      : '1px solid lightgrey',
                     }}
-                    key={`server-${s.server_id}`}
+                    key={`server-${s.serverId}`}
                   >
-                    <ListItemButton onClick={serverLogin(s.server_id)}>
+                    <ListItemButton onClick={serverLogin(s.serverId)}>
                       <ListItemText
                         sx={{
                           span: {
                             fontSize: 20,
                           },
                         }}
-                        primary={s.server_name}
-                        secondary={`${s.players_online} players online`}
+                        primary={s.longName}
+                        secondary={`${s.players_online ?? 0} players online`}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -166,7 +166,7 @@ export const Login = () => {
           <Button
             disabled={
               !gameController.dev ||
-              loginState.loading ||
+              // loginState.loading ||
               !username.length ||
               !password.length
             }

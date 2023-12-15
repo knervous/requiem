@@ -1,7 +1,6 @@
 import { EQClientPacket } from '../../../net/packet/EQClientPacket';
 import { EQServerPacket } from '../../../net/packet/EQServerPacket';
-import * as EQPacket from '../../../net/packet/EQPacket';
-import { EQOpCodes, getOpCode, getOpCodeDesc } from '../../../net/message';
+import { EQOpCodes, getOpCodeDesc } from '../../../net/message';
 import { EqSocket } from '../../../net/socket/eqsocket';
 import { GAME_STATES, GlobalStore } from '../../../state';
 import { GameControllerChild } from './GameControllerChild';
@@ -19,27 +18,35 @@ class NetLoginController extends GameControllerChild {
   }
 
   async onMessage(opcode, data) {
+    console.log('Got op code', opcode);
     switch (opcode) {
       case EQOpCodes.OP_LoginAccepted: {
-        const playerLoginInfo = EQServerPacket.LoginReply(data);
+        const playerLoginInfo = EQServerPacket.LoginReply(data, opcode);
         GlobalStore.actions.setLoginState({ ...playerLoginInfo, loading: false, triedLogin: true });
         console.log('login info', playerLoginInfo);
-        // if (playerLoginInfo.success) {
-        //   this.#socket.send(new EQPacket.ServerListRequest(4));
-        // }
+        if (playerLoginInfo.success) {
+          this.#socket.send(EQClientPacket.LoginRequest({ sequence: 4 }));
+        }
         break;
       }
-      // case EQOpCodes.OP_ServerListResponse: {
-      //   const lr = new EQPacket.ListServerResponse(data);
-      //   GlobalStore.actions.setLoginState({ serverList: lr.toObject().server_list, loggedIn: true });
-      //   break;
-      // }
-      // case EQOpCodes.OP_PlayEverquestResponse: {
-      //   const eqResponse = new EQPacket.PlayEverquestResponse(data);
-      //   GlobalStore.actions.setSelectedServer(eqResponse.server_id);
-      //   GlobalStore.actions.setGameState(GAME_STATES.CHAR_SELECT);
-      //   break;
-      // }
+      case EQOpCodes.OP_ServerListResponse: {
+        const lsr = EQServerPacket.LoginServerResponse(data, opcode);
+        console.log('got lsr', lsr);
+        GlobalStore.actions.setLoginState({ serverList: lsr.servers, loggedIn: true });
+        break;
+      }
+      case EQOpCodes.OP_PlayEverquestResponse: {
+        const eqResponse = EQServerPacket.PlayEverquestResponse(data, opcode);
+        console.log('eq response', eqResponse);
+
+        if (eqResponse.success) {
+          GlobalStore.actions.setSelectedServer(eqResponse.serverId);
+          GlobalStore.actions.setGameState(GAME_STATES.CHAR_SELECT);
+          const { lsid, key } = GlobalStore.getState().loginState;
+          this.NetWorldController.worldConnect(lsid.toString(), key);
+        }
+        break;
+      }
       default:
         console.warn(
             `Got unhandled login message: ${getOpCodeDesc(data)}`,
@@ -60,13 +67,11 @@ class NetLoginController extends GameControllerChild {
     if (!this.#socket.isConnected) {
       await this.#socket.connect('7775', this.onMessage, this.onClose);
     }
-    this.#socket.send(EQClientPacket.LoginPacket({ username, password }));
+    this.#socket.send(EQClientPacket.LoginMessage({ username, password }));
   }
 
   async serverLogin(serverId) {
-    this.#socket.send(new EQPacket.PlayEverquest([5, false, 0, 0], serverId));
-    const { lsid, key } = GlobalStore.getState().loginState;
-    this.NetWorldController.worldConnect(lsid.toString(), key);
+    this.#socket.send(EQClientPacket.PlayEverquest({ serverId }));
   }
 }
 

@@ -16,6 +16,10 @@ export class EqSocket {
   webtransport = null;
   isConnected = false;
 
+  constructor() {
+    this.close = this.close.bind(this);
+  }
+
   async send (buffer) {
     try {
       if (this.webtransport !== null) {
@@ -34,6 +38,8 @@ export class EqSocket {
    
   }
   close () {
+    console.log('Trying to close', this.webtransport);
+    this.isConnected = false;
     if (this.webtransport) {
       console.log('Closing WebTransport', this.webtransport);
       this.webtransport.close();
@@ -48,29 +54,47 @@ export class EqSocket {
     }
     console.log(`Connecting via WebTransport to: ${port}`);
     if (this.webtransport !== null && !(await this.webtransport.closed)) {
+      console.log('Clearing webtransport');
       this.webtransport.close();
       this.webtransport = null;
     }
-    this.webtransport = new WebTransport(`https://${process.env.REACT_APP_EQ_SERVER}:${port}/eq`, {
-      serverCertificateHashes: [
-        {
-          algorithm: 'sha-256',
-          value    : base64ToArrayBuffer('UJmQrrDia/3IO7e40AFnJ+EWP1ZRVcgkAP/m5kCuiok=')
-        }
-      ]
-    });
-    await this.webtransport.ready;
+    try {
+      const hash = await fetch(`/hash?port=${port}`).then(r => r.text());
+      console.log('Hash', hash);
+      this.webtransport = new WebTransport(`https://${process.env.REACT_APP_EQ_SERVER}:${port}/eq`, {
+        serverCertificateHashes: [
+          {
+            algorithm: 'sha-256',
+            value    : base64ToArrayBuffer(hash) // base64ToArrayBuffer('BTvR8vWp36EsHSnzWl2qBLDPkwytKRlxdHbXFfcn7Es=')
+          }
+        ]
+      });
+      await this.webtransport.ready;
+    } catch (e) {
+      this.close();
+    }
+    
     (async () => {
       const reader = this.webtransport.datagrams.readable.getReader();
     
       while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
+        try {
+          const { value, done } = await reader.read();
+          if (done) {
+            this.close();
+            onClose();
+            break;
+          }
+          const opcode = new Uint16Array(value.buffer.slice(0, 2))[0];
+          onMessage(opcode, value.slice(2, value.length));
+        } catch (e) {
+          console.warn('Error in read loop socket', e);
+          this.close();
           onClose();
           break;
+
         }
-        const opcode = new Uint16Array(value.buffer)[0];
-        onMessage(opcode, value.slice(2, value.length));
+        
       }
     })();
 

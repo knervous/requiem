@@ -1,9 +1,11 @@
 import * as EQPacket from '../../../net/packet/EQPacket';
-import { OP_CODES, getOpCode, getOpCodeDesc } from '../../../net/packet/opcodes';
 import { EqSocket } from '../../../net/socket/eqsocket';
 import { GAME_STATES, GlobalStore } from '../../../state';
 import { GameControllerChild } from './GameControllerChild';
 import { sleep } from '../../../util/util';
+import { EQClientPacket } from '../../../net/packet/EQClientPacket.js';
+import { EQOpCodes, getOpCodeDesc } from '../../../net/message/index.js';
+import { EQServerPacket } from '../../../net/packet/EQServerPacket.js';
 class NetWorldController extends GameControllerChild {
   #socket = new EqSocket();
 
@@ -13,26 +15,26 @@ class NetWorldController extends GameControllerChild {
     this.onClose = this.onClose.bind(this);
   }
 
-  async onMessage(data) {
-    const opc = getOpCode(data);
+  async onMessage(opcode, data) {
     console.log(
-      `Got world message: ${getOpCodeDesc(data)}`,
+      `Got world message: ${getOpCodeDesc(opcode)}`,
       data,
     );
-    switch (opc) {
-      case OP_CODES.OP_SendCharInfo: {
-        const charInfo = new EQPacket.CharacterSelectEntry(data);
+    switch (opcode) {
+      case EQOpCodes.OP_SendCharInfo: {
+        const charInfo = EQServerPacket.CharacterSelect(data, opcode);
+        console.log('Char info', charInfo);
         GlobalStore.actions.setLoginState({ characters: charInfo.characters, loading: false });
         break;
       }
-      case OP_CODES.OP_ZoneServerInfo:
-        const zoneInfo = new EQPacket.ZoneInfo(data).toObject();
-        GlobalStore.actions.setZonePort(zoneInfo.port);
-        await this.NetZoneController.zoneConnect(zoneInfo.port, this.state.character);
+      case EQOpCodes.OP_ZoneServerInfo:
+        // const zoneInfo = new EQPacket.ZoneInfo(data).toObject();
+        // GlobalStore.actions.setZonePort(zoneInfo.port);
+        // await this.NetZoneController.zoneConnect(zoneInfo.port, this.state.character);
         break;
       default:
         console.warn(
-          `Got unhandled world message: ${getOpCodeDesc(data)}`,
+          `Got unhandled world message: ${getOpCodeDesc(opcode)}`,
           data,
         );
         break;
@@ -60,15 +62,9 @@ class NetWorldController extends GameControllerChild {
   }
 
   async worldConnect(lsid, key) {
-    await this.#socket.connect('7777', this.onMessage, this.onClose);
+    await this.#socket.connect('9500', this.onMessage, this.onClose);
     GlobalStore.actions.setLoginState({ loading: true });
-    await sleep(500);
-    this.#socket.send(
-      new EQPacket.LoginInfo(
-        [lsid, key],
-        false,
-      ),
-    );
+    this.#socket.send(EQClientPacket.SendLoginInfo({ name: lsid, password: key, zoning: false }));
   }
 
 }
