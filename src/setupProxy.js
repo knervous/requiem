@@ -2,7 +2,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 /** @param {import('express').Application} app */
 module.exports = function (app) {
-  app.use('/hash', async (req, res) => {
+  app.use('/api/hash', async (req, res) => {
     const port = req.query.port;
     if (!port) {
       res.send('');

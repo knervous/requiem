@@ -165,8 +165,8 @@ export const Login = () => {
           </Typography>
           <Button
             disabled={
-              !gameController.dev ||
-              // loginState.loading ||
+              // !gameController.dev ||
+              loginState.loading ||
               !username.length ||
               !password.length
             }
@@ -179,7 +179,7 @@ export const Login = () => {
               marginTop  : 2,
             }}
           >
-            {gameController.dev ? 'Log In' : 'Not Available'}
+            Log In
           </Button>
 
           <Stack
