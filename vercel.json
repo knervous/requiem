@@ -2,11 +2,12 @@
     "buildCommand": "npm run build",
     "devCommand": "npm start",
     "framework": "create-react-app",
+    "outputDirectory": "build",
+    "install command": "npm install",
     "functions": {
         "api/hash.js": {
           "memory": 3008,
           "maxDuration": 30
         }
       }
-
 }
