@@ -1,5 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
- 
+export const fetchCache = 'force-no-store';
+export const revalidate = 0; // seconds
+export const dynamic = 'force-dynamic';
+
 console.log('In module');
 export default function handler(
   request,
