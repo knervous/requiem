@@ -60,7 +60,6 @@ export class EqSocket {
     }
     try {
       const hash = await fetch(`/hash?port=${port}`).then(r => r.text());
-      console.log('Hash', hash);
       this.webtransport = new WebTransport(`https://${process.env.REACT_APP_EQ_SERVER}:${port}/eq`, {
         serverCertificateHashes: [
           {

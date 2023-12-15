@@ -1,0 +1,12 @@
+{
+    "buildCommand": "npm run build",
+    "devCommand": "npm start",
+    "framework": "create-react-app",
+    "functions": {
+        "api/hash.js": {
+          "memory": 3008,
+          "maxDuration": 30
+        }
+      }
+
+}

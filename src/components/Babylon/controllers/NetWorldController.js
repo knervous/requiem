@@ -2,7 +2,6 @@ import * as EQPacket from '../../../net/packet/EQPacket';
 import { EqSocket } from '../../../net/socket/eqsocket';
 import { GAME_STATES, GlobalStore } from '../../../state';
 import { GameControllerChild } from './GameControllerChild';
-import { sleep } from '../../../util/util';
 import { EQClientPacket } from '../../../net/packet/EQClientPacket.js';
 import { EQOpCodes, getOpCodeDesc } from '../../../net/message/index.js';
 import { EQServerPacket } from '../../../net/packet/EQServerPacket.js';
