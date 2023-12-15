@@ -3,5 +3,11 @@
     "devCommand": "npm start",
     "framework": "create-react-app",
     "outputDirectory": "build",
-    "installCommand": "npm install"
+    "installCommand": "npm install",
+    "functions": {
+        "api/hash.js": {
+          "memory": 1000,
+          "maxDuration": 5
+        }
+      }
 }
