@@ -33,4 +33,11 @@ export class EQServerPacket {
   static CharacterSelect(bytes, opcode) {
     return decode(bytes, opcode);
   }
+
+  /**
+  * @return  {import('../message/def/eq').ZoneServerInfo}
+  */
+  static ZoneServerInfo(bytes, opcode) {
+    return decode(bytes, opcode);
+  }
 }

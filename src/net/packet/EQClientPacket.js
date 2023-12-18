@@ -44,9 +44,16 @@ export class EQClientPacket {
   * */
   static WebInitiateConnection = (payload) => createPacket(EQOpCodes.OP_WebInitiateConnection, payload);
 
-  // ZONE
   /**
   *  @param  {import('../message/def/eq').LoginInfo} payload
   * */
   static SendLoginInfo = (payload) => createPacket(EQOpCodes.OP_SendLoginInfo, payload);
+
+  /**
+  *  @param  {import('../message/def/eq').EnterWorld} payload
+  * */
+  static EnterWorld = (payload) => createPacket(EQOpCodes.OP_EnterWorld, payload);
+
+  // ZONE
+
 }

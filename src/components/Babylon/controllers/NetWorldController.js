@@ -27,6 +27,8 @@ class NetWorldController extends GameControllerChild {
         break;
       }
       case EQOpCodes.OP_ZoneServerInfo:
+        const zoneInfo = EQServerPacket.ZoneServerInfo(data, opcode);
+        console.log('Zone info', zoneInfo);
         // const zoneInfo = new EQPacket.ZoneInfo(data).toObject();
         // GlobalStore.actions.setZonePort(zoneInfo.port);
         // await this.NetZoneController.zoneConnect(zoneInfo.port, this.state.character);
@@ -55,9 +57,10 @@ class NetWorldController extends GameControllerChild {
    */
   async characterLogin(name, zoneInfo) {
     GlobalStore.actions.setZoneInfo(zoneInfo);
-    GlobalStore.actions.setGameState(GAME_STATES.IN_ZONE);
+    // GlobalStore.actions.setGameState(GAME_STATES.IN_ZONE);
     GlobalStore.actions.setCharacter(name);
-    this.#socket.send(new EQPacket.EnterWorld(name, false, false));
+    
+    this.#socket.send(EQClientPacket.EnterWorld({ name, tutorial: 0, returnHome: 0 }));
   }
 
   async worldConnect(lsid, key) {
