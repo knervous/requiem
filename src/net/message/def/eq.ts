@@ -25,6 +25,313 @@ export enum OpCodes {
     OP_WebInitiateConnection = 'OP_WebInitiateConnection',
     OP_SendCharInfo = 'OP_SendCharInfo',
     OP_ZoneServerInfo = 'OP_ZoneServerInfo',
+    OP_ZoneEntry = 'OP_ZoneEntry',
+    OP_SetServerFilter = 'OP_SetServerFilter',
+    OP_SendAATable = 'OP_SendAATable',
+    OP_SendTributes = 'OP_SendTributes',
+    OP_SendGuildTributes = 'OP_SendGuildTributes',
+    OP_SendAAStats = 'OP_SendAAStats',
+    OP_ReqClientSpawn = 'OP_ReqClientSpawn',
+    OP_ReqNewZone = 'OP_ReqNewZone',
+    OP_SendExpZonein = 'OP_SendExpZonein',
+    OP_ClientReady = 'OP_ClientReady',
+    OP_ClientError = 'OP_ClientError',
+    OP_ApproveZone = 'OP_ApproveZone',
+    OP_TGB = 'OP_TGB',
+    OP_AckPacket = 'OP_AckPacket',
+    OP_ClientUpdate = 'OP_ClientUpdate',
+    OP_AutoAttack = 'OP_AutoAttack',
+    OP_AutoAttack2 = 'OP_AutoAttack2',
+    OP_Consent = 'OP_Consent',
+    OP_ConsentDeny = 'OP_ConsentDeny',
+    OP_TargetMouse = 'OP_TargetMouse',
+    OP_TargetCommand = 'OP_TargetCommand',
+    OP_Shielding = 'OP_Shielding',
+    OP_Jump = 'OP_Jump',
+    OP_AdventureInfoRequest = 'OP_AdventureInfoRequest',
+    OP_AdventureRequest = 'OP_AdventureRequest',
+    OP_LDoNButton = 'OP_LDoNButton',
+    OP_LeaveAdventure = 'OP_LeaveAdventure',
+    OP_Consume = 'OP_Consume',
+    OP_AdventureMerchantRequest = 'OP_AdventureMerchantRequest',
+    OP_AdventureMerchantPurchase = 'OP_AdventureMerchantPurchase',
+    OP_ConsiderCorpse = 'OP_ConsiderCorpse',
+    OP_Consider = 'OP_Consider',
+    OP_Begging = 'OP_Begging',
+    OP_TestBuff = 'OP_TestBuff',
+    OP_Surname = 'OP_Surname',
+    OP_YellForHelp = 'OP_YellForHelp',
+    OP_Assist = 'OP_Assist',
+    OP_GMTraining = 'OP_GMTraining',
+    OP_GMEndTraining = 'OP_GMEndTraining',
+    OP_GMTrainSkill = 'OP_GMTrainSkill',
+    OP_RequestDuel = 'OP_RequestDuel',
+    OP_DuelDecline = 'OP_DuelDecline',
+    OP_DuelAccept = 'OP_DuelAccept',
+    OP_SpawnAppearance = 'OP_SpawnAppearance',
+    OP_BazaarInspect = 'OP_BazaarInspect',
+    OP_Death = 'OP_Death',
+    OP_MoveCoin = 'OP_MoveCoin',
+    OP_ItemLinkClick = 'OP_ItemLinkClick',
+    OP_MoveItem = 'OP_MoveItem',
+    OP_Camp = 'OP_Camp',
+    OP_Logout = 'OP_Logout',
+    OP_SenseHeading = 'OP_SenseHeading',
+    OP_FeignDeath = 'OP_FeignDeath',
+    OP_Sneak = 'OP_Sneak',
+    OP_Hide = 'OP_Hide',
+    OP_ChannelMessage = 'OP_ChannelMessage',
+    OP_WearChange = 'OP_WearChange',
+    OP_DeleteSpawn = 'OP_DeleteSpawn',
+    OP_SaveOnZoneReq = 'OP_SaveOnZoneReq',
+    OP_Save = 'OP_Save',
+    OP_WhoAllRequest = 'OP_WhoAllRequest',
+    OP_GMZoneRequest = 'OP_GMZoneRequest',
+    OP_GMZoneRequest2 = 'OP_GMZoneRequest2',
+    OP_EndLootRequest = 'OP_EndLootRequest',
+    OP_LootRequest = 'OP_LootRequest',
+    OP_Dye = 'OP_Dye',
+    OP_ConfirmDelete = 'OP_ConfirmDelete',
+    OP_LootItem = 'OP_LootItem',
+    OP_GuildDelete = 'OP_GuildDelete',
+    OP_GuildPublicNote = 'OP_GuildPublicNote',
+    OP_GetGuildsList = 'OP_GetGuildsList',
+    OP_SetGuildMOTD = 'OP_SetGuildMOTD',
+    OP_SetRunMode = 'OP_SetRunMode',
+    OP_GuildPeace = 'OP_GuildPeace',
+    OP_GuildWar = 'OP_GuildWar',
+    OP_GuildLeader = 'OP_GuildLeader',
+    OP_GuildDemote = 'OP_GuildDemote',
+    OP_GuildInvite = 'OP_GuildInvite',
+    OP_GuildRemove = 'OP_GuildRemove',
+    OP_GuildInviteAccept = 'OP_GuildInviteAccept',
+    OP_ManaChange = 'OP_ManaChange',
+    OP_MemorizeSpell = 'OP_MemorizeSpell',
+    OP_SwapSpell = 'OP_SwapSpell',
+    OP_CastSpell = 'OP_CastSpell',
+    OP_DeleteItem = 'OP_DeleteItem',
+    OP_CombatAbility = 'OP_CombatAbility',
+    OP_Taunt = 'OP_Taunt',
+    OP_InstillDoubt = 'OP_InstillDoubt',
+    OP_RezzAnswer = 'OP_RezzAnswer',
+    OP_GMSummon = 'OP_GMSummon',
+    OP_TradeBusy = 'OP_TradeBusy',
+    OP_TradeRequest = 'OP_TradeRequest',
+    OP_TradeRequestAck = 'OP_TradeRequestAck',
+    OP_CancelTrade = 'OP_CancelTrade',
+    OP_TradeAcceptClick = 'OP_TradeAcceptClick',
+    OP_BoardBoat = 'OP_BoardBoat',
+    OP_LeaveBoat = 'OP_LeaveBoat',
+    OP_RandomReq = 'OP_RandomReq',
+    OP_Buff = 'OP_Buff',
+    OP_GMHideMe = 'OP_GMHideMe',
+    OP_GMNameChange = 'OP_GMNameChange',
+    OP_GMKill = 'OP_GMKill',
+    OP_GMLastName = 'OP_GMLastName',
+    OP_GMToggle = 'OP_GMToggle',
+    OP_LFGCommand = 'OP_LFGCommand',
+    OP_GMGoto = 'OP_GMGoto',
+    OP_TraderShop = 'OP_TraderShop',
+    OP_ShopRequest = 'OP_ShopRequest',
+    OP_Bazaar = 'OP_Bazaar',
+    OP_ShopPlayerBuy = 'OP_ShopPlayerBuy',
+    OP_ShopPlayerSell = 'OP_ShopPlayerSell',
+    OP_ShopEnd = 'OP_ShopEnd',
+    OP_CloseContainer = 'OP_CloseContainer',
+    OP_ClickObjectAction = 'OP_ClickObjectAction',
+    OP_ClickObject = 'OP_ClickObject',
+    OP_RecipesFavorite = 'OP_RecipesFavorite',
+    OP_RecipesSearch = 'OP_RecipesSearch',
+    OP_RecipeDetails = 'OP_RecipeDetails',
+    OP_RecipeAutoCombine = 'OP_RecipeAutoCombine',
+    OP_TradeSkillCombine = 'OP_TradeSkillCombine',
+    OP_ItemName = 'OP_ItemName',
+    OP_AugmentItem = 'OP_AugmentItem',
+    OP_ClickDoor = 'OP_ClickDoor',
+    OP_FaceChange = 'OP_FaceChange',
+    OP_GroupInvite = 'OP_GroupInvite',
+    OP_GroupInvite2 = 'OP_GroupInvite2',
+    OP_GroupFollow = 'OP_GroupFollow',
+    OP_GroupFollow2 = 'OP_GroupFollow2',
+    OP_GroupAcknowledge = 'OP_GroupAcknowledge',
+    OP_GroupCancelInvite = 'OP_GroupCancelInvite',
+    OP_GroupDisband = 'OP_GroupDisband',
+    OP_GroupDelete = 'OP_GroupDelete',
+    OP_GMEmoteZone = 'OP_GMEmoteZone',
+    OP_InspectRequest = 'OP_InspectRequest',
+    OP_InspectAnswer = 'OP_InspectAnswer',
+    OP_DeleteSpell = 'OP_DeleteSpell',
+    OP_PetitionBug = 'OP_PetitionBug',
+    OP_Bug = 'OP_Bug',
+    OP_Petition = 'OP_Petition',
+    OP_PetitionCheckIn = 'OP_PetitionCheckIn',
+    OP_PetitionResolve = 'OP_PetitionResolve',
+    OP_PetitionDelete = 'OP_PetitionDelete',
+    OP_PetitionUnCheckout = 'OP_PetitionUnCheckout',
+    OP_PetitionQue = 'OP_PetitionQue',
+    OP_PDeletePetition = 'OP_PDeletePetition',
+    OP_PetitionCheckout = 'OP_PetitionCheckout',
+    OP_PetitionRefresh = 'OP_PetitionRefresh',
+    OP_PetCommands = 'OP_PetCommands',
+    OP_ReadBook = 'OP_ReadBook',
+    OP_Emote = 'OP_Emote',
+    OP_GMDelCorpse = 'OP_GMDelCorpse',
+    OP_GMKick = 'OP_GMKick',
+    OP_GMServers = 'OP_GMServers',
+    OP_Illusion = 'OP_Illusion',
+    OP_GMBecomeNPC = 'OP_GMBecomeNPC',
+    OP_Fishing = 'OP_Fishing',
+    OP_Forage = 'OP_Forage',
+    OP_Mend = 'OP_Mend',
+    OP_EnvDamage = 'OP_EnvDamage',
+    OP_Damage = 'OP_Damage',
+    OP_AAAction = 'OP_AAAction',
+    OP_TraderBuy = 'OP_TraderBuy',
+    OP_Trader = 'OP_Trader',
+    OP_GMFind = 'OP_GMFind',
+    OP_PickPocket = 'OP_PickPocket',
+    OP_Bind_Wound = 'OP_Bind_Wound',
+    OP_TrackTarget = 'OP_TrackTarget',
+    OP_Track = 'OP_Track',
+    OP_TrackUnknown = 'OP_TrackUnknown',
+    OP_ReloadUI = 'OP_ReloadUI',
+    OP_Split = 'OP_Split',
+    OP_SenseTraps = 'OP_SenseTraps',
+    OP_DisarmTraps = 'OP_DisarmTraps',
+    OP_OpenTributeMaster = 'OP_OpenTributeMaster',
+    OP_OpenGuildTributeMaster = 'OP_OpenGuildTributeMaster',
+    OP_TributeItem = 'OP_TributeItem',
+    OP_TributeMoney = 'OP_TributeMoney',
+    OP_SelectTribute = 'OP_SelectTribute',
+    OP_TributeUpdate = 'OP_TributeUpdate',
+    OP_TributeToggle = 'OP_TributeToggle',
+    OP_TributeNPC = 'OP_TributeNPC',
+    OP_CrashDump = 'OP_CrashDump',
+    OP_ControlBoat = 'OP_ControlBoat',
+    OP_DumpName = 'OP_DumpName',
+    OP_SafeFallSuccess = 'OP_SafeFallSuccess',
+    OP_Heartbeat = 'OP_Heartbeat',
+    OP_SafePoint = 'OP_SafePoint',
+    OP_FindPersonRequest = 'OP_FindPersonRequest',
+    OP_LeadershipExpToggle = 'OP_LeadershipExpToggle',
+    OP_PurchaseLeadershipAA = 'OP_PurchaseLeadershipAA',
+    OP_BankerChange = 'OP_BankerChange',
+    OP_SetTitle = 'OP_SetTitle',
+    OP_RequestTitles = 'OP_RequestTitles',
+    OP_ItemVerifyRequest = 'OP_ItemVerifyRequest',
+    OP_ClearObject = 'OP_ClearObject',
+    OP_FinishTrade = 'OP_FinishTrade',
+    OP_GMEndTrainingResponse = 'OP_GMEndTrainingResponse',
+    OP_LootComplete = 'OP_LootComplete',
+    OP_WorldObjectsSent = 'OP_WorldObjectsSent',
+    OP_FinishWindow = 'OP_FinishWindow',
+    OP_FinishWindow2 = 'OP_FinishWindow2',
+    OP_ItemPacket = 'OP_ItemPacket',
+    OP_ColoredText = 'OP_ColoredText',
+    OP_ItemRecastDelay = 'OP_ItemRecastDelay',
+    OP_FormattedMessage = 'OP_FormattedMessage',
+    OP_GuildMemberList = 'OP_GuildMemberList',
+    OP_InterruptCast = 'OP_InterruptCast',
+    OP_ItemLinkResponse = 'OP_ItemLinkResponse',
+    OP_ZoneSpawns = 'OP_ZoneSpawns',
+    OP_CompletedTasks = 'OP_CompletedTasks',
+    OP_CharInventory = 'OP_CharInventory',
+    OP_CustomTitles = 'OP_CustomTitles',
+    OP_SpawnDoor = 'OP_SpawnDoor',
+    OP_SendZonepoints = 'OP_SendZonepoints',
+    OP_TributeInfo = 'OP_TributeInfo',
+    OP_GuildTributeInfo = 'OP_GuildTributeInfo',
+    OP_SendTitleList = 'OP_SendTitleList',
+    OP_SendMaxCharacters = 'OP_SendMaxCharacters',
+    OP_AAExpUpdate = 'OP_AAExpUpdate',
+    OP_Action = 'OP_Action',
+    OP_AdventureData = 'OP_AdventureData',
+    OP_AdventureFinish = 'OP_AdventureFinish',
+    OP_AdventurePointsUpdate = 'OP_AdventurePointsUpdate',
+    OP_Animation = 'OP_Animation',
+    OP_AnnoyingZoneUnknown = 'OP_AnnoyingZoneUnknown',
+    OP_BecomeTrader = 'OP_BecomeTrader',
+    OP_BeginCast = 'OP_BeginCast',
+    OP_Charm = 'OP_Charm',
+    OP_CameraEffect = 'OP_CameraEffect',
+    OP_ConsentResponse = 'OP_ConsentResponse',
+    OP_EnduranceUpdate = 'OP_EnduranceUpdate',
+    OP_ExpUpdate = 'OP_ExpUpdate',
+    OP_GroundSpawn = 'OP_GroundSpawn',
+    OP_GroupUpdate = 'OP_GroupUpdate',
+    OP_GuildMOTD = 'OP_GuildMOTD',
+    OP_GuildManageAdd = 'OP_GuildManageAdd',
+    OP_GuildManageRemove = 'OP_GuildManageRemove',
+    OP_GuildManageStatus = 'OP_GuildManageStatus',
+    OP_GuildMemberUpdate = 'OP_GuildMemberUpdate',
+    OP_HPUpdate = 'OP_HPUpdate',
+    OP_IncreaseStats = 'OP_IncreaseStats',
+    OP_ItemVerifyReply = 'OP_ItemVerifyReply',
+    OP_LFGAppearance = 'OP_LFGAppearance',
+    OP_LeadershipExpUpdate = 'OP_LeadershipExpUpdate',
+    OP_LevelAppearance = 'OP_LevelAppearance',
+    OP_LevelUpdate = 'OP_LevelUpdate',
+    OP_ManaUpdate = 'OP_ManaUpdate',
+    OP_MobEnduranceUpdate = 'OP_MobEnduranceUpdate',
+    OP_MobHealth = 'OP_MobHealth',
+    OP_MobManaUpdate = 'OP_MobManaUpdate',
+    OP_MobRename = 'OP_MobRename',
+    OP_MoneyOnCorpse = 'OP_MoneyOnCorpse',
+    OP_MoneyUpdate = 'OP_MoneyUpdate',
+    OP_MoveDoor = 'OP_MoveDoor',
+    OP_NewSpawn = 'OP_NewSpawn',
+    OP_NewZone = 'OP_NewZone',
+    OP_PetitionUpdate = 'OP_PetitionUpdate',
+    OP_PlayerProfile = 'OP_PlayerProfile',
+    OP_RaidUpdate = 'OP_RaidUpdate',
+    OP_RandomReply = 'OP_RandomReply',
+    OP_RecipeReply = 'OP_RecipeReply',
+    OP_RequestClientZoneChange = 'OP_RequestClientZoneChange',
+    OP_RespondAA = 'OP_RespondAA',
+    OP_RezzRequest = 'OP_RezzRequest',
+    OP_SetTitleReply = 'OP_SetTitleReply',
+    OP_ShopDelItem = 'OP_ShopDelItem',
+    OP_SimpleMessage = 'OP_SimpleMessage',
+    OP_SkillUpdate = 'OP_SkillUpdate',
+    OP_SomeItemPacketMaybe = 'OP_SomeItemPacketMaybe',
+    OP_SpellEffect = 'OP_SpellEffect',
+    OP_Stamina = 'OP_Stamina',
+    OP_Stun = 'OP_Stun',
+    OP_TargetReject = 'OP_TargetReject',
+    OP_TimeOfDay = 'OP_TimeOfDay',
+    OP_TradeCoins = 'OP_TradeCoins',
+    OP_TradeMoneyUpdate = 'OP_TradeMoneyUpdate',
+    OP_TraderDelItem = 'OP_TraderDelItem',
+    OP_TraderItemUpdate = 'OP_TraderItemUpdate',
+    OP_TributeTimer = 'OP_TributeTimer',
+    OP_UpdateLeadershipAA = 'OP_UpdateLeadershipAA',
+    OP_Weather = 'OP_Weather',
+    OP_ZoneChange = 'OP_ZoneChange',
+    OP_ZoneInUnknown = 'OP_ZoneInUnknown',
+    OP_AcceptNewTask = 'OP_AcceptNewTask',
+    OP_AdventureInfo = 'OP_AdventureInfo',
+    OP_ApplyPoison = 'OP_ApplyPoison',
+    OP_ApproveWorld = 'OP_ApproveWorld',
+    OP_Bandolier = 'OP_Bandolier',
+    OP_BazaarSearch = 'OP_BazaarSearch',
+    OP_BecomeCorpse = 'OP_BecomeCorpse',
+    OP_CancelTask = 'OP_CancelTask',
+    OP_Command = 'OP_Command',
+    OP_DynamicWall = 'OP_DynamicWall',
+    OP_GuildsList = 'OP_GuildsList',
+    OP_LFGuild = 'OP_LFGuild',
+    OP_LoadSpellSet = 'OP_LoadSpellSet',
+    OP_LogServer = 'OP_LogServer',
+    OP_MOTD = 'OP_MOTD',
+    OP_OnLevelMessage = 'OP_OnLevelMessage',
+    OP_PlayMP3 = 'OP_PlayMP3',
+    OP_PotionBelt = 'OP_PotionBelt',
+    OP_PVPStats = 'OP_PVPStats',
+    OP_Report = 'OP_Report',
+    OP_SpecialMesg = 'OP_SpecialMesg',
+    OP_TaskActivity = 'OP_TaskActivity',
+    OP_TaskDescription = 'OP_TaskDescription',
+    OP_ZoneUnavail = 'OP_ZoneUnavail',
     Nested_WorldServer = 'Nested_WorldServer',
     Nested_CharacterSelectEntry = 'Nested_CharacterSelectEntry',
     Nested_CharSelectEquip = 'Nested_CharSelectEquip',
@@ -32,26 +339,13 @@ export enum OpCodes {
     OP_ExploreUnknown = 'OP_ExploreUnknown',
     OP_0x0193 = 'OP_0x0193',
     OP_0x0347 = 'OP_0x0347',
-    OP_AAAction = 'OP_AAAction',
-    OP_AAExpUpdate = 'OP_AAExpUpdate',
-    OP_AcceptNewTask = 'OP_AcceptNewTask',
-    OP_AckPacket = 'OP_AckPacket',
-    OP_Action = 'OP_Action',
     OP_Action2 = 'OP_Action2',
     OP_AddNimbusEffect = 'OP_AddNimbusEffect',
-    OP_AdventureData = 'OP_AdventureData',
     OP_AdventureDetails = 'OP_AdventureDetails',
-    OP_AdventureFinish = 'OP_AdventureFinish',
-    OP_AdventureInfo = 'OP_AdventureInfo',
-    OP_AdventureInfoRequest = 'OP_AdventureInfoRequest',
     OP_AdventureLeaderboardReply = 'OP_AdventureLeaderboardReply',
     OP_AdventureLeaderboardRequest = 'OP_AdventureLeaderboardRequest',
-    OP_AdventureMerchantPurchase = 'OP_AdventureMerchantPurchase',
-    OP_AdventureMerchantRequest = 'OP_AdventureMerchantRequest',
     OP_AdventureMerchantResponse = 'OP_AdventureMerchantResponse',
     OP_AdventureMerchantSell = 'OP_AdventureMerchantSell',
-    OP_AdventurePointsUpdate = 'OP_AdventurePointsUpdate',
-    OP_AdventureRequest = 'OP_AdventureRequest',
     OP_AdventureStatsReply = 'OP_AdventureStatsReply',
     OP_AdventureStatsRequest = 'OP_AdventureStatsRequest',
     OP_AdventureUpdate = 'OP_AdventureUpdate',
@@ -65,106 +359,43 @@ export enum OpCodes {
     OP_AltCurrencyReclaim = 'OP_AltCurrencyReclaim',
     OP_AltCurrencySell = 'OP_AltCurrencySell',
     OP_AltCurrencySellSelection = 'OP_AltCurrencySellSelection',
-    OP_Animation = 'OP_Animation',
-    OP_AnnoyingZoneUnknown = 'OP_AnnoyingZoneUnknown',
-    OP_ApplyPoison = 'OP_ApplyPoison',
     OP_ApproveName = 'OP_ApproveName',
-    OP_ApproveWorld = 'OP_ApproveWorld',
-    OP_ApproveZone = 'OP_ApproveZone',
-    OP_Assist = 'OP_Assist',
     OP_AssistGroup = 'OP_AssistGroup',
     OP_AugmentInfo = 'OP_AugmentInfo',
-    OP_AugmentItem = 'OP_AugmentItem',
-    OP_AutoAttack = 'OP_AutoAttack',
-    OP_AutoAttack2 = 'OP_AutoAttack2',
     OP_AutoFire = 'OP_AutoFire',
-    OP_Bandolier = 'OP_Bandolier',
-    OP_BankerChange = 'OP_BankerChange',
     OP_Barter = 'OP_Barter',
-    OP_Bazaar = 'OP_Bazaar',
-    OP_BazaarInspect = 'OP_BazaarInspect',
-    OP_BazaarSearch = 'OP_BazaarSearch',
-    OP_BecomeCorpse = 'OP_BecomeCorpse',
-    OP_BecomeTrader = 'OP_BecomeTrader',
-    OP_Begging = 'OP_Begging',
-    OP_BeginCast = 'OP_BeginCast',
-    OP_Bind_Wound = 'OP_Bind_Wound',
     OP_BlockedBuffs = 'OP_BlockedBuffs',
-    OP_BoardBoat = 'OP_BoardBoat',
     OP_BookButton = 'OP_BookButton',
-    OP_Buff = 'OP_Buff',
     OP_BuffCreate = 'OP_BuffCreate',
     OP_BuffRemoveRequest = 'OP_BuffRemoveRequest',
-    OP_Bug = 'OP_Bug',
-    OP_CameraEffect = 'OP_CameraEffect',
-    OP_Camp = 'OP_Camp',
     OP_CancelSneakHide = 'OP_CancelSneakHide',
-    OP_CancelTask = 'OP_CancelTask',
-    OP_CancelTrade = 'OP_CancelTrade',
     OP_CashReward = 'OP_CashReward',
-    OP_CastSpell = 'OP_CastSpell',
     OP_ChangeSize = 'OP_ChangeSize',
-    OP_ChannelMessage = 'OP_ChannelMessage',
     OP_CharacterCreate = 'OP_CharacterCreate',
     OP_CharacterCreateRequest = 'OP_CharacterCreateRequest',
-    OP_CharInventory = 'OP_CharInventory',
-    OP_Charm = 'OP_Charm',
     OP_ChatMessage = 'OP_ChatMessage',
     OP_ClearAA = 'OP_ClearAA',
     OP_ClearBlockedBuffs = 'OP_ClearBlockedBuffs',
     OP_ClearLeadershipAbilities = 'OP_ClearLeadershipAbilities',
     OP_ClearNPCMarks = 'OP_ClearNPCMarks',
-    OP_ClearObject = 'OP_ClearObject',
     OP_ClearSurname = 'OP_ClearSurname',
-    OP_ClickDoor = 'OP_ClickDoor',
-    OP_ClickObject = 'OP_ClickObject',
-    OP_ClickObjectAction = 'OP_ClickObjectAction',
-    OP_ClientError = 'OP_ClientError',
-    OP_ClientReady = 'OP_ClientReady',
     OP_ClientTimeStamp = 'OP_ClientTimeStamp',
-    OP_ClientUpdate = 'OP_ClientUpdate',
-    OP_CloseContainer = 'OP_CloseContainer',
     OP_CloseTributeMaster = 'OP_CloseTributeMaster',
-    OP_ColoredText = 'OP_ColoredText',
-    OP_CombatAbility = 'OP_CombatAbility',
-    OP_Command = 'OP_Command',
-    OP_CompletedTasks = 'OP_CompletedTasks',
-    OP_ConfirmDelete = 'OP_ConfirmDelete',
-    OP_Consent = 'OP_Consent',
-    OP_ConsentDeny = 'OP_ConsentDeny',
-    OP_ConsentResponse = 'OP_ConsentResponse',
-    OP_Consider = 'OP_Consider',
-    OP_ConsiderCorpse = 'OP_ConsiderCorpse',
-    OP_Consume = 'OP_Consume',
-    OP_ControlBoat = 'OP_ControlBoat',
     OP_CorpseDrag = 'OP_CorpseDrag',
     OP_CorpseDrop = 'OP_CorpseDrop',
-    OP_CrashDump = 'OP_CrashDump',
     OP_CrystalCountUpdate = 'OP_CrystalCountUpdate',
     OP_CrystalCreate = 'OP_CrystalCreate',
     OP_CrystalReclaim = 'OP_CrystalReclaim',
-    OP_CustomTitles = 'OP_CustomTitles',
-    OP_Damage = 'OP_Damage',
-    OP_Death = 'OP_Death',
     OP_DelegateAbility = 'OP_DelegateAbility',
     OP_DeleteCharacter = 'OP_DeleteCharacter',
     OP_DeleteCharge = 'OP_DeleteCharge',
-    OP_DeleteItem = 'OP_DeleteItem',
     OP_DeletePetition = 'OP_DeletePetition',
-    OP_DeleteSpawn = 'OP_DeleteSpawn',
-    OP_DeleteSpell = 'OP_DeleteSpell',
     OP_DenyResponse = 'OP_DenyResponse',
     OP_Disarm = 'OP_Disarm',
-    OP_DisarmTraps = 'OP_DisarmTraps',
     OP_DisciplineTimer = 'OP_DisciplineTimer',
     OP_DisciplineUpdate = 'OP_DisciplineUpdate',
     OP_DiscordMerchantInventory = 'OP_DiscordMerchantInventory',
     OP_DoGroupLeadershipAbility = 'OP_DoGroupLeadershipAbility',
-    OP_DuelDecline = 'OP_DuelDecline',
-    OP_DuelAccept = 'OP_DuelAccept',
-    OP_DumpName = 'OP_DumpName',
-    OP_Dye = 'OP_Dye',
-    OP_DynamicWall = 'OP_DynamicWall',
     OP_DzAddPlayer = 'OP_DzAddPlayer',
     OP_DzChooseZone = 'OP_DzChooseZone',
     OP_DzChooseZoneReply = 'OP_DzChooseZoneReply',
@@ -184,150 +415,60 @@ export enum OpCodes {
     OP_DzRemovePlayer = 'OP_DzRemovePlayer',
     OP_DzSetLeaderName = 'OP_DzSetLeaderName',
     OP_DzSwapPlayer = 'OP_DzSwapPlayer',
-    OP_Emote = 'OP_Emote',
-    OP_EndLootRequest = 'OP_EndLootRequest',
-    OP_EnduranceUpdate = 'OP_EnduranceUpdate',
     OP_EnterChat = 'OP_EnterChat',
-    OP_EnvDamage = 'OP_EnvDamage',
     OP_ExpansionInfo = 'OP_ExpansionInfo',
-    OP_ExpUpdate = 'OP_ExpUpdate',
-    OP_FaceChange = 'OP_FaceChange',
     OP_Feedback = 'OP_Feedback',
-    OP_FeignDeath = 'OP_FeignDeath',
     OP_FellowshipUpdate = 'OP_FellowshipUpdate',
     OP_FindPersonReply = 'OP_FindPersonReply',
-    OP_FindPersonRequest = 'OP_FindPersonRequest',
-    OP_FinishTrade = 'OP_FinishTrade',
-    OP_FinishWindow = 'OP_FinishWindow',
-    OP_FinishWindow2 = 'OP_FinishWindow2',
-    OP_Fishing = 'OP_Fishing',
     OP_Fling = 'OP_Fling',
     OP_FloatListThing = 'OP_FloatListThing',
-    OP_Forage = 'OP_Forage',
     OP_ForceFindPerson = 'OP_ForceFindPerson',
-    OP_FormattedMessage = 'OP_FormattedMessage',
     OP_FriendsWho = 'OP_FriendsWho',
     OP_GetGuildMOTD = 'OP_GetGuildMOTD',
     OP_GetGuildMOTDReply = 'OP_GetGuildMOTDReply',
-    OP_GetGuildsList = 'OP_GetGuildsList',
     OP_GiveMoney = 'OP_GiveMoney',
     OP_GMApproval = 'OP_GMApproval',
-    OP_GMBecomeNPC = 'OP_GMBecomeNPC',
-    OP_GMDelCorpse = 'OP_GMDelCorpse',
-    OP_GMEmoteZone = 'OP_GMEmoteZone',
-    OP_GMEndTraining = 'OP_GMEndTraining',
-    OP_GMEndTrainingResponse = 'OP_GMEndTrainingResponse',
-    OP_GMFind = 'OP_GMFind',
-    OP_GMGoto = 'OP_GMGoto',
-    OP_GMHideMe = 'OP_GMHideMe',
-    OP_GMKick = 'OP_GMKick',
-    OP_GMKill = 'OP_GMKill',
-    OP_GMLastName = 'OP_GMLastName',
-    OP_GMNameChange = 'OP_GMNameChange',
-    OP_GMSearchCorpse = 'OP_GMSearchCorpse',
-    OP_GMServers = 'OP_GMServers',
-    OP_GMSummon = 'OP_GMSummon',
-    OP_GMToggle = 'OP_GMToggle',
-    OP_GMTraining = 'OP_GMTraining',
-    OP_GMTrainSkill = 'OP_GMTrainSkill',
     OP_GMTrainSkillConfirm = 'OP_GMTrainSkillConfirm',
-    OP_GMZoneRequest = 'OP_GMZoneRequest',
-    OP_GMZoneRequest2 = 'OP_GMZoneRequest2',
-    OP_GroundSpawn = 'OP_GroundSpawn',
-    OP_GroupAcknowledge = 'OP_GroupAcknowledge',
-    OP_GroupCancelInvite = 'OP_GroupCancelInvite',
-    OP_GroupDelete = 'OP_GroupDelete',
-    OP_GroupDisband = 'OP_GroupDisband',
     OP_GroupDisbandOther = 'OP_GroupDisbandOther',
     OP_GroupDisbandYou = 'OP_GroupDisbandYou',
-    OP_GroupFollow = 'OP_GroupFollow',
-    OP_GroupFollow2 = 'OP_GroupFollow2',
-    OP_GroupInvite = 'OP_GroupInvite',
-    OP_GroupInvite2 = 'OP_GroupInvite2',
     OP_GroupLeaderChange = 'OP_GroupLeaderChange',
     OP_GroupLeadershipAAUpdate = 'OP_GroupLeadershipAAUpdate',
     OP_GroupMakeLeader = 'OP_GroupMakeLeader',
     OP_GroupMentor = 'OP_GroupMentor',
     OP_GroupRoles = 'OP_GroupRoles',
-    OP_GroupUpdate = 'OP_GroupUpdate',
     OP_GroupUpdateB = 'OP_GroupUpdateB',
     OP_GroupUpdateLeaderAA = 'OP_GroupUpdateLeaderAA',
     OP_GuildBank = 'OP_GuildBank',
     OP_GuildBankItemList = 'OP_GuildBankItemList',
     OP_GuildCreate = 'OP_GuildCreate',
-    OP_GuildDelete = 'OP_GuildDelete',
-    OP_GuildDemote = 'OP_GuildDemote',
-    OP_GuildInvite = 'OP_GuildInvite',
-    OP_GuildInviteAccept = 'OP_GuildInviteAccept',
-    OP_GuildLeader = 'OP_GuildLeader',
-    OP_GuildManageAdd = 'OP_GuildManageAdd',
     OP_GuildManageBanker = 'OP_GuildManageBanker',
-    OP_GuildManageRemove = 'OP_GuildManageRemove',
-    OP_GuildManageStatus = 'OP_GuildManageStatus',
     OP_GuildMemberLevelUpdate = 'OP_GuildMemberLevelUpdate',
-    OP_GuildMemberList = 'OP_GuildMemberList',
-    OP_GuildMemberUpdate = 'OP_GuildMemberUpdate',
-    OP_GuildMOTD = 'OP_GuildMOTD',
-    OP_GuildPeace = 'OP_GuildPeace',
     OP_GuildPromote = 'OP_GuildPromote',
-    OP_GuildPublicNote = 'OP_GuildPublicNote',
-    OP_GuildRemove = 'OP_GuildRemove',
-    OP_GuildsList = 'OP_GuildsList',
     OP_GuildStatus = 'OP_GuildStatus',
-    OP_GuildTributeInfo = 'OP_GuildTributeInfo',
     OP_GuildUpdateURLAndChannel = 'OP_GuildUpdateURLAndChannel',
-    OP_GuildWar = 'OP_GuildWar',
-    OP_Heartbeat = 'OP_Heartbeat',
-    OP_Hide = 'OP_Hide',
     OP_HideCorpse = 'OP_HideCorpse',
-    OP_HPUpdate = 'OP_HPUpdate',
-    OP_Illusion = 'OP_Illusion',
-    OP_IncreaseStats = 'OP_IncreaseStats',
     OP_InitialHPUpdate = 'OP_InitialHPUpdate',
     OP_InitialMobHealth = 'OP_InitialMobHealth',
-    OP_InspectAnswer = 'OP_InspectAnswer',
     OP_InspectBuffs = 'OP_InspectBuffs',
     OP_InspectMessageUpdate = 'OP_InspectMessageUpdate',
-    OP_InspectRequest = 'OP_InspectRequest',
-    OP_InstillDoubt = 'OP_InstillDoubt',
-    OP_InterruptCast = 'OP_InterruptCast',
-    OP_ItemLinkClick = 'OP_ItemLinkClick',
-    OP_ItemLinkResponse = 'OP_ItemLinkResponse',
     OP_ItemLinkText = 'OP_ItemLinkText',
-    OP_ItemName = 'OP_ItemName',
-    OP_ItemPacket = 'OP_ItemPacket',
     OP_ItemPreview = 'OP_ItemPreview',
-    OP_ItemRecastDelay = 'OP_ItemRecastDelay',
-    OP_ItemVerifyReply = 'OP_ItemVerifyReply',
-    OP_ItemVerifyRequest = 'OP_ItemVerifyRequest',
     OP_ItemViewUnknown = 'OP_ItemViewUnknown',
-    OP_Jump = 'OP_Jump',
     OP_KeyRing = 'OP_KeyRing',
     OP_KickPlayers = 'OP_KickPlayers',
     OP_KnowledgeBase = 'OP_KnowledgeBase',
-    OP_LDoNButton = 'OP_LDoNButton',
     OP_LDoNDisarmTraps = 'OP_LDoNDisarmTraps',
     OP_LDoNInspect = 'OP_LDoNInspect',
     OP_LDoNOpen = 'OP_LDoNOpen',
     OP_LDoNPickLock = 'OP_LDoNPickLock',
     OP_LDoNSenseTraps = 'OP_LDoNSenseTraps',
-    OP_LeadershipExpToggle = 'OP_LeadershipExpToggle',
-    OP_LeadershipExpUpdate = 'OP_LeadershipExpUpdate',
-    OP_LeaveAdventure = 'OP_LeaveAdventure',
-    OP_LeaveBoat = 'OP_LeaveBoat',
-    OP_LevelAppearance = 'OP_LevelAppearance',
-    OP_LevelUpdate = 'OP_LevelUpdate',
-    OP_LFGAppearance = 'OP_LFGAppearance',
-    OP_LFGCommand = 'OP_LFGCommand',
     OP_LFGGetMatchesRequest = 'OP_LFGGetMatchesRequest',
     OP_LFGGetMatchesResponse = 'OP_LFGGetMatchesResponse',
     OP_LFGResponse = 'OP_LFGResponse',
-    OP_LFGuild = 'OP_LFGuild',
     OP_LFPCommand = 'OP_LFPCommand',
     OP_LFPGetMatchesRequest = 'OP_LFPGetMatchesRequest',
     OP_LFPGetMatchesResponse = 'OP_LFPGetMatchesResponse',
     OP_LinkedReuse = 'OP_LinkedReuse',
-    OP_LoadSpellSet = 'OP_LoadSpellSet',
     OP_LocInfo = 'OP_LocInfo',
     OP_LockoutTimerInfo = 'OP_LockoutTimerInfo',
     OP_Login = 'OP_Login',
@@ -335,19 +476,10 @@ export enum OpCodes {
     OP_LoginExpansionPacketData = 'OP_LoginExpansionPacketData',
     OP_LoginUnknown1 = 'OP_LoginUnknown1',
     OP_LoginUnknown2 = 'OP_LoginUnknown2',
-    OP_Logout = 'OP_Logout',
     OP_LogoutReply = 'OP_LogoutReply',
-    OP_LogServer = 'OP_LogServer',
-    OP_LootComplete = 'OP_LootComplete',
-    OP_LootItem = 'OP_LootItem',
-    OP_LootRequest = 'OP_LootRequest',
-    OP_ManaChange = 'OP_ManaChange',
-    OP_ManaUpdate = 'OP_ManaUpdate',
     OP_MarkNPC = 'OP_MarkNPC',
     OP_MarkRaidNPC = 'OP_MarkRaidNPC',
     OP_Marquee = 'OP_Marquee',
-    OP_MemorizeSpell = 'OP_MemorizeSpell',
-    OP_Mend = 'OP_Mend',
     OP_MendHPUpdate = 'OP_MendHPUpdate',
     OP_MercenaryAssign = 'OP_MercenaryAssign',
     OP_MercenaryCommand = 'OP_MercenaryCommand',
@@ -363,134 +495,62 @@ export enum OpCodes {
     OP_MercenaryTimerRequest = 'OP_MercenaryTimerRequest',
     OP_MercenaryUnknown1 = 'OP_MercenaryUnknown1',
     OP_MercenaryUnsuspendResponse = 'OP_MercenaryUnsuspendResponse',
-    OP_MobEnduranceUpdate = 'OP_MobEnduranceUpdate',
-    OP_MobHealth = 'OP_MobHealth',
-    OP_MobManaUpdate = 'OP_MobManaUpdate',
-    OP_MobRename = 'OP_MobRename',
     OP_MobUpdate = 'OP_MobUpdate',
-    OP_MoneyOnCorpse = 'OP_MoneyOnCorpse',
-    OP_MoneyUpdate = 'OP_MoneyUpdate',
-    OP_MOTD = 'OP_MOTD',
-    OP_MoveCoin = 'OP_MoveCoin',
-    OP_MoveDoor = 'OP_MoveDoor',
-    OP_MoveItem = 'OP_MoveItem',
     OP_MoveMultipleItems = 'OP_MoveMultipleItems',
     OP_MoveLogDisregard = 'OP_MoveLogDisregard',
     OP_MoveLogRequest = 'OP_MoveLogRequest',
     OP_MultiLineMsg = 'OP_MultiLineMsg',
-    OP_NewSpawn = 'OP_NewSpawn',
     OP_NewTitlesAvailable = 'OP_NewTitlesAvailable',
-    OP_NewZone = 'OP_NewZone',
-    OP_OnLevelMessage = 'OP_OnLevelMessage',
     OP_OpenContainer = 'OP_OpenContainer',
     OP_OpenDiscordMerchant = 'OP_OpenDiscordMerchant',
-    OP_OpenGuildTributeMaster = 'OP_OpenGuildTributeMaster',
     OP_OpenInventory = 'OP_OpenInventory',
-    OP_OpenTributeMaster = 'OP_OpenTributeMaster',
-    OP_PDeletePetition = 'OP_PDeletePetition',
     OP_PetBuffWindow = 'OP_PetBuffWindow',
-    OP_PetCommands = 'OP_PetCommands',
     OP_PetCommandState = 'OP_PetCommandState',
     OP_PetHoTT = 'OP_PetHoTT',
-    OP_Petition = 'OP_Petition',
-    OP_PetitionBug = 'OP_PetitionBug',
-    OP_PetitionCheckIn = 'OP_PetitionCheckIn',
-    OP_PetitionCheckout = 'OP_PetitionCheckout',
     OP_PetitionCheckout2 = 'OP_PetitionCheckout2',
-    OP_PetitionDelete = 'OP_PetitionDelete',
-    OP_PetitionQue = 'OP_PetitionQue',
-    OP_PetitionRefresh = 'OP_PetitionRefresh',
-    OP_PetitionResolve = 'OP_PetitionResolve',
     OP_PetitionSearch = 'OP_PetitionSearch',
     OP_PetitionSearchResults = 'OP_PetitionSearchResults',
     OP_PetitionSearchText = 'OP_PetitionSearchText',
-    OP_PetitionUnCheckout = 'OP_PetitionUnCheckout',
-    OP_PetitionUpdate = 'OP_PetitionUpdate',
-    OP_PickPocket = 'OP_PickPocket',
-    OP_PlayerProfile = 'OP_PlayerProfile',
     OP_PlayerStateAdd = 'OP_PlayerStateAdd',
     OP_PlayerStateRemove = 'OP_PlayerStateRemove',
-    OP_PlayMP3 = 'OP_PlayMP3',
     OP_Poll = 'OP_Poll',
     OP_PollResponse = 'OP_PollResponse',
     OP_PopupResponse = 'OP_PopupResponse',
     OP_PostEnterWorld = 'OP_PostEnterWorld',
-    OP_PotionBelt = 'OP_PotionBelt',
     OP_PreLogoutReply = 'OP_PreLogoutReply',
-    OP_PurchaseLeadershipAA = 'OP_PurchaseLeadershipAA',
     OP_PVPLeaderBoardDetailsReply = 'OP_PVPLeaderBoardDetailsReply',
     OP_PVPLeaderBoardDetailsRequest = 'OP_PVPLeaderBoardDetailsRequest',
     OP_PVPLeaderBoardReply = 'OP_PVPLeaderBoardReply',
     OP_PVPLeaderBoardRequest = 'OP_PVPLeaderBoardRequest',
-    OP_PVPStats = 'OP_PVPStats',
     OP_QueryResponseThing = 'OP_QueryResponseThing',
     OP_QueryUCSServerStatus = 'OP_QueryUCSServerStatus',
     OP_RaidDelegateAbility = 'OP_RaidDelegateAbility',
     OP_RaidClearNPCMarks = 'OP_RaidClearNPCMarks',
     OP_RaidInvite = 'OP_RaidInvite',
     OP_RaidJoin = 'OP_RaidJoin',
-    OP_RaidUpdate = 'OP_RaidUpdate',
     OP_RandomNameGenerator = 'OP_RandomNameGenerator',
-    OP_RandomReply = 'OP_RandomReply',
-    OP_RandomReq = 'OP_RandomReq',
-    OP_ReadBook = 'OP_ReadBook',
-    OP_RecipeAutoCombine = 'OP_RecipeAutoCombine',
-    OP_RecipeDetails = 'OP_RecipeDetails',
-    OP_RecipeReply = 'OP_RecipeReply',
-    OP_RecipesFavorite = 'OP_RecipesFavorite',
-    OP_RecipesSearch = 'OP_RecipesSearch',
     OP_ReclaimCrystals = 'OP_ReclaimCrystals',
-    OP_ReloadUI = 'OP_ReloadUI',
     OP_RemoveAllDoors = 'OP_RemoveAllDoors',
     OP_RemoveBlockedBuffs = 'OP_RemoveBlockedBuffs',
     OP_RemoveNimbusEffect = 'OP_RemoveNimbusEffect',
     OP_RemoveTrap = 'OP_RemoveTrap',
-    OP_Report = 'OP_Report',
-    OP_ReqClientSpawn = 'OP_ReqClientSpawn',
-    OP_ReqNewZone = 'OP_ReqNewZone',
-    OP_RequestClientZoneChange = 'OP_RequestClientZoneChange',
-    OP_RequestDuel = 'OP_RequestDuel',
     OP_RequestKnowledgeBase = 'OP_RequestKnowledgeBase',
-    OP_RequestTitles = 'OP_RequestTitles',
     OP_RespawnWindow = 'OP_RespawnWindow',
-    OP_RespondAA = 'OP_RespondAA',
     OP_RestState = 'OP_RestState',
     OP_Rewind = 'OP_Rewind',
-    OP_RezzAnswer = 'OP_RezzAnswer',
     OP_RezzComplete = 'OP_RezzComplete',
-    OP_RezzRequest = 'OP_RezzRequest',
     OP_Sacrifice = 'OP_Sacrifice',
-    OP_SafeFallSuccess = 'OP_SafeFallSuccess',
-    OP_SafePoint = 'OP_SafePoint',
-    OP_Save = 'OP_Save',
-    OP_SaveOnZoneReq = 'OP_SaveOnZoneReq',
-    OP_SelectTribute = 'OP_SelectTribute',
-    OP_SendAAStats = 'OP_SendAAStats',
-    OP_SendAATable = 'OP_SendAATable',
-    OP_SendExpZonein = 'OP_SendExpZonein',
     OP_SendFindableNPCs = 'OP_SendFindableNPCs',
-    OP_SendGuildTributes = 'OP_SendGuildTributes',
-    OP_SendMaxCharacters = 'OP_SendMaxCharacters',
     OP_SendMembership = 'OP_SendMembership',
     OP_SendMembershipDetails = 'OP_SendMembershipDetails',
     OP_SendSystemStats = 'OP_SendSystemStats',
-    OP_SendTitleList = 'OP_SendTitleList',
-    OP_SendTributes = 'OP_SendTributes',
-    OP_SendZonepoints = 'OP_SendZonepoints',
-    OP_SenseHeading = 'OP_SenseHeading',
-    OP_SenseTraps = 'OP_SenseTraps',
     OP_SessionReady = 'OP_SessionReady',
     OP_SetChatServer = 'OP_SetChatServer',
     OP_SetChatServer2 = 'OP_SetChatServer2',
     OP_SetFace = 'OP_SetFace',
     OP_SetGroupTarget = 'OP_SetGroupTarget',
-    OP_SetGuildMOTD = 'OP_SetGuildMOTD',
     OP_SetGuildRank = 'OP_SetGuildRank',
-    OP_SetRunMode = 'OP_SetRunMode',
-    OP_SetServerFilter = 'OP_SetServerFilter',
     OP_SetStartCity = 'OP_SetStartCity',
-    OP_SetTitle = 'OP_SetTitle',
-    OP_SetTitleReply = 'OP_SetTitleReply',
     OP_SharedTaskMemberList = 'OP_SharedTaskMemberList',
     OP_SharedTaskAddPlayer = 'OP_SharedTaskAddPlayer',
     OP_SharedTaskRemovePlayer = 'OP_SharedTaskRemovePlayer',
@@ -504,85 +564,31 @@ export enum OpCodes {
     OP_SharedTaskSelectWindow = 'OP_SharedTaskSelectWindow',
     OP_SharedTaskQuit = 'OP_SharedTaskQuit',
     OP_TaskTimers = 'OP_TaskTimers',
-    OP_Shielding = 'OP_Shielding',
-    OP_ShopDelItem = 'OP_ShopDelItem',
-    OP_ShopEnd = 'OP_ShopEnd',
     OP_ShopEndConfirm = 'OP_ShopEndConfirm',
     OP_ShopItem = 'OP_ShopItem',
-    OP_ShopPlayerBuy = 'OP_ShopPlayerBuy',
-    OP_ShopPlayerSell = 'OP_ShopPlayerSell',
-    OP_ShopRequest = 'OP_ShopRequest',
-    OP_SimpleMessage = 'OP_SimpleMessage',
-    OP_SkillUpdate = 'OP_SkillUpdate',
-    OP_Sneak = 'OP_Sneak',
     OP_Some3ByteHPUpdate = 'OP_Some3ByteHPUpdate',
     OP_Some6ByteHPUpdate = 'OP_Some6ByteHPUpdate',
-    OP_SomeItemPacketMaybe = 'OP_SomeItemPacketMaybe',
     OP_Sound = 'OP_Sound',
-    OP_SpawnAppearance = 'OP_SpawnAppearance',
-    OP_SpawnDoor = 'OP_SpawnDoor',
     OP_SpawnPositionUpdate = 'OP_SpawnPositionUpdate',
-    OP_SpecialMesg = 'OP_SpecialMesg',
-    OP_SpellEffect = 'OP_SpellEffect',
-    OP_Split = 'OP_Split',
-    OP_Stamina = 'OP_Stamina',
-    OP_Stun = 'OP_Stun',
-    OP_Surname = 'OP_Surname',
-    OP_SwapSpell = 'OP_SwapSpell',
     OP_TargetBuffs = 'OP_TargetBuffs',
-    OP_TargetCommand = 'OP_TargetCommand',
     OP_TargetHoTT = 'OP_TargetHoTT',
-    OP_TargetMouse = 'OP_TargetMouse',
-    OP_TargetReject = 'OP_TargetReject',
-    OP_TaskActivity = 'OP_TaskActivity',
     OP_TaskActivityComplete = 'OP_TaskActivityComplete',
-    OP_TaskDescription = 'OP_TaskDescription',
     OP_TaskHistoryReply = 'OP_TaskHistoryReply',
     OP_TaskHistoryRequest = 'OP_TaskHistoryRequest',
     OP_TaskRequestTimer = 'OP_TaskRequestTimer',
     OP_TaskSelectWindow = 'OP_TaskSelectWindow',
-    OP_Taunt = 'OP_Taunt',
-    OP_TestBuff = 'OP_TestBuff',
-    OP_TGB = 'OP_TGB',
-    OP_TimeOfDay = 'OP_TimeOfDay',
-    OP_Track = 'OP_Track',
-    OP_TrackTarget = 'OP_TrackTarget',
-    OP_TrackUnknown = 'OP_TrackUnknown',
-    OP_TradeAcceptClick = 'OP_TradeAcceptClick',
-    OP_TradeBusy = 'OP_TradeBusy',
-    OP_TradeCoins = 'OP_TradeCoins',
-    OP_TradeMoneyUpdate = 'OP_TradeMoneyUpdate',
-    OP_Trader = 'OP_Trader',
-    OP_TraderBuy = 'OP_TraderBuy',
-    OP_TraderDelItem = 'OP_TraderDelItem',
-    OP_TradeRequest = 'OP_TradeRequest',
-    OP_TradeRequestAck = 'OP_TradeRequestAck',
-    OP_TraderItemUpdate = 'OP_TraderItemUpdate',
-    OP_TraderShop = 'OP_TraderShop',
-    OP_TradeSkillCombine = 'OP_TradeSkillCombine',
     OP_Translocate = 'OP_Translocate',
-    OP_TributeInfo = 'OP_TributeInfo',
-    OP_TributeItem = 'OP_TributeItem',
-    OP_TributeMoney = 'OP_TributeMoney',
-    OP_TributeNPC = 'OP_TributeNPC',
     OP_TributePointUpdate = 'OP_TributePointUpdate',
-    OP_TributeTimer = 'OP_TributeTimer',
-    OP_TributeToggle = 'OP_TributeToggle',
-    OP_TributeUpdate = 'OP_TributeUpdate',
     OP_Untargetable = 'OP_Untargetable',
     OP_UpdateAA = 'OP_UpdateAA',
     OP_UpdateAura = 'OP_UpdateAura',
-    OP_UpdateLeadershipAA = 'OP_UpdateLeadershipAA',
     OP_VetClaimReply = 'OP_VetClaimReply',
     OP_VetClaimRequest = 'OP_VetClaimRequest',
     OP_VetRewardsAvaliable = 'OP_VetRewardsAvaliable',
     OP_VoiceMacroIn = 'OP_VoiceMacroIn',
     OP_VoiceMacroOut = 'OP_VoiceMacroOut',
     OP_WeaponEquip1 = 'OP_WeaponEquip1',
-    OP_WearChange = 'OP_WearChange',
-    OP_Weather = 'OP_Weather',
     OP_Weblink = 'OP_Weblink',
-    OP_WhoAllRequest = 'OP_WhoAllRequest',
     OP_WhoAllResponse = 'OP_WhoAllResponse',
     OP_World_Client_CRC1 = 'OP_World_Client_CRC1',
     OP_World_Client_CRC2 = 'OP_World_Client_CRC2',
@@ -590,31 +596,109 @@ export enum OpCodes {
     OP_WorldClientReady = 'OP_WorldClientReady',
     OP_WorldComplete = 'OP_WorldComplete',
     OP_WorldLogout = 'OP_WorldLogout',
-    OP_WorldObjectsSent = 'OP_WorldObjectsSent',
     OP_WorldUnknown001 = 'OP_WorldUnknown001',
     OP_XTargetAutoAddHaters = 'OP_XTargetAutoAddHaters',
     OP_XTargetOpen = 'OP_XTargetOpen',
     OP_XTargetOpenResponse = 'OP_XTargetOpenResponse',
     OP_XTargetRequest = 'OP_XTargetRequest',
     OP_XTargetResponse = 'OP_XTargetResponse',
-    OP_YellForHelp = 'OP_YellForHelp',
-    OP_ZoneChange = 'OP_ZoneChange',
     OP_ZoneComplete = 'OP_ZoneComplete',
-    OP_ZoneEntry = 'OP_ZoneEntry',
     OP_ZoneGuildList = 'OP_ZoneGuildList',
-    OP_ZoneInUnknown = 'OP_ZoneInUnknown',
     OP_ZonePlayerToBind = 'OP_ZonePlayerToBind',
     OP_ZoneServerReady = 'OP_ZoneServerReady',
-    OP_ZoneSpawns = 'OP_ZoneSpawns',
-    OP_ZoneUnavail = 'OP_ZoneUnavail',
     OP_ResetAA = 'OP_ResetAA',
     OP_UnderWorld = 'OP_UnderWorld',
+}
+
+// Login
+export interface LoginMessage {
+    username?: string;
+    password?: string;
+}
+
+export interface LoginReply {
+    key?: string;
+    errorStrId?: number;
+    failedAttempts?: number;
+    lsid?: number;
+    success?: boolean;
+    showPlayerCount?: boolean;
+}
+
+export interface LoginRequest {
+    sequence?: number;
+}
+
+export interface WorldServer {
+    ip?: string;
+    serverType?: number;
+    serverId?: number;
+    longName?: string;
+    countryCode?: string;
+    languageCode?: string;
+    status?: number;
+    playersOnline?: number;
+}
+
+export interface LoginServerResponse {
+    serverCount?: number;
+    servers?: WorldServer[];
+}
+
+export interface PlayEverquest {
+    serverId?: number;
+}
+
+export interface PlayEverquestResponse {
+    serverId?: number;
+    success?: boolean;
+    errorStrId?: number;
+}
+
+// World
+export interface WebInitiateConnection {
+    login?: boolean;
 }
 
 export interface LoginInfo {
     name?: string;
     password?: string;
     zoning?: number;
+}
+
+export interface Tint {
+    blue?: number;
+    green?: number;
+    red?: number;
+    useTint?: number;
+}
+
+export interface CharSelectEquip {
+    material?: number;
+    color?: Tint;
+}
+
+export interface CharacterSelectEntry {
+    name?: string;
+    charClass?: number;
+    race?: number;
+    level?: number;
+    zone?: number;
+    instance?: number;
+    gender?: number;
+    face?: number;
+    equip?: CharSelectEquip[];
+    deity?: number;
+    primaryIdFile?: number;
+    secondaryIdFile?: number;
+    goHome?: number;
+    enabled?: number;
+    lastLogin?: number;
+}
+
+export interface CharacterSelect {
+    characterCount?: number;
+    characters?: CharacterSelectEntry[];
 }
 
 export interface EnterWorld {
@@ -673,13 +757,6 @@ export interface AdventureInfo {
     zonedungeonid?: number;
 }
 
-export interface Tint {
-    blue?: number;
-    green?: number;
-    red?: number;
-    useTint?: number;
-}
-
 export interface TextureProfile {
     head?: number;
     chest?: number;
@@ -702,34 +779,6 @@ export interface TintProfile {
     feet?: number;
     primary?: number;
     secondary?: number;
-}
-
-export interface CharSelectEquip {
-    material?: number;
-    color?: number;
-}
-
-export interface CharacterSelectEntry {
-    name?: string;
-    charClass?: number;
-    race?: number;
-    level?: number;
-    zone?: number;
-    instance?: number;
-    gender?: number;
-    face?: number;
-    equip?: CharSelectEquip[];
-    deity?: number;
-    primaryIdFile?: number;
-    secondaryIdFile?: number;
-    goHome?: number;
-    enabled?: number;
-    lastLogin?: number;
-}
-
-export interface CharacterSelect {
-    characterCount?: number;
-    characters?: CharacterSelectEntry[];
 }
 
 export interface Spawn {
@@ -1424,6 +1473,11 @@ export interface MoveCoin {
     amount?: number;
 }
 
+export interface TradeBusy {
+    toMobId?: number;
+    fromMobId?: number;
+}
+
 export interface TradeCoin {
     trader?: number;
     slot?: number;
@@ -1698,7 +1752,7 @@ export interface ZonePoint_Entry {
 
 export interface ZonePoints {
     count?: number;
-    zpe?: number[];
+    zpe?: ZonePoint_Entry[];
 }
 
 export interface SkillUpdate {
@@ -1925,6 +1979,15 @@ export interface ClickObject {
     playerId?: number;
 }
 
+export interface ClickObjectAction {
+    playerId?: number;
+    dropId?: number;
+    open?: number;
+    type?: number;
+    icon?: number;
+    objectName?: string;
+}
+
 export interface Shielding {
     targetId?: number;
 }
@@ -1974,6 +2037,11 @@ export interface ClickDoor {
 export interface MoveDoor {
     doorid?: number;
     action?: number;
+}
+
+export interface ControlBoat {
+    boatId?: number;
+    takeControl?: boolean;
 }
 
 export interface BecomeNPC {
@@ -2070,6 +2138,11 @@ export interface ItemViewRequest {
     linkHash?: number;
 }
 
+export interface ItemVerifyRequest {
+    slot?: number;
+    target?: number;
+}
+
 export interface PickPocket {
     to?: number;
     from?: number;
@@ -2108,6 +2181,10 @@ export interface MobHealth {
 export interface Track {
     entityid?: number;
     distance?: number;
+}
+
+export interface TrackTarget {
+    entityid?: number;
 }
 
 export interface Tracking {
@@ -3026,12 +3103,22 @@ export interface WebPlayEverquestResponse {
     errorStrId?: number;
 }
 
-export interface WebInitiateConnection {
-    login?: boolean;
-}
-
 export interface WebSession {
     remoteAddr?: string;
     remoteIp?: number;
     remotePort?: number;
+}
+
+export interface Zero {}
+
+export interface Int {
+    value?: number;
+}
+
+export interface Bool {
+    value?: boolean;
+}
+
+export interface String {
+    value?: string;
 }

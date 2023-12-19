@@ -1,4 +1,4 @@
-import { EQMessage, EQOpCodes, getMessageType } from '../message';
+import { EQMessage, getMessageType, valueOptionMap } from '../message';
 
 function concatArrayBuffer(buffer1, buffer2) {
   const newBuffer = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
@@ -20,40 +20,17 @@ function createPacket(opcode, payload) {
   const opcodeBuffer = new Uint16Array([opcode]).buffer;
   return concatArrayBuffer(opcodeBuffer, messageBuffer);
 }
-export class EQClientPacket {
-  // LOGIN
-  /**
-  *  @param  {import('../message/def/eq').LoginMessage} payload
-  * */
-  static LoginMessage = (payload) => createPacket(EQOpCodes.OP_LoginWeb, payload);
 
-  /**
-  *  @param  {import('../message/def/eq').LoginRequest} payload
-  * */
-  static LoginRequest = (payload) => createPacket(EQOpCodes.OP_ServerListRequest, payload);
 
-  /**
-  *  @param  {import('../message/def/eq').PlayEverquest} payload
-  * */
-  static PlayEverquest = (payload) => createPacket(EQOpCodes.OP_PlayEverquestRequest, payload);
-
-  // WORLD
-
-  /**
-  *  @param  {import('../message/def/eq').WebInitiateConnection} payload
-  * */
-  static WebInitiateConnection = (payload) => createPacket(EQOpCodes.OP_WebInitiateConnection, payload);
-
-  /**
-  *  @param  {import('../message/def/eq').LoginInfo} payload
-  * */
-  static SendLoginInfo = (payload) => createPacket(EQOpCodes.OP_SendLoginInfo, payload);
-
-  /**
-  *  @param  {import('../message/def/eq').EnterWorld} payload
-  * */
-  static EnterWorld = (payload) => createPacket(EQOpCodes.OP_EnterWorld, payload);
-
-  // ZONE
-
-}
+/**
+* @type {import('../message/eq_interface').EQClientPacket}
+ */
+export const EQClientPacket = new Proxy({}, {
+  get(_, path) {
+    const opCode = valueOptionMap[path];
+    if (opCode === undefined) {
+      throw new Error('Undefined op code in EQClientPacket', path);
+    }
+    return (payload) => createPacket(opCode, payload);
+  }
+});

@@ -24,8 +24,16 @@ const opLookup = EQMessage.lookupEnum('OpCodes');
  */
 export const getOpCodeDesc = opCode => opLookup.valuesById[opCode];
 
-
-console.log('ok', opLookup, getOpCodeDesc(EQOpCodes.OP_LoginWeb));
+/**
+ * @type {Record<string, number>}
+ */
+export const valueOptionMap = Object.entries(opLookup.valuesOptions).reduce((acc, [opKey, opValue]) => {
+  const eqType = opValue['(messageType)'].replace('eq.', '');
+  return {
+    ...acc,
+    [eqType]: opLookup.values[opKey]
+  };
+}, {});
 
 /**
  * 

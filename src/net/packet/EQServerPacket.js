@@ -1,6 +1,6 @@
 import { EQMessage, getMessageType } from '../message';
 
-const decode = (bytes, opcode) => {
+export const decode = (bytes, opcode) => {
   const message = EQMessage.lookupType(getMessageType(opcode));
   return message.toObject(message.decode(bytes), { defaults: true });
 };
