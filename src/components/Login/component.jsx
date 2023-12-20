@@ -30,14 +30,13 @@ const formControlSx = {
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const [demoZone, setDemoZone] = useState(1);
-
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [ackOpen, setAckopen] = useState(false);
 
   const loginState = useSelector(GameState.loginState);
+  const ip = useSelector(GameState.ip);
 
   const status = useMemo(() => {
     if (!loginState.triedLogin) {
@@ -122,6 +121,23 @@ export const Login = () => {
       ) : (
         <>
           <FormControl sx={formControlSx}>
+            <CssTextField
+              autoComplete="on"
+              label="Login Server IP"
+              variant="outlined"
+              defaultValue="62.153.17.113"
+              value={ip}
+              onChange={({ target: { value } }) => GlobalStore.actions.setIp(value)}
+              sx={{
+                margin    : '5px 0',
+                label     : { color: 'white', fontSize: 18 },
+                input     : { color: 'white' },
+                background: 'rgba(0,0,0, .15)',
+              }}
+              classes={{
+                root: textFieldClasses.root,
+              }}
+            />
             <CssTextField
               autoComplete="on"
               label="Username"

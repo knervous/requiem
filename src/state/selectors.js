@@ -5,6 +5,8 @@ export const GameState = {
   loginState : store => store.loginState,
   /** @param {import('./defaultState')} store */
   exploreMode: store => store.exploreMode,
+  /** @param {import('./defaultState')} store */
+  ip         : store => store.ip,
 };
 
 export const ZoneState = {

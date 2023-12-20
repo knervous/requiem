@@ -37,7 +37,7 @@ interface GlobalState {
         triedLogin: boolean,
         lsid: number,
         key: string,
-        serverList: array<{ 
+        serverList: Array<{ 
             ip: string,
             server_type: number,
             server_id: number,
@@ -47,11 +47,12 @@ interface GlobalState {
             status: number,
             players_online: number
         }>,
-        characters: array<{
+        characters: Array<{
             
         }>
     },
     character: '',
+    ip: string,
     gameState: number,
     chat: {
         chatLines: string[]

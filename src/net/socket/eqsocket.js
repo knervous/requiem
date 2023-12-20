@@ -1,3 +1,4 @@
+import { GlobalStore } from '../../state';
 import { EQPacket } from '../packet/EQPacket';
 
 function base64ToArrayBuffer(base64) {
@@ -59,8 +60,8 @@ export class EqSocket {
       this.webtransport = null;
     }
     try {
-      const hash = await fetch(`/api/hash?port=${port}&ip=${process.env.REACT_APP_EQ_SERVER}`).then(r => r.text());
-      this.webtransport = new WebTransport(`https://${process.env.REACT_APP_EQ_SERVER}:${port}/eq`, {
+      const hash = await fetch(`/api/hash?port=${port}&ip=${GlobalStore.getState().ip}`).then(r => r.text());
+      this.webtransport = new WebTransport(`https://${GlobalStore.getState().ip}:${port}/eq`, {
         serverCertificateHashes: [
           {
             algorithm: 'sha-256',

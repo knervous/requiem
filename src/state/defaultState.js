@@ -26,6 +26,7 @@ export const defaultState = {
     characters: [],
   },
   character: '',
+  ip       : '62.153.17.113',
   gameState: GAME_STATES.LOGIN,
   chat     : {
     chatLines: []

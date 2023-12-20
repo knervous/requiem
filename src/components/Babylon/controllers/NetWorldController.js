@@ -56,7 +56,7 @@ class NetWorldController extends GameControllerChild {
     GlobalStore.actions.setZoneInfo(zoneInfo);
     // GlobalStore.actions.setGameState(GAME_STATES.IN_ZONE);
     GlobalStore.actions.setCharacter(name);
-    
+    await this.NetZoneController.zoneConnect(8000, this.state.character);
     this.#socket.send(EQClientPacket.EnterWorld({ name, tutorial: 0, returnHome: 0 }));
   }
 

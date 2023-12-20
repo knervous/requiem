@@ -11,6 +11,9 @@ export const actions = {
   setExploreMode: createAction('SET_EXPLORE', () => {
     return { };
   }),
+  setIp: createAction('SET_IP', ip => {
+    return { ip };
+  }),
 };
 
 export const reducer = createReducer(defaultState, builder => {
@@ -26,6 +29,11 @@ export const reducer = createReducer(defaultState, builder => {
 
   builder.addCase(actions.setExploreMode, (state) => {
     state.exploreMode = true;
+    return state;
+  });
+
+  builder.addCase(actions.setIp, (state) => {
+    state.ip = true;
     return state;
   });
 });
