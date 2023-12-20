@@ -781,6 +781,11 @@ export interface TintProfile {
     secondary?: number;
 }
 
+export interface Spawns {
+    spawnCount?: number;
+    spawns?: Spawn;
+}
+
 export interface Spawn {
     gm?: number;
     aaitle?: number;
@@ -843,7 +848,7 @@ export interface NewSpawn {
     spawn?: Spawn;
 }
 
-export interface ClientzoneEntry {
+export interface ClientZoneEntry {
     charName?: string;
 }
 

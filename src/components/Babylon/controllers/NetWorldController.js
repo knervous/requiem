@@ -25,9 +25,9 @@ class NetWorldController extends GameControllerChild {
       case EQOpCodes.OP_ZoneServerInfo:
         const zoneInfo = EQServerPacket.ZoneServerInfo(data, opcode);
         console.log('Zone info', zoneInfo);
-        // const zoneInfo = new EQPacket.ZoneInfo(data).toObject();
-        // GlobalStore.actions.setZonePort(zoneInfo.port);
-        // await this.NetZoneController.zoneConnect(zoneInfo.port, this.state.character);
+        const port = zoneInfo.port + 1000;
+        GlobalStore.actions.setZonePort(port);
+        await this.NetZoneController.zoneConnect(port, this.state.character);
         break;
       default:
         console.warn(

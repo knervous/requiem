@@ -23,10 +23,13 @@ function createPacket(opcode, payload) {
 
 
 /**
-* @type {import('../message/eq_interface').EQClientPacket}
+* @type {import('../message/eq_interface').EQClientPacket & { SendOpCode: (opCode: number, payload: any) => Uint8Array}} 
  */
 export const EQClientPacket = new Proxy({}, {
   get(_, path) {
+    if (path === 'SendOpCode') {
+      return (opCode, payload) => createPacket(opCode, payload);
+    }
     const opCode = valueOptionMap[path];
     if (opCode === undefined) {
       throw new Error('Undefined op code in EQClientPacket', path);
