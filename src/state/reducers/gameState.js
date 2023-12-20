@@ -12,7 +12,7 @@ export const actions = {
     return { };
   }),
   setIp: createAction('SET_IP', ip => {
-    return { ip };
+    return { payload: ip };
   }),
 };
 
@@ -32,8 +32,8 @@ export const reducer = createReducer(defaultState, builder => {
     return state;
   });
 
-  builder.addCase(actions.setIp, (state) => {
-    state.ip = true;
+  builder.addCase(actions.setIp, (state, action) => {
+    state.ip = action.payload;
     return state;
   });
 });

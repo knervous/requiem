@@ -125,7 +125,6 @@ export const Login = () => {
               autoComplete="on"
               label="Login Server IP"
               variant="outlined"
-              defaultValue="62.153.17.113"
               value={ip}
               onChange={({ target: { value } }) => GlobalStore.actions.setIp(value)}
               sx={{
