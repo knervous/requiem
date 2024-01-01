@@ -61,7 +61,7 @@
   },
   "scripts": {
     "start": "PORT=3310 HTTPS=true craco start",
-    "build": "GENERATE_SOURCEMAP=false REACT_APP_EQ_SERVER=62.153.25.53 craco build",
+    "build": "GENERATE_SOURCEMAP=false REACT_APP_EQ_SERVER=62.153.18.237 craco build",
     "test": "craco test",
     "proto": "node src/net/message/generate-proto.js"
   },
