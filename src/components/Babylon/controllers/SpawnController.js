@@ -23,6 +23,11 @@ class SpawnController extends GameControllerChild {
   spawns = {};
 
   /**
+   * @type {BabylonSpawn}
+   */
+  characterSelectSpawn = null;
+
+  /**
    * @type {BabylonSpawn[]}
    */
   interpolatingSpawns = [];
@@ -150,6 +155,29 @@ class SpawnController extends GameControllerChild {
       this.assetContainers[modelName] = SceneLoader.LoadAssetContainerAsync(modelsUrl, `${modelName}.glb.gz`, this.currentScene, undefined, '.glb');
     }
     return this.assetContainers[modelName];
+  }
+
+  async setCharacterSelectModel(character) {
+    if (this.characterSelectSpawn) {
+      this.characterSelectSpawn.dispose();
+    }
+    const model = raceData.find(r => r.id === character.race);
+    const modelName = (model?.[character.gender] || model?.['2'] || 'HUM').toLowerCase();
+
+    const container = await this.getAssetContainer(modelName);
+    if (!container) { 
+      console.log('Did not load model', modelName);
+      return;
+    }
+    const babylonSpawn = new BabylonSpawn(character, container, { skipPhysics: true });
+    if (!(await babylonSpawn.initializeSpawn())) {
+      console.log('Did not initialize character select', modelName);
+      return;
+    }
+    this.characterSelectSpawn = babylonSpawn;
+    this.enableSpawn(this.characterSelectSpawn);
+ 
+    this.characterSelectSpawn.charSelectAnimation();
   }
 
 

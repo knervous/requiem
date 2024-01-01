@@ -58,7 +58,8 @@ export class BabylonSpawn {
      * @param {object} spawnData
      * @param {import('@babylonjs/core').AssetContainer} container
      */
-  constructor(spawnEntry, container) {
+  constructor(spawnEntry, container, options = {}) {
+    this.options = options;
     this.assetContainer = container;
     this.instanceContainer = container.instantiateModelsToScene();
     this.instanceContainer.animationGroups?.forEach(ag => gameController.currentScene.removeAnimationGroup(ag));
@@ -81,7 +82,7 @@ export class BabylonSpawn {
 
     this.rootNode.id = `spawn_${this.spawn.id}`;
     this.rootNode.name = this.spawn.name;
-    const scale = this.spawn.size === 0 ? 1.5 : this.spawn.size / 4;
+    const scale = (this.spawn.size ?? 0) === 0 ? 1.5 : this.spawn.size / 4;
 
     for (const mesh of this.rootNode.getChildMeshes()) {
       mesh.checkCollisions = true;
@@ -114,7 +115,9 @@ export class BabylonSpawn {
     this.rootNode.name = this.spawn.name;
     // this.rootNode.setEnabled(false);
 
-    await this.updatePrimarySecondary(instanceSkeleton, skeletonRoot).catch(() => {});
+    await this.updatePrimarySecondary(instanceSkeleton, skeletonRoot).catch((e) => {
+      console.warn('Error instantiating primary/secondary', e);
+    });
 
     this.rootNode.position = eqtoBabylonVector(this.spawn.x, this.spawn.y, this.spawn.z + 2);
     this.rootNode.scaling.z = scale;
@@ -135,11 +138,15 @@ export class BabylonSpawn {
       this.physicsAggregate.dispose();
       delete this.physicsAggregate;
     }
-    const ag = new PhysicsAggregate(this.rootNode, PhysicsShapeType.BOX, { center: new Vector3(0, -1.5, 0), extents: new Vector3(2, height, 2), mass: 3, restitution: 0, friction: 1 });
-    ag.body.setMassProperties({
-      inertia: new Vector3(0, 0, 0)
-    });
-    this.physicsAggregate = ag;
+
+    if (!this.options.skipPhysics) {
+      const ag = new PhysicsAggregate(this.rootNode, PhysicsShapeType.BOX, { center: new Vector3(0, -1.5, 0), extents: new Vector3(2, height, 2), mass: 3, restitution: 0, friction: 1 });
+      ag.body.setMassProperties({
+        inertia: new Vector3(0, 0, 0)
+      });
+      this.physicsAggregate = ag;
+    }
+   
     // this.rootNode.forceRenderingWhenOccluded = true;
     // this.rootNode.occlusionType = AbstractMesh.OCCLUSION_TYPE_OPTIMISTIC;
 
@@ -191,29 +198,43 @@ export class BabylonSpawn {
     }
   }
 
+  dispose() {
+    this.rootNode?.dispose();
+    this.rootNode = null;
+    clearInterval(this.charSelectInterval);
+  }
+
+  charSelectAnimation() {
+    this.swapLoopedAnimation(AnimationNames.Idle);
+    this.charSelectInterval = setInterval(() => {
+      
+      this.playAnimation(Math.floor(Math.random() * 5));
+    }, 5000);
+  }
+
   createNameplate() {
     const temp = new DynamicTexture('DynamicTexture', 64, gameController.currentScene);
     const tmpctx = temp.getContext();
     tmpctx.font = '16px Arial';
     const textWidth = tmpctx.measureText(this.spawn.displayedName).width + 20;
     const textureGround = new DynamicTexture(`${this.spawn.name}_nameplate_texture`, { width: textWidth, height: 30 }, gameController.currentScene);   
-    textureGround.drawText(this.spawn.displayedName, null, null, '16px Arial', 'teal', 'transparent', false, true);
+    textureGround.drawText(this.spawn.displayedName, null, null, '17px Arial', '#02c473', 'transparent', false, true);
     textureGround.update(false, true);
     const materialGround = new StandardMaterial(`${this.spawn.name}_nameplate_material`, gameController.currentScene);
 
     materialGround.diffuseTexture = textureGround;
     materialGround.diffuseTexture.hasAlpha = true;
     materialGround.useAlphaFromDiffuseTexture = true;
-    materialGround.emissiveColor = Color3.FromInts(100, 200, 100);
+    materialGround.emissiveColor = Color3.White();// ('#fbdc02');// Color3.FromInts(100, 200, 100);
     materialGround.disableLighting = true;
     const nameplateMesh = MeshBuilder.CreatePlane(`${this.spawn.name}_nameplate`, { width: textWidth / 30, height: 1 }, gameController.currentScene);
     nameplateMesh.parent = this.rootNode;
     nameplateMesh.billboardMode = ParticleSystem.BILLBOARDMODE_ALL;
     nameplateMesh.material = materialGround;
 
-    materialGround.onBindObservable.add(() => {
-      gameController.engine.alphaState.setAlphaBlendFunctionParameters(1, 0x0303 /* ONE MINUS SRC ALPHA */, 1, 0x0303 /* ONE MINUS SRC ALPHA */);
-    });
+    // materialGround.onBindObservable.add(() => {
+    //   gameController.engine.alphaState.setAlphaBlendFunctionParameters(1, 0x0303 /* ONE MINUS SRC ALPHA */, 1, 0x0303 /* ONE MINUS SRC ALPHA */);
+    // });
 
     this.nameplateMesh = nameplateMesh;
   }
@@ -284,8 +305,8 @@ export class BabylonSpawn {
         if (mesh.name.startsWith('d_clk')) {
           if (isVariation(mesh.name, equip.chest.id - 6)) {
             mesh.setEnabled(true);
-            const { blue, green, red, use_tint } = this.spawn.equipment.chest.tint;
-            if (use_tint !== 0) {
+            const { blue, green, red, useTint } = this.spawn.equipment.chest.tint;
+            if (useTint !== 0) {
               mesh.material.albedoColor = Color3.FromInts(red, green, blue);
             }
                 
@@ -302,6 +323,10 @@ export class BabylonSpawn {
         if (matchPrefix(`${model}ch`, mesh.name)) {
           if (isVariation(mesh.name, equip.chest.id)) {
             mesh.setEnabled(true);
+            const { blue, green, red, useTint } = this.spawn.equipment.chest.tint;
+            if (useTint !== 0) {
+              mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+            }
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -343,6 +368,10 @@ export class BabylonSpawn {
           if (!isVariation(mesh.name, 0)) {
             if (isVariation(mesh.name, equip.hands.id)) {
               mesh.setEnabled(true);
+              const { blue, green, red, useTint } = this.spawn.equipment.hands.tint;
+              if (useTint !== 0) {
+                mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+              }
             } else {
               if (doDelete) {
                 mesh.dispose();
@@ -357,6 +386,10 @@ export class BabylonSpawn {
         if (matchPrefix(`${model}ua`, mesh.name)) {
           if (isVariation(mesh.name, equip.arms.id)) {
             mesh.setEnabled(true);
+            const { blue, green, red, useTint } = this.spawn.equipment.arms.tint;
+            if (useTint !== 0) {
+              mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+            }
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -370,6 +403,10 @@ export class BabylonSpawn {
         if (matchPrefix(`${model}fa`, mesh.name)) {
           if (isVariation(mesh.name, equip.wrist.id)) {
             mesh.setEnabled(true);
+            const { blue, green, red, useTint } = this.spawn.equipment.wrist.tint;
+            if (useTint !== 0) {
+              mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+            }
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -383,6 +420,10 @@ export class BabylonSpawn {
         if (matchPrefix(`${model}lg`, mesh.name)) {
           if (isVariation(mesh.name, equip.legs.id)) {
             mesh.setEnabled(true);
+            const { blue, green, red, useTint } = this.spawn.equipment.legs.tint;
+            if (useTint !== 0) {
+              mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+            }
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -402,6 +443,10 @@ export class BabylonSpawn {
           }
           if (isVariation(mesh.name, feetId) && (!checkEnd || mesh.name.endsWith('02'))) {
             mesh.setEnabled(true);
+            const { blue, green, red, useTint } = this.spawn.equipment.feet.tint;
+            if (useTint !== 0) {
+              mesh.material.albedoColor = Color3.FromInts(red, green, blue);
+            }
           } else {
             if (doDelete) {
               mesh.dispose();
@@ -437,14 +482,16 @@ export class BabylonSpawn {
     if (this.spawn.equipment.secondary.id > 0) {
       const secondary = await gameController.ItemController.createItem(this.spawn.equipment.secondary.id);
       if (secondary) {
-        const secondaryBone = skeleton.bones.find(b => b.name === 'shield_point');
-        const transformNode = this.rootNode.getChildTransformNodes().find(a => a.name.includes('shield_point'));
+        const secondaryBone = skeleton.bones.find(b => b.name === 'l_point');
+        const transformNode = this.rootNode.getChildTransformNodes().find(a => a.name.includes('l_point'));
+        // Some item type check here for shield_point
         if (secondaryBone && transformNode) {
           secondary.attachToBone(secondaryBone);
           secondary.parent = transformNode;
           secondary.rotationQuaternion = null;
           secondary.rotation.setAll(0);
-          secondary.scaling.setAll(-1);
+          // secondary.scaling.setAll(-1);
+          secondary.scaling.setAll(1);
           secondary.scaling.x = -1;
           secondary.name = `it${this.spawn.equipment.secondary.id}`;
         }

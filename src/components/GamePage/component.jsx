@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { GAME_STATES, GameState, UiState, useSelector } from '../../state';
 import { Login } from '../Login/component';
@@ -9,6 +9,8 @@ import { CharSelect } from '../CharacterSelect';
 import './component.scss';
 import { Splash } from '../Common/splash';
 import { Typography } from '@mui/material';
+import { useToasts } from 'react-toast-notifications';
+import { gameController } from '../Babylon/controllers/GameController';
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
@@ -19,6 +21,12 @@ export const GamePage = () => {
   const loading = useSelector(UiState.loading);
   const loadingText = useSelector(UiState.loadingText);
   const exploreMode = useSelector(GameState.exploreMode);
+  const { addToast } = useToasts();
+
+  useEffect(() => {
+    gameController.addToast = addToast;
+  }, [addToast]);
+
   const content = useMemo(() => {
     if (params.zone?.length || exploreMode) {
       return <Zone />;

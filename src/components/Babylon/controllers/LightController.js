@@ -38,6 +38,15 @@ class LightController extends GameControllerChild {
     this.ambientLight?.dispose();
     this.playerLight?.dispose();
   }
+
+  setAmbientColor(hexString) {
+    this.ambientLight.diffuse = Color3.FromHexString(hexString);
+    this.ambientLight.groundColor = Color3.FromHexString(hexString);
+  }
+
+  setIntensity(intensity) {
+    this.ambientLight.intensity = intensity;
+  }
   /**
    * @param {import('@babylonjs/core/scene').Scene} scene
    * @param {boolean} fromSerialized

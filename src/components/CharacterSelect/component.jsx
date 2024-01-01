@@ -1,111 +1,65 @@
-import React, { useCallback } from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import { Button, FormControl, Typography } from '@mui/material';
-import { GameState, GlobalStore, useSelector } from '../../state';
-import { Splash } from '../Common/splash';
-import RaceData from '../../common/raceData.json';
-import ClassData from '../../common/classData.json';
-import ZoneData from '../../common/zoneData.json';
+import React, { useEffect, useRef, useState } from 'react';
+import { GameState, useSelector } from '../../state';
 import { gameController } from '../Babylon/controllers/GameController';
+import { VIEWS } from './constants';
+import { CharacterSelect } from './char-select';
+import { CharacterCreate } from './char-create';
 
-const formControlSx = {
-  marginTop: 200,
-  padding  : '120px 0 0 0',
-  width    : 300,
-  display  : 'block',
-  margin   : '0 auto',
-};
+import './component.scss';
 
 export const CharSelect = () => {
   const loginInfo = useSelector(GameState.loginState);
+  const [view, setView] = useState(VIEWS.CHAR_SELECT);
+  const [, forceRender] = useState({});
+  const [babylonLoaded, setBabylonLoaded] = useState(false);
 
-  const characterLogin = useCallback(
-    (name, zoneInfo) => () => {
-      gameController.NetWorldController.characterLogin(name, zoneInfo);
-    },
-    [],
-  );
+  const canvasRef = useRef();
+  const zoneRef = useRef();
 
-  const createCharacter = useCallback(() => {
-    // Need to implement create character
+  useEffect(() => {
+    (async () => {
+      await gameController.loadEngine(canvasRef.current);
+      gameController.loadCharacterSelect().then(() => {
+        window.addEventListener('resize', gameController.resize);
+        window.addEventListener('keydown', gameController.keyDown);
+        forceRender({});
+        setBabylonLoaded(true);
+      });
+    })();
+
+    return () => {
+      window.removeEventListener('resize', gameController.resize);
+      window.addEventListener('keydown', gameController.keyDown);
+    };
   }, []);
 
   return (
-    <Splash>
-      <FormControl sx={formControlSx}>
-        {
-          <>
-            <Typography variant="h7" noWrap component="div">
-              Characters
-            </Typography>
-            {!loginInfo.loading && <List>
-              {loginInfo.characters.map((c) => (
-                <ListItem
-                  disablePadding
-                  sx={{
-                    background  : 'rgba(0,0,0, .15)',
-                    borderRadius: 1,
-                    border      : '1px solid lightgrey',
-                  }}
-                  key={`char-${c.name}`}
-                >
-                  <ListItemButton onClick={characterLogin(c.name, ZoneData.find(z => z.zone === c.zone))}>
-                    <ListItemText
-                      sx={{
-                        span: {
-                          fontSize: 20,
-                        },
-                      }}
-                      primary={c.name}
-                      secondary={`Level ${c.level} ${RaceData.find(rd => rd.id === c.race).name} ${ClassData[c.charClass]} - ${ZoneData.find(z => z.zone === c.zone).longName}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-              {
-                loginInfo.characters.length < 10 ? <ListItem
-                  disablePadding
-                  sx={{
-                    background  : 'rgba(0,0,0, .15)',
-                    borderRadius: 1,
-                    border      : '1px solid lightgrey',
-                  }}
-                  key={'char-create'}
-                >
-                  <ListItemButton onClick={createCharacter}>
-                    <ListItemText
-                      sx={{
-                        span: {
-                          fontSize: 20,
-                        },
-                      }}
-                      primary="Create a new character"
-                    />
-                  </ListItemButton>
-                </ListItem> : null
-              }
-            </List>}
-            
-          </>
-        }
-        <Button
-          onClick={() => {
-            GlobalStore.actions.resetLogin();
-          }}
-          variant="outlined"
-          sx={{
-            color      : 'white',
-            borderColor: 'white',
-            marginTop  : 2,
-            background : 'rgba(0,0,0, .15)',
-          }}
-        >
-          Back to login
-        </Button>
-      </FormControl>
-    </Splash>
+    <div ref={zoneRef} width="100%" height="100%">
+      {babylonLoaded && (
+        <div className="char-select">
+          <img
+            src="/brand/png/logo-no-background-white.png"
+            width={300}
+            alt="logo"
+          />
+          {view === VIEWS.CHAR_SELECT && (
+            <CharacterSelect
+              babylonLoaded={babylonLoaded}
+              loginInfo={loginInfo}
+              setView={setView}
+            />
+          )}
+          {view === VIEWS.CHAR_CREATE && (
+            <CharacterCreate
+              babylonLoaded={babylonLoaded}
+              loginInfo={loginInfo}
+              setView={setView}
+            />
+          )}
+        </div>
+      )}
+
+      <canvas width="100vw" height="100vh" ref={canvasRef} id="renderCanvas" />
+    </div>
   );
 };

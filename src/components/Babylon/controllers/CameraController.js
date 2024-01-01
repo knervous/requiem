@@ -9,6 +9,17 @@ class CameraController extends GameControllerChild {
   camera = null;
   isLocked = false;
   speedModified = false;
+  VIEWS = {
+    GOOD: {
+      position: new Vector3(90, 20, 1),
+      rotation: new Vector3(0.024, -1.5754, 0),
+    },
+    EVIL: {
+      position: new Vector3(-90.024, 30.407, -313.65),
+      rotation: new Vector3(0.15828, 7.87398, 0),
+    },
+  };
+
   dispose() {
     if (this.camera) {
       this.camera.dispose();
@@ -44,6 +55,13 @@ class CameraController extends GameControllerChild {
     this.onChangePointerLock = this.onChangePointerLock.bind(this);
     this.keyDownHandler = this.keyDownHandler.bind(this);
     this.keyUpHandler = this.keyUpHandler.bind(this);
+  }
+
+  
+
+  swapCharacterSelectView (view) {
+    this.camera.position.set(view.position.x, view.position.y, view.position.z);
+    this.camera.rotation.set(view.rotation.x, view.rotation.y, view.rotation.z);
   }
 
   onChangePointerLock = () => {

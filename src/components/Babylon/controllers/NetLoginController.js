@@ -64,10 +64,11 @@ class NetLoginController extends GameControllerChild {
   }
 
   async login(username, password) {
-    if (!this.#socket.isConnected) {
-      await this.#socket.connect('7775', this.onMessage, this.onClose);
-    }
-    this.#socket.send(EQClientPacket.LoginMessage({ username, password }));
+    if (await this.#socket.connect('7775', this.onMessage, this.onClose)) {
+      this.#socket.send(EQClientPacket.LoginMessage({ username, password }));
+    } else {
+      console.warn('Could not connect to loginserver');
+    } 
   }
 
   async serverLogin(serverId) {

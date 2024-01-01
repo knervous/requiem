@@ -19,7 +19,7 @@ export interface EQClientPacket {
 
 `;
 
-const types = [];
+let types = [];
 for (const [opKey, opValue] of Object.entries(opLookup.valuesOptions)) {
   if (!opKey.startsWith('OP_')) {
     continue;
@@ -35,6 +35,29 @@ for (const [opKey, opValue] of Object.entries(opLookup.valuesOptions)) {
 }
 
 clientPacketTypeDef += `
+}
+
+export interface EQServerPacket {
+
+
+`;
+
+types = [];
+for (const [opKey, opValue] of Object.entries(opLookup.valuesOptions)) {
+  if (!opKey.startsWith('OP_')) {
+    continue;
+  }
+  const eqType = opValue['(messageType)'].replace('eq.', '').trim();
+  if (types.includes(eqType)) {
+    continue;
+  }
+  types.push(eqType);
+  clientPacketTypeDef += `${eqType}: (bytes: Uint8Array) => EQMessage.${eqType},
+  `;
+}
+
+clientPacketTypeDef += `
+
 }
 `;
 

@@ -43,11 +43,14 @@ class ItemController extends GameControllerChild {
    * @returns {Promise<import('@babylonjs/core').AbstractMesh>}
    */
   async createItem(item) {
+    while (!this.#scene) {
+      await new Promise(res => setTimeout(res, 10));
+    }
     try {
       const container = await this.getAssetContainer(item);
   
       if (!container) { 
-        console.log('Did not load model', item);
+        console.log('Did not load item model', item);
         return;
       }
   

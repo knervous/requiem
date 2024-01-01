@@ -78,6 +78,7 @@ class ZoneController extends GameControllerChild {
   dispose() {
     if (this.scene) {
       this.scene.onBeforeRenderObservable.remove(this.renderHook.bind(this));
+      this.scene.onBeforeRenderObservable.remove(this.renderCharacterSelectHook.bind(this));
       this.scene.dispose();
     }
     this.scene = null;
@@ -224,6 +225,111 @@ class ZoneController extends GameControllerChild {
     this.zoneLoaded = true;
   }
 
+  /**
+   * 
+   * @param {import('@babylonjs/core').Scene} scene 
+   * @returns 
+   */
+  async loadCharacterSelect(scene) {
+    this.actions.setLoadingText('Entering Character Selection');
+    this.dispose();
+    this.scene = scene;
+    this.zoneName = 'load';
+    this.scene.metadata = { version: sceneVersion };
+    this.scene.collisionsEnabled = true;
+    this.zoneInfo = this.state.zoneInfo;
+    this.CameraController.createCamera(new Vector3());
+   
+    // Load serialized scene in IDB
+    let storedScene = await getDataEntry(this.zoneName);
+    if (storedScene) {
+      if (storedScene.data.metadata?.version === sceneVersion) {
+        const { animatedMeshes } = storedScene.data.metadata;
+        delete storedScene.data.metadata;
+        scene.metadata.animatedMeshes = animatedMeshes;
+        await SceneLoader.AppendAsync('', `data:${JSON.stringify(storedScene.data)}`, scene);
+        this.hadStoredScene = true;
+      } else {
+        storedScene = null;
+      }
+    }
+
+    this.scene.gravity = new Vector3(0, 0, 0);
+
+    if (!(await this.loadPhysicsEngine())) {
+      console.error('Could not load physics engine');
+      return;
+    }
+
+    // Zone texture
+    await this.loadZoneTexture();
+
+    this.zoneMetadata = await fetch(`${storageUrl}${this.zoneName}.json`).then(r => r.json());
+
+    // Objects
+    if (!this.hadStoredScene) {
+      this.animatedMeshes = (await Promise.all(Object.entries(this.zoneMetadata.objects).filter(([, val]) => val?.[0]?.animated).map(([key, val]) => this.instantiateObjects(key, val)))).flat();
+    } else {
+      for (const [key, val] of Object.entries(this.zoneMetadata.objects).filter(([key]) =>
+        this.scene.metadata.animatedMeshes.includes(key))) {
+        this.animatedMeshes = this.animatedMeshes.concat(await this.instantiateObjects(key, val));
+      }
+    }
+
+    // Set up aabb tree
+    await this.setupAabbTree();
+
+    // Music
+    this.actions.setLoadingText('Loading audio');
+    this.MusicController.hookUpZoneMusic(scene, this.zoneName, this.zoneMetadata.music, this.aabbTree);
+
+    // Sound
+    this.SoundController.hookUpZoneSounds(scene, this.zoneMetadata.sound2d, this.zoneMetadata.sound3d);
+
+    scene.audioListenerPositionProvider = () => this.CameraController.camera.globalPosition;
+
+    // Lights
+    this.actions.setLoadingText('Loading lights');
+    this.LightController.loadLights(scene, this.zoneMetadata.lights, this.hadStoredScene, this.aabbTree);
+
+    this.LightController.setIntensity(1.75);
+    this.LightController.setAmbientColor('#FFFFFF');
+    // Sky 
+    this.actions.setLoadingText('Loading sky');
+    await this.SkyController.loadStaticSky(scene, 1, this.hadStoredScene);
+
+    // Spawn controller
+    this.SpawnController.setupSpawnController(this.aabbTree);
+
+    // Item Controller
+    this.ItemController.setupItemController(scene);
+
+    // Start zone hook
+    this.collideCounter = 0;
+    this.counter = 0;
+    this.lastPosition = { ...this.CameraController.camera.position };
+
+    this.scene.onBeforeRenderObservable.add(this.renderCharacterSelectHook.bind(this));
+    
+    this.octree = new PointOctree(new ThreeVector3(this.aabbTree.min.x, this.aabbTree.min.z, this.aabbTree.min.y), 
+      new ThreeVector3(this.aabbTree.max.x, this.aabbTree.max.z, this.aabbTree.max.y));
+
+    // Optimize
+    SceneOptimizer.OptimizeAsync(scene, SceneOptimizerOptions.ModerateDegradationAllowed());
+
+    // Start texture animations
+    await this.addTextureAnimations();
+
+    // Serialize in background
+    this.serializeScene();
+
+    this.zoneLoaded = true;
+  }
+
+  renderCharacterSelectHook() {
+    this.LightController.updateLights(this.CameraController.camera.globalPosition);
+  }
+
   renderHook() {
     if (this.CameraController.camera.globalPosition.equals(this.lastCameraPosition) && this.CameraController.camera.rotation.equals(this.lastCameraRotation)) {
       return;
@@ -322,7 +428,7 @@ class ZoneController extends GameControllerChild {
     window.aabbPerf += performance.now() - aabbPerf;
     if (aabbRegion) {
       this.lastAabbNode = aabbRegion;
-      if (aabbRegion.regions?.includes(4)) {
+      if (aabbRegion.regions?.includes?.(4)) {
         console.log(`Hit zoneline or teleporter!
                                 ${JSON.stringify({ zone: aabbRegion.zone }, null, 4)}`);
         const zone = aabbRegion.zone;

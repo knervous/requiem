@@ -33,6 +33,12 @@ export const reducer = createReducer(defaultState, builder => {
   });
 
   builder.addCase(actions.setIp, (state, action) => {
+    
+    if (action.payload !== '') {
+      localStorage.setItem('loginip', action.payload);
+    } else {
+      localStorage.removeItem('loginip');
+    }
     state.ip = action.payload;
     return state;
   });

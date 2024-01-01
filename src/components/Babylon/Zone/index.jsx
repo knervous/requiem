@@ -2,6 +2,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  useCallback
 } from 'react';
 
 import { useToasts } from 'react-toast-notifications';
@@ -20,10 +21,10 @@ export const BabylonZone = () => {
   const loading = useSelector(UiState.loading);
   const canvasRef = useRef();
   const zoneRef = useRef();
-  const { addToast } = useToasts();
+
   useEffect(() => {
     (async () => {
-      await gameController.loadEngine(canvasRef.current, addToast);
+      await gameController.loadEngine(canvasRef.current);
       gameController.loadZoneScene(zone, params.spawns === 'true').then(() => {
         window.addEventListener('resize', gameController.resize);
         window.addEventListener('keydown', gameController.keyDown);
@@ -37,7 +38,7 @@ export const BabylonZone = () => {
       window.addEventListener('keydown', gameController.keyDown);
     };
     
-  }, [zone, addToast]);
+  }, [zone]);
 
   return <div ref={zoneRef} width="100%" height="100%">
     {gameController.showUi && !loading && <UiOverlay rootNode={zoneRef.current} /> }

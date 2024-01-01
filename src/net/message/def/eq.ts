@@ -20,11 +20,21 @@ export enum OpCodes {
     OP_PlayEverquestResponse = 'OP_PlayEverquestResponse',
     OP_ServerListRequest = 'OP_ServerListRequest',
     OP_ServerListResponse = 'OP_ServerListResponse',
+    OP_ApproveName = 'OP_ApproveName',
+    OP_CharacterCreate = 'OP_CharacterCreate',
+    OP_DeleteCharacter = 'OP_DeleteCharacter',
+    OP_ApproveName_Server = 'OP_ApproveName_Server',
     OP_EnterWorld = 'OP_EnterWorld',
-    OP_SendLoginInfo = 'OP_SendLoginInfo',
-    OP_WebInitiateConnection = 'OP_WebInitiateConnection',
+    OP_ExpansionInfo = 'OP_ExpansionInfo',
+    OP_GuildsList = 'OP_GuildsList',
+    OP_PostEnterWorld = 'OP_PostEnterWorld',
     OP_SendCharInfo = 'OP_SendCharInfo',
+    OP_SendLoginInfo = 'OP_SendLoginInfo',
+    OP_SendMaxCharacters = 'OP_SendMaxCharacters',
+    OP_SendMembership = 'OP_SendMembership',
+    OP_SendMembershipDetails = 'OP_SendMembershipDetails',
     OP_ZoneServerInfo = 'OP_ZoneServerInfo',
+    OP_WebInitiateConnection = 'OP_WebInitiateConnection',
     OP_ZoneEntry = 'OP_ZoneEntry',
     OP_SetServerFilter = 'OP_SetServerFilter',
     OP_SendAATable = 'OP_SendAATable',
@@ -242,7 +252,6 @@ export enum OpCodes {
     OP_TributeInfo = 'OP_TributeInfo',
     OP_GuildTributeInfo = 'OP_GuildTributeInfo',
     OP_SendTitleList = 'OP_SendTitleList',
-    OP_SendMaxCharacters = 'OP_SendMaxCharacters',
     OP_AAExpUpdate = 'OP_AAExpUpdate',
     OP_Action = 'OP_Action',
     OP_AdventureData = 'OP_AdventureData',
@@ -318,7 +327,6 @@ export enum OpCodes {
     OP_CancelTask = 'OP_CancelTask',
     OP_Command = 'OP_Command',
     OP_DynamicWall = 'OP_DynamicWall',
-    OP_GuildsList = 'OP_GuildsList',
     OP_LFGuild = 'OP_LFGuild',
     OP_LoadSpellSet = 'OP_LoadSpellSet',
     OP_LogServer = 'OP_LogServer',
@@ -336,6 +344,7 @@ export enum OpCodes {
     Nested_CharacterSelectEntry = 'Nested_CharacterSelectEntry',
     Nested_CharSelectEquip = 'Nested_CharSelectEquip',
     Nested_Tint = 'Nested_Tint',
+    Nested_StringList = 'Nested_StringList',
     OP_ExploreUnknown = 'OP_ExploreUnknown',
     OP_0x0193 = 'OP_0x0193',
     OP_0x0347 = 'OP_0x0347',
@@ -359,7 +368,6 @@ export enum OpCodes {
     OP_AltCurrencyReclaim = 'OP_AltCurrencyReclaim',
     OP_AltCurrencySell = 'OP_AltCurrencySell',
     OP_AltCurrencySellSelection = 'OP_AltCurrencySellSelection',
-    OP_ApproveName = 'OP_ApproveName',
     OP_AssistGroup = 'OP_AssistGroup',
     OP_AugmentInfo = 'OP_AugmentInfo',
     OP_AutoFire = 'OP_AutoFire',
@@ -371,7 +379,6 @@ export enum OpCodes {
     OP_CancelSneakHide = 'OP_CancelSneakHide',
     OP_CashReward = 'OP_CashReward',
     OP_ChangeSize = 'OP_ChangeSize',
-    OP_CharacterCreate = 'OP_CharacterCreate',
     OP_CharacterCreateRequest = 'OP_CharacterCreateRequest',
     OP_ChatMessage = 'OP_ChatMessage',
     OP_ClearAA = 'OP_ClearAA',
@@ -387,7 +394,6 @@ export enum OpCodes {
     OP_CrystalCreate = 'OP_CrystalCreate',
     OP_CrystalReclaim = 'OP_CrystalReclaim',
     OP_DelegateAbility = 'OP_DelegateAbility',
-    OP_DeleteCharacter = 'OP_DeleteCharacter',
     OP_DeleteCharge = 'OP_DeleteCharge',
     OP_DeletePetition = 'OP_DeletePetition',
     OP_DenyResponse = 'OP_DenyResponse',
@@ -416,7 +422,6 @@ export enum OpCodes {
     OP_DzSetLeaderName = 'OP_DzSetLeaderName',
     OP_DzSwapPlayer = 'OP_DzSwapPlayer',
     OP_EnterChat = 'OP_EnterChat',
-    OP_ExpansionInfo = 'OP_ExpansionInfo',
     OP_Feedback = 'OP_Feedback',
     OP_FellowshipUpdate = 'OP_FellowshipUpdate',
     OP_FindPersonReply = 'OP_FindPersonReply',
@@ -516,7 +521,6 @@ export enum OpCodes {
     OP_Poll = 'OP_Poll',
     OP_PollResponse = 'OP_PollResponse',
     OP_PopupResponse = 'OP_PopupResponse',
-    OP_PostEnterWorld = 'OP_PostEnterWorld',
     OP_PreLogoutReply = 'OP_PreLogoutReply',
     OP_PVPLeaderBoardDetailsReply = 'OP_PVPLeaderBoardDetailsReply',
     OP_PVPLeaderBoardDetailsRequest = 'OP_PVPLeaderBoardDetailsRequest',
@@ -541,8 +545,6 @@ export enum OpCodes {
     OP_RezzComplete = 'OP_RezzComplete',
     OP_Sacrifice = 'OP_Sacrifice',
     OP_SendFindableNPCs = 'OP_SendFindableNPCs',
-    OP_SendMembership = 'OP_SendMembership',
-    OP_SendMembershipDetails = 'OP_SendMembershipDetails',
     OP_SendSystemStats = 'OP_SendSystemStats',
     OP_SessionReady = 'OP_SessionReady',
     OP_SetChatServer = 'OP_SetChatServer',
@@ -1500,18 +1502,8 @@ export interface Surname {
     lastname?: string;
 }
 
-export interface GuildsListEntry {
-    name?: string;
-}
-
 export interface GuildsList {
-    head?: number[];
-    guilds?: GuildsListEntry[];
-}
-
-export interface GuildUpdate {
-    guildId?: number;
-    entry?: GuildsListEntry;
+    guilds?: StringList[];
 }
 
 export interface MoneyOnCorpse {

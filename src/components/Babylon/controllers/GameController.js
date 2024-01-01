@@ -94,7 +94,7 @@ export class GameController {
     return this.#scene;
   }
 
-  async loadEngine(canvas, addToast) {
+  async loadEngine(canvas) {
     if (this.engine) {
       this.engine.dispose();
     }
@@ -104,7 +104,6 @@ export class GameController {
     this.engine.disableManifestCheck = true;
     this.engine.enableOfflineSupport = true;
     this.loading = false;
-    this.addToast = addToast;
     this.engine.runRenderLoop(this.renderLoop);
 
   }
@@ -166,6 +165,23 @@ export class GameController {
 
     this.#scene.onPointerDown = this.sceneMouseDown;
     this.#scene.onPointerUp = this.sceneMouseUp;
+  }
+
+  async loadCharacterSelect() {
+    this.setLoading(true);
+    this.dispose();
+    this.#scene = null;
+    if (!this.engine || !this.canvas) {
+      return;
+    }
+    this.#scene = new Scene(this.engine);
+    await this.ZoneController.loadCharacterSelect(this.#scene);
+    if (process.env.REACT_APP_INSPECTOR === 'true') {
+      // Inspector.Show(this.#scene, { embedMode: true, overlay: true });
+    }
+
+    this.setLoading(false);
+
   }
 
   renderLoop() {

@@ -23,7 +23,7 @@ export class Spawn {
   get displayedName() {
     const fullName = this.name.replace(/_/g, ' ').replace(/\d+$/, '');
     return this.currentHp <= 0 ? `${fullName}'s corpse` : 
-      this.lastName.length ? `${fullName} (${this.lastName})` : fullName;
+      this.lastName?.length ? `${fullName} (${this.lastName})` : fullName;
   }
   get deity() {
     return this.#data.deity;
@@ -125,15 +125,15 @@ export class Spawn {
   // Equipment
   get equipment() {
     return {
-      head     : { id: this.#data.equipment[0].material, tint: this.#data.equipment_tint[0] },
-      chest    : { id: this.#data.equipment[1].material, tint: this.#data.equipment_tint[1] },
-      arms     : { id: this.#data.equipment[2].material, tint: this.#data.equipment_tint[2] },
-      wrist    : { id: this.#data.equipment[3].material, tint: this.#data.equipment_tint[3] },
-      hands    : { id: this.#data.equipment[4].material, tint: this.#data.equipment_tint[4] },
-      legs     : { id: this.#data.equipment[5].material, tint: this.#data.equipment_tint[5] },
-      feet     : { id: this.#data.equipment[6].material, tint: this.#data.equipment_tint[6] },
-      primary  : { id: this.#data.equipment[7].material, tint: this.#data.equipment_tint[7] },
-      secondary: { id: this.#data.equipment[8].material, tint: this.#data.equipment_tint[8] },
+      head     : { id: this.#data.equip[0]?.material ?? 0, tint: this.#data.equip[0]?.color ?? { useTint: 0 } },
+      chest    : { id: this.#data.equip[1]?.material ?? 0, tint: this.#data.equip[1]?.color ?? { useTint: 0 } },
+      arms     : { id: this.#data.equip[2]?.material ?? 0, tint: this.#data.equip[2]?.color ?? { useTint: 0 } },
+      wrist    : { id: this.#data.equip[3]?.material ?? 0, tint: this.#data.equip[3]?.color ?? { useTint: 0 } },
+      hands    : { id: this.#data.equip[4]?.material ?? 0, tint: this.#data.equip[4]?.color ?? { useTint: 0 } },
+      legs     : { id: this.#data.equip[5]?.material ?? 0, tint: this.#data.equip[5]?.color ?? { useTint: 0 } },
+      feet     : { id: this.#data.equip[6]?.material ?? 0, tint: this.#data.equip[6]?.color ?? { useTint: 0 } },
+      primary  : { id: this.#data.equip[7]?.material ?? 0, tint: this.#data.equip[7]?.color ?? { useTint: 0 } },
+      secondary: { id: this.#data.equip[8]?.material ?? 0, tint: this.#data.equip[8]?.color ?? { useTint: 0 } },
     };
   }
 }

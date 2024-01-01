@@ -15,6 +15,46 @@ class SkyController extends GameControllerChild {
    * @param {number} index 
    * @param {boolean} fromSerialized
    */
+  async loadStaticSky(scene, index, fromSerialized) {
+    let skyRoot;
+    if (!fromSerialized) {
+      const sky = await SceneLoader.ImportMeshAsync(
+        '',
+        skyUrl,
+        `sky${index}.glb`,
+        scene,
+        undefined,
+        '.glb'
+      );
+      skyRoot = sky.meshes[0];
+      skyRoot.scaling.x = 20000;
+      skyRoot.scaling.y = 20000;
+      skyRoot.scaling.z = 20000;
+      skyRoot.name = '__sky__';
+     
+    } else {
+      skyRoot = scene.getMeshByName('__sky__');
+    }
+
+    const [cloudLayer, upperLayer] = skyRoot.getChildMeshes();
+    const [cloudTexture] = cloudLayer.material.getActiveTextures();
+    const [upperLayerTexture] = upperLayer.material.getActiveTextures();
+
+    
+    this.#moveInterval = setInterval(() => {
+      cloudTexture.uOffset += 0.0001;
+      cloudTexture.vOffset += 0.0001;
+      upperLayerTexture.vOffset -= 0.0001;
+      upperLayerTexture.vOffset -= 0.0001;
+    }, 10);
+
+  }
+
+  /**
+   * @param {import('@babylonjs/core/scene').Scene} scene
+   * @param {number} index 
+   * @param {boolean} fromSerialized
+   */
   async loadSky(scene, index, fromSerialized) {
     let skyRoot;
     if (!fromSerialized) {

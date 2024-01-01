@@ -19,6 +19,7 @@ export class EqSocket {
 
   constructor() {
     this.close = this.close.bind(this);
+    window.addEventListener('beforeunload', this.close.bind(this));
   }
 
   async send (buffer) {
@@ -71,7 +72,9 @@ export class EqSocket {
       });
       await this.webtransport.ready;
     } catch (e) {
+      console.warn('Error connecting socket', e);
       this.close();
+      return false;
     }
     
     (async () => {
@@ -98,6 +101,6 @@ export class EqSocket {
       }
     })();
 
-    
+    return true;
   }
 }
