@@ -26,7 +26,8 @@ export const defaultState = {
     characters: [],
   },
   character: '',
-  ip       : localStorage.getItem('loginip') || process.env.REACT_APP_EQ_SERVER,
+  ip       : process.env.REACT_APP_SAVE_IP === 'true' ?
+    (localStorage.getItem('loginip') || process.env.REACT_APP_EQ_SERVER) : process.env.REACT_APP_EQ_SERVER,
   gameState: GAME_STATES.LOGIN,
   chat     : {
     chatLines: []
