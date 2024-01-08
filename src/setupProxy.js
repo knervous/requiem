@@ -4,11 +4,12 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 module.exports = function (app) {
   app.use('/api/hash', async (req, res) => {
     const port = req.query.port;
-    if (!port) {
+    const ip = req.query.ip;
+    if (!port || !ip) {
       res.send('');
       return;
     }
-    const hash = await fetch(`http://${process.env.REACT_APP_EQ_SERVER}:${port}/hash`).then(r => r.text()).catch(_ => '');
+    const hash = await fetch(`http://${ip}:${port}/hash`).then(r => r.text()).catch(_ => '');
     res.send(hash);
   });
 };

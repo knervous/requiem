@@ -36,6 +36,8 @@ export class GameController {
 
   loading = false;
 
+  addToast() {}
+
   showUi = params.ui === 'true';
   dev = process.env.REACT_APP_DEV === 'true';
 

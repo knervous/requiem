@@ -37,6 +37,8 @@ export const Splash = ({ children }) => {
           position      : 'fixed',
           height        : '100vh',
           width         : '100vw',
+          maxHeight     : '100vh',
+          overflowY     : 'scroll',
           background    : 'center no-repeat url(/img/requiem-splash6.png)',
           backgroundSize: 'cover'
         }}
@@ -45,7 +47,7 @@ export const Splash = ({ children }) => {
           <img src="/brand/png/logo-no-background.png" width={400} alt="logo" />
           {children}
         </CardContent>
-        <footer style={{ position: 'absolute', bottom: 15, left: 15, textAlign: 'left' }}>	
+        <footer style={{ position: 'fixed', bottom: 15, left: 15, textAlign: 'left', maxWidth: '35%' }}>	
   EverQuest is a registered trademark of Daybreak Game Company LLC.
           <br/>
   EQ Requiem is not associated or affiliated in any way with Daybreak Game Company LLC.</footer>

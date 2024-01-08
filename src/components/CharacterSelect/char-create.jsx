@@ -417,6 +417,9 @@ export const CharacterCreate = ({ setView, loginInfo }) => {
           label="Name"
           variant="outlined"
           value={name}
+          onKeyDown={e => {
+            e.stopPropagation();
+          }}
           onChange={(e) => setName(e.target.value)}
         />
         <Button

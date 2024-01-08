@@ -123,7 +123,7 @@ export const Login = () => {
           <FormControl sx={formControlSx}>
             <CssTextField
               autoComplete="on"
-              label="Login Server IP"
+              label="Login Server"
               variant="outlined"
               value={ip}
               onChange={({ target: { value } }) => GlobalStore.actions.setIp(value)}

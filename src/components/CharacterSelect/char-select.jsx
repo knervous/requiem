@@ -10,6 +10,7 @@ import ClassData from '../../common/classData.json';
 import ZoneData from '../../common/zoneData.json';
 import { gameController } from '../Babylon/controllers/GameController';
 import { VIEWS } from './constants';
+import supportedZones from '../../common/supportedZones.json';
 
 const formControlSx = {
   marginTop: 200,
@@ -78,22 +79,32 @@ export const CharacterSelect = ({ loginInfo, babylonLoaded, setView }) => {
     if (!selectedChar) {
       return;
     }
-    gameController.NetWorldController.characterLogin(
-      selectedChar.name,
-      selectedChar.zone
-    );
-  }, [selectedChar]);
+
+    confirm({
+      description:
+        'Live zones are a work in progress and currently unavailable. Do you want to enter the demo?',
+      title: 'Enter Demo',
+    })
+      .then(() => {
+        GlobalStore.actions.setExploreMode();
+        const zone = supportedZones[selectedChar.zone];
+        GlobalStore.actions.setZoneInfo({ ...zone, zone: selectedChar.zone });
+      })
+      .catch(() => {});
+  }, [selectedChar, confirm]);
 
   const characterDelete = useCallback(() => {
     if (!selectedChar) {
       return;
     }
-    confirm({ description: `Are you sure you want to delete ${selectedChar.name}? This cannot be undone.` })
+    confirm({
+      title      : 'Delete Character',
+      description: `Are you sure you want to delete ${selectedChar.name}? This cannot be undone.`,
+    })
       .then(() => {
-        gameController.NetWorldController.characterDelete(
-          selectedChar.name,
-        );
-      });
+        gameController.NetWorldController.characterDelete(selectedChar.name);
+      })
+      .catch(() => {});
   }, [selectedChar, confirm]);
 
   const createCharacter = useCallback(() => {
@@ -209,11 +220,10 @@ export const CharacterSelect = ({ loginInfo, babylonLoaded, setView }) => {
               background : 'rgba(0,0,0, .15)',
             }}
           >
-          Delete Character
+            Delete Character
           </Button>
         )}
       </FormControl>
-     
     </>
   );
 };

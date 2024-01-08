@@ -30,6 +30,14 @@ class NetWorldController extends GameControllerChild {
         await this.NetZoneController.zoneConnect(port, this.state.character);
         break;
 
+      case EQOpCodes.OP_ApproveName_Server:
+        const info = EQServerPacket.Int(data, opcode);
+        if (info.value === 0) {
+          gameController.addToast('Name was rejected.');
+        }
+        break;
+
+
       case EQOpCodes.OP_SendMaxCharacters:
         const maxChar = EQServerPacket.Int(data).value;
         console.log('Max char', maxChar);
