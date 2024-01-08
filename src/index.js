@@ -1,4 +1,6 @@
 import React from 'react';
+import { Analytics } from '@vercel/analytics/react';
+
 import { createRoot } from 'react-dom/client';
 import { ConfirmProvider } from 'material-ui-confirm';
 
@@ -12,6 +14,7 @@ root.render(
   <GlobalStoreProvider>
     <ConfirmProvider>
       <Main />
+      <Analytics />
     </ConfirmProvider>
   </GlobalStoreProvider>
 );

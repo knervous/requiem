@@ -27,6 +27,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/cannon": "^0.1.8",
+    "@vercel/analytics": "^1.1.1",
     "ammo.js": "^0.0.10",
     "ammojs3": "^0.0.8",
     "babylonjs-inspector": "^6.21.2",
